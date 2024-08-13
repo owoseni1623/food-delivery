@@ -1,0 +1,314 @@
+/* General Styles for Restaurant Details */
+.restaurant-details-102 {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 7rem auto;
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styles */
+.restaurant-header-102 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.restaurant-image-102 {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 5px solid #fff;
+}
+
+/* Info section styles */
+.restaurant-info-102 {
+  flex-grow: 1;
+}
+
+.restaurant-info-102 h1 {
+  margin: 0 0 10px 0;
+  font-size: 2.5em;
+  color: #2c3e50;
+}
+
+.cuisine-type-102, .rating-102, .address-102 {
+  margin: 8px 0;
+  font-size: 1.1em;
+  color: #34495e;
+}
+
+/* Specific styles for cuisine type */
+.cuisine-type-102 {
+  font-size: 1.3em;
+  font-weight: bold;
+  font-style: italic;
+  color: #3498db;
+}
+
+/* Open/Closed indicator styles */
+.hours-102 {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.open-now-102, .closed-now-102 {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.open-now-102 {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.closed-now-102 {
+  background-color: #e74c3c;
+  color: white;
+}
+
+/* Title sections */
+.menu-title-102, .location-title-102 {
+  margin: 30px 0 20px;
+  font-size: 2em;
+  color: #2c3e50;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 10px;
+}
+
+/* Menu categories container */
+.menu-categories-container-102 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+/* Individual menu item styles */
+.menu-item-102 {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: calc(33.33% - 20px);
+  margin-bottom: 30px;
+}
+
+.menu-item-102:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.category-title-102 {
+  font-size: 1.2em;
+  color: #3498db;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #3498db;
+}
+
+.menu-item-image-102 {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.menu-item-102 h4 {
+  font-size: 1.3em;
+  color: #2c3e50;
+  margin: 10px 0;
+}
+
+.item-description-102 {
+  color: #7f8c8d;
+  margin: 10px 0;
+  font-size: 0.9em;
+  flex-grow: 1;
+}
+
+.item-price-102 {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e67e22;
+  margin: 15px 0;
+}
+
+/* Add to cart button */
+.add-to-cart-102 {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.add-to-cart-102:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
+
+/* Location container styles */
+.location-container-102 {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.get-location-102 {
+  padding: 12px 25px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.get-location-102:hover {
+  background-color: #27ae60;
+  transform: scale(1.05);
+}
+
+/* Modal overlay styles */
+.modal-overlay-102 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content-102 {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.close-button-102 {
+  color: #95a5a6;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  transition: color 0.3s ease;
+}
+
+.close-button-102:hover, .close-button-102:focus {
+  color: #2c3e50;
+}
+
+.location-modal-102 {
+  width: 95%;
+  max-width: 700px;
+}
+
+.rating-102 {
+  display: flex;
+  align-items: center;
+  font-size: 1.2em;
+}
+
+.star-rating {
+  color: #ffd700; /* Yellow color for stars */
+  margin-right: 5px;
+}
+
+.numeric-rating {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 1200px) {
+  .menu-item-102 {
+    width: calc(50% - 15px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .menu-item-102 {
+    width: 100%;
+  }
+  
+  .restaurant-header-102 {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .restaurant-image-102 {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .restaurant-info-102 h1 {
+    font-size: 2em;
+  }
+
+  .cuisine-type-102, .rating-102, .address-102 {
+    font-size: 1em;
+  }
+
+  .hours-102 {
+    justify-content: center;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.restaurant-details-102 {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.menu-item-102 {
+  animation: fadeIn 0.5s ease-out;
+}

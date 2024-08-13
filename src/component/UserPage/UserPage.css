@@ -1,0 +1,132 @@
+/* UserPage.css */
+.user11page {
+    padding: 40px 20px;
+    background-color: #f0f2f5;
+    min-height: calc(110vh - 80px);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .user11container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 11px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+  }
+  
+  .user11title {
+    color: #1a1a2e;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+  }
+  
+  .user11profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .user11avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 4px solid #e94560;
+  }
+  
+  .user11info h2 {
+    color: #1a1a2e;
+    margin-bottom: 15px;
+  }
+  
+  .user11info p {
+    color: #4a4a4a;
+    margin-bottom: 11px;
+  }
+  
+  .user11form {
+    width: 110%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .user11input {
+    width: 110%;
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .user11textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+  
+  .user11button {
+    background-color: #e94560;
+    color: #ffffff;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  .status-indicator {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    margin-left: 10px;
+  }
+  
+  .status-indicator.online {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .status-indicator.offline {
+    background-color: #F44336;
+    color: white;
+  }
+  
+  .user11button:hover {
+    background-color: #d63d57;
+  }
+  
+  .user11cancel {
+    background-color: #6c757d;
+  }
+  
+  .user11cancel:hover {
+    background-color: #5a6268;
+  }
+  
+  .user11order-history {
+    margin-top: 40px;
+  }
+  
+  .user11order-history h2 {
+    color: #1a1a2e;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 768px) {
+    .user11container {
+      padding: 20px;
+    }
+  
+    .user11title {
+      font-size: 2rem;
+    }
+  
+    .user11avatar {
+      width: 120px;
+      height: 120px;
+    }
+  }

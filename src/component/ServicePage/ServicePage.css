@@ -1,0 +1,188 @@
+.reassurance-service-page5 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .hero-section5 {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .hero-background5 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/images/mafe.jpeg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5);
+    z-index: 1;
+  }
+  
+  .hero-content5 {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+  }
+  
+  .hero-section5 h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .hero-section5 p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .service-highlights5 {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px 0;
+    background-color: #f8f8f8;
+  }
+  
+  .service-card5 {
+    text-align: center;
+    padding: 20px;
+    max-width: 300px;
+  }
+  
+  .icon5 {
+    font-size: 3rem;
+    color: #ff6600;
+    margin-bottom: 20px;
+  }
+  
+  .quality-assurance5, .customer-support5, .testimonials5, .transparency5, .data-privacy5, .community-impact5 {
+    padding: 50px 20px;
+  }
+  
+  .quality-assurance5 ul, .transparency5 ul, .data-privacy5 ul, .community-impact5 ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .quality-assurance5 li, .transparency5 li, .data-privacy5 li, .community-impact5 li {
+    padding-left: 30px;
+    position: relative;
+    margin-bottom: 10px;
+  }
+  
+  .quality-assurance5 li:before, .transparency5 li:before, .data-privacy5 li:before, .community-impact5 li:before {
+    content: '✓';
+    color: #ff6600;
+    position: absolute;
+    left: 0;
+  }
+  
+  .support-options5 {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  
+  .support-card5 {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+  }
+  
+  .testimonial5 {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  .customer-name5 {
+    font-style: italic;
+    text-align: right;
+  }
+  
+  .cta5 {
+    position: relative;
+    padding: 80px 20px;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+  }
+  
+  .cta-background5 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/images/pap-akara.jpg");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    z-index: 1;
+  }
+  
+  .cta-content5 {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .cta5 h2 {
+    color: #4D4D4D;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .cta5 p {
+    color: #4D4D4D;
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 30px;
+  }
+  
+  .cta-button5 {
+    background-color: #6082B6;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cta-button5:hover {
+    background-color: #ff8533;
+  }
+  
+  @media (max-width: 768px) {
+    .service-highlights5, .support-options5 {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .service-card5, .support-card5 {
+      margin-bottom: 20px;
+    }
+  }
+  
+  /* Additional styles for the chart */
+  .stats5 {
+    padding: 50px 20px;
+    background-color: #f8f8f8;
+  }
+  
+  .stats5 h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }

@@ -1,0 +1,435 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f7f7;
+  color: #333;
+}
+
+.restaurant-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background-color: #2c3e50;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  color: #ecf0f1;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #ecf0f1;
+  border-radius: 50px;
+  padding: 0.7rem 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.search-bar:focus-within {
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+}
+
+.search-bar svg {
+  color: #34495e;
+  margin-right: 0.7rem;
+  font-size: 1.2rem;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+
+.search-bar input::placeholder {
+  color: #95a5a6;
+}
+
+.search-bar input:focus {
+  outline: none;
+}
+
+.page-wrapper {
+  max-width: 1200px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 0 2rem;
+  flex-grow: 1;
+}
+
+.restaurant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.restaurant-card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.restaurant-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.restaurant-info {
+  padding: 1.5rem;
+}
+
+.restaurant-name {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.cuisine {
+  color: #7f8c8d;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  color: #f39c12;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.rating svg {
+  margin-right: 0.4rem;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1001;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 15px;
+  max-width: 600px;
+  width: 90%;
+  margin: 60px auto 2rem;
+  position: relative;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #2c3e50;
+}
+
+.back-button svg {
+  margin-right: 0.5rem;
+}
+
+.modal-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.modal-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.modal-content .cuisine {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-content .rating {
+  margin-bottom: 1rem;
+}
+
+.eco-friendly {
+  display: inline-flex;
+  align-items: center;
+  background-color: #27ae60;
+  color: white;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.eco-friendly svg {
+  margin-right: 0.4rem;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.specialties {
+  list-style-type: none;
+  padding: 0;
+}
+
+.specialties li {
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.specialties li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #e74c3c;
+}
+
+.contact-info {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.contact-info p {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.contact-info svg {
+  margin-right: 0.5rem;
+  color: #3498db;
+}
+
+/* Tablet view */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .restaurant-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .page-wrapper {
+    padding: 0 1.5rem;
+  }
+
+  .modal-content {
+    max-width: 80%;
+    padding: 2rem;
+  }
+
+  .restaurant-card {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .restaurant-image {
+    width: 50%;
+    height: 100%;
+  }
+
+  .restaurant-info {
+    width: 50%;
+    padding: 1rem;
+  }
+
+  .restaurant-name {
+    font-size: 1.3rem;
+  }
+
+  .cuisine {
+    font-size: 0.95rem;
+  }
+
+  .rating {
+    font-size: 1.05rem;
+  }
+
+  .modal-image {
+    height: 250px;
+  }
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .search-bar {
+    padding: 0.5rem 1rem;
+    max-width: 100%;
+  }
+
+  .search-bar input {
+    font-size: 0.9rem;
+  }
+
+  .restaurant-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .restaurant-card {
+    max-width: 100%;
+  }
+
+  .restaurant-image {
+    height: 180px;
+  }
+
+  .restaurant-info {
+    padding: 1rem;
+  }
+
+  .restaurant-name {
+    font-size: 1.2rem;
+  }
+
+  .cuisine {
+    font-size: 0.9rem;
+  }
+
+  .rating {
+    font-size: 1rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+    margin: 40px auto 1rem;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+  }
+
+  .modal-image {
+    height: 200px;
+  }
+
+  .modal-content h2 {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .modal-content .cuisine {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  .specialties li {
+    font-size: 0.9rem;
+  }
+
+  .contact-info {
+    font-size: 0.8rem;
+  }
+
+  .back-button {
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .search-bar {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .search-bar input {
+    font-size: 0.8rem;
+  }
+
+  .restaurant-image {
+    height: 160px;
+  }
+
+  .restaurant-name {
+    font-size: 1.1rem;
+  }
+
+  .modal-image {
+    height: 180px;
+  }
+
+  .modal-content h2 {
+    font-size: 1.3rem;
+  }
+
+  .modal-content {
+    padding: 1rem;
+    margin: 20px auto 1rem;
+    max-height: calc(100vh - 40px);
+  }
+}

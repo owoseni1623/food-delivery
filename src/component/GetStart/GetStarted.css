@@ -1,0 +1,123 @@
+.get-started-modal6 {
+  max-width: 550px;
+  width: 95%;
+  height: 90vh;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+/* .close-button6 {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #aaa;
+} */
+
+.get-started-modal6 h2 {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.get-started-modal6 h4 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.phone-input6 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.country-code6 {
+  padding: 10px;
+  margin-right: 15px;
+  width: 50%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.phone-input6 input[type='tel'] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.continue-options6 {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.continue-options6 button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.continue-options6 button:hover {
+  background-color: #f0f0f0;
+}
+
+.continue-options6 button svg {
+  margin-right: 10px;
+}
+
+.legal-text6 {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.legal-text6 a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.legal-text6 a:hover {
+  text-decoration: underline;
+}
+
+.continue-sms6 { background-color: #4CAF50; color: white; }
+.continue-google6 { background-color: #fff; color: #333; }
+.continue-email6 { background-color: #1A73E8; color: white; }
+.continue-facebook6 { background-color: #1877F2; color: white; }
+.continue-instagram6 { background-color: #C32AA3; color: white; }
+.continue-youtube6 { background-color: #FF0000; color: white; }
+.continue-twitter6 { background-color: #1DA1F2; color: white; }
+.continue-linkedin6 { background-color: #0077B5; color: white; }
+.continue-pinterest6 { background-color: #BD081C; color: white; }
+.continue-tiktok6 { background-color: #000000; color: white; }
+.continue-reddit6 { background-color: #FF4500; color: white; }
+.continue-whatsapp6 { background-color: #25D366; color: white; }
+
+.continue-options6 button:hover {
+  opacity: 0.4;
+}

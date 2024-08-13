@@ -1,0 +1,272 @@
+/* Container for the menu page */
+.menu-page022 {
+  max-width: 1500px;
+  margin: 0 auto;
+  margin-top: 2rem;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* Title styling */
+.title022 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Grid layout for food cards */
+.food-grid022 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+/* Food card styling */
+.food-card022 {
+  border: none;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  border-radius: 15px;
+  border: 2px solid #3498db;
+  background-color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.food-card022:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.food-card022 img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #3498db;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.food-card022 img:hover {
+  transform: scale(1.05);
+}
+
+.food-card022 h3 {
+  margin: 15px 0;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.food-card022 p {
+  color: black;
+}
+
+.food-card022 .price022 {
+  font-weight: bold;
+  color: #e74c3c;
+  margin: 10px 0;
+  font-size: 1.2rem;
+}
+
+.food-card022 .rating022 {
+  margin: 10px 0;
+  color: #f39c12;
+  font-size: 1.2rem;
+}
+
+/* Add to Cart button styling */
+.food-card022 button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.food-card022 button:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
+
+.star022 {
+  color: #ccc;
+  font-size: 1.5rem;
+  margin-right: 2px;
+}
+
+.star022.filled {
+  color: #ffd700;
+}
+
+/* Marquee styling */
+.marquee022 {
+  overflow: hidden;
+  position: relative;
+  background-color: #fff;
+  padding: 40px 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  margin-top: 40px;
+}
+
+.marquee-inner022 {
+  display: flex;
+  animation: marquee 15s linear infinite;
+}
+
+.marquee-item022 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.marquee-item022 img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 5px solid #3498db;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.marquee-item022 img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 768px) {
+  .marquee-item022 img {
+    width: 400px;
+    height: 180px;
+  }
+}
+
+/* Modal styling */
+.modal022 {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content022 {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  border-radius: 15px;
+  border: 2px solid #3498db;
+  width: 90%;
+  max-width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Close button styling */
+.close022 {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close022:hover {
+  color: #333;
+}
+
+.modal-content022 img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border: 2px solid #3498db;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.modal-content022 h2 {
+  margin: 15px 0;
+  font-size: 2rem;
+  color: #333;
+}
+
+.modal-content022 p {
+  color: black; 
+  margin: 10px 0;
+}
+
+.modal-content022 .price022 {
+  font-weight: bold;
+  color: #e74c3c;
+  margin: 10px 0;
+  font-size: 1.4rem;
+}
+
+.modal-content022 .rating022 {
+  margin: 10px 0;
+  color: #f39c12;
+  font-size: 1.2rem;
+}
+
+.modal-content022 button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.modal-content022 button:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
+
+/* Keyframes for marquee animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Eco-mode styling */
+.eco-mode022 {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}

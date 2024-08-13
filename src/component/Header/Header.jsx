@@ -1,0 +1,138 @@
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart, faBars } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../../Context/AuthContext";
+import { useEcom } from "../../Context/EcomContext";
+import avatarImage from "/images/Avatar.png"
+import logo from "/images/logo.jpeg"
+import "./Header.css";
+
+const API_BASE_URL = 'http://localhost:3000';
+
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+  const [hideHeader, setHideHeader] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const navigate = useNavigate();
+  const { isLoggedIn, user, logout } = useAuth();
+  const { getCartItemCount } = useEcom();
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > 60) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+
+      if (currentScrollY > lastScrollY && currentScrollY > 300) {
+        setHideHeader(true);
+      } else {
+        setHideHeader(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
+
+  useEffect(() => {
+    const handleUserUpdate = () => {
+      setLastScrollY(prev => prev + 1);
+    };
+
+    window.addEventListener('user-updated', handleUserUpdate);
+
+    return () => {
+      window.removeEventListener('user-updated', handleUserUpdate);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  const getAvatarUrl = () => {
+    if (user && user.avatar) {
+      // Check if the avatar is already a full URL
+      if (user.avatar.startsWith('http')) {
+        return user.avatar;
+      }
+      // If it's not a full URL, prepend the API_BASE_URL
+      return `${API_BASE_URL}/${user.avatar}`;
+    }
+    return avatarImage;
+  };
+
+  return (
+    <header className={`header ${isSticky ? "sticky" : ""} ${hideHeader ? "hide" : ""}`}>
+      <div className="header-container">
+        <div className="logo-title-container">
+          <img src={logo} alt="Logo" className="header-logo" />
+          <h1 className="header-title">Roadrunner Foods</h1>
+          <button className="menu-toggle" onClick={toggleMenu}>
+            <FontAwesomeIcon icon={faBars} />
+          </button>
+        </div>
+        <nav className={`navbar ${isMenuOpen ? "open" : ""}`}>
+          <ul className="nav-list">
+            <li className="nav-item">
+              <Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            </li>
+            {isLoggedIn && user ? (
+              <>
+                <li className="nav-item">
+                  <Link to="/menu" onClick={() => setIsMenuOpen(false)}>Restaurant Menu</Link>
+                </li>
+                <li className="nav-item cart-icon">
+                  <Link to="/cart" onClick={() => setIsMenuOpen(false)}>
+                    <FontAwesomeIcon icon={faShoppingCart} />
+                    {getCartItemCount() > 0 && <span className="cart-count">{getCartItemCount()}</span>}
+                  </Link>
+                </li>
+                <li className="nav-item auth-items">
+                  <Link to="/profile" className="profile-link" onClick={() => setIsMenuOpen(false)}>
+                    <img 
+                      src={getAvatarUrl()} 
+                      alt={user.firstName || "User"} 
+                      className="user-avatar" 
+                    />
+                    <span className="user-name" title={user.firstName || "User"}>
+                      {user.firstName || "User"}
+                    </span>
+                  </Link>
+                  <button className="auth-link" onClick={handleLogout}>Log Out</button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item auth-items">
+                  <Link to="/login" className="auth-link" onClick={() => setIsMenuOpen(false)}>Login</Link>
+                </li>
+                <li className="nav-item auth-items">
+                  <Link to="/signup" className="auth-link" onClick={() => setIsMenuOpen(false)}>Sign Up</Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </nav>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
