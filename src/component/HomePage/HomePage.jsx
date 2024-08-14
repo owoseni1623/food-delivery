@@ -166,16 +166,15 @@ const HomePage = () => {
           <div className="dish">
           <img src="/images/food8.jpeg" alt="Signature Dish 1" className="dish-image" />
             <div className="dish-content">
-              <h3>Grilled Salmon with Lemon Butter Sauce</h3>
-              <p>Our exquisite grilled salmon is a testament to culinary perfection. We start with the freshest Atlantic salmon, carefully seasoned with a blend of herbs and spices. The fish is then grilled to perfection, resulting in a crispy exterior while maintaining a tender, flaky interior. The dish is elevated with our signature lemon butter sauce, which adds a bright, citrusy note that perfectly complements the rich flavor of the salmon.</p>
+              <h3>Jollof Rice with Grilled Chicken</h3>
+              <p>Our signature Jollof Rice is a beloved West African classic, perfected by Roadrunner Food Ordering. We start with the finest long-grain rice, simmered in a rich tomato and pepper sauce, infused with aromatic spices. The dish is complemented by tender, perfectly grilled chicken, marinated in a blend of African herbs and spices. This combination offers a harmonious balance of flavors, representing the vibrant and diverse culinary traditions of West Africa.</p>
             </div>
-            
           </div>
           <div className="dish">
             <img src="/images/food9.webp" alt="Signature Dish 2" className="dish-image" />
             <div className="dish-content">
-              <h3>Truffle Risotto with Wild Mushrooms</h3>
-              <p>Our truffle risotto is a luxurious dish that showcases the earthy, aromatic flavors of truffles and wild mushrooms. We begin with Arborio rice, slowly cooked to creamy perfection in a rich vegetable broth. A medley of wild mushrooms - including porcini, shiitake, and chanterelles - is sautéed and folded into the risotto, adding depth and texture. The dish is finished with a generous shaving of black truffles, imparting an intense, unmistakable aroma.</p>
+              <h3>Pap and Chakalaka</h3>
+              <p>Experience the heart of South African cuisine with our Pap and Chakalaka. The pap, a staple made from ground maize, is cooked to creamy perfection, providing a comforting base for the dish. It's paired with our zesty chakalaka, a spicy vegetable relish bursting with flavors of tomatoes, onions, peppers, and a secret blend of spices. This vegetarian-friendly option showcases the diversity of African cuisine and is a customer favorite across our locations.</p>
             </div>
           </div>
         </div>
@@ -187,11 +186,10 @@ const HomePage = () => {
         <div className="about-content">
         <img src="/images/food13.jpg" alt="Our Restaurant" className="about-image" />
           <div className="about-text">
-            <p>Founded in 1985 by Chef Maria Rodriguez, our restaurant has been a labor of love and a testament to culinary excellence for over three decades. Maria's journey began in her grandmother's kitchen in rural Spain, where she first learned the importance of using fresh, local ingredients and cooking with passion.</p>
-            <p>After honing her skills in some of Europe's most prestigious kitchens, Maria decided to bring her unique vision of contemporary cuisine with traditional roots to life. She opened our doors with a simple mission: to create a dining experience that not only satisfies the palate but also nourishes the soul.</p>
-            <p>Today, under the guidance of Maria and her talented team of chefs, we continue to push culinary boundaries while honoring traditional techniques. Our menu is a reflection of our journey - a harmonious blend of classic flavors and innovative gastronomy.</p>
+            <p>Founded in 2015 by a group of passionate food enthusiasts, Roadrunner Food Ordering has been on a mission to revolutionize the African food delivery landscape. Our journey began with a simple idea: to make the rich, diverse flavors of African cuisine accessible to people across the continent, right at their doorstep.</p>
+            <p>Starting from a small office in Lagos, Nigeria, we quickly expanded our operations, driven by the overwhelming response from food lovers. Our commitment to quality, authenticity, and customer satisfaction has been the cornerstone of our growth. Today, Roadrunner Food Ordering proudly serves customers in numerous countries across the African continent, from the bustling streets of Cairo to the vibrant communities of Cape Town.</p>
+            <p>At Roadrunner, we believe that food is more than just sustenance - it's a celebration of culture, tradition, and community. Our platform brings together a curated selection of restaurants, from local gems serving traditional dishes to modern eateries offering innovative African fusion cuisine. We're not just delivering food; we're delivering a taste of Africa's culinary heritage to your doorstep.</p>
           </div>
-          
         </div>
       </section>
 
@@ -202,22 +200,21 @@ const HomePage = () => {
           <div className="highlight">
             <div className="highlight-content">
               <h3>Appetizers</h3>
-              <p>Begin your culinary journey with our carefully crafted appetizers. From our crispy calamari served with a zesty lemon aioli to our bruschetta topped with vine-ripened tomatoes and fresh basil, each starter is designed to awaken your taste buds. Don't miss our chef's special: a creamy burrata served with grilled peaches, prosciutto, and a drizzle of aged balsamic vinegar.</p>
+              <p>Begin your culinary journey across Africa with our diverse range of appetizers. Savor the crispy goodness of Kenyan Samosas, filled with spiced meat or vegetables. Try the Nigerian Suya, thinly sliced beef seasoned with ground peanuts and spices. For a lighter option, our Moroccan Zaalouk, a smoky eggplant dip, paired with warm pita bread, offers a burst of Mediterranean flavors. These starters are designed to awaken your palate to the rich tapestry of African cuisine.</p>
             </div>
             <img src="/images/food10.jpg" alt="Appetizer" className="highlight-image" />
           </div>
           <div className="highlight">
-            
             <div className="highlight-content">
               <h3>Main Courses</h3>
-              <p>Our main courses are the heart of our menu, showcasing the finest ingredients and our chefs' expertise. Try our tender braised short ribs, slow-cooked for 12 hours and served with a velvety potato purée and glazed root vegetables. For seafood lovers, our pan-seared scallops with a cauliflower cream and crispy pancetta offer a perfect balance of flavors and textures.</p>
+              <p>Our main courses showcase the diversity of African cuisine. Indulge in the aromatic Ethiopian Doro Wat, a spicy chicken stew served with injera bread. For seafood enthusiasts, our Senegalese Thieboudienne, a flavorful one-pot dish of fish, rice, and vegetables, is a must-try. Vegetarians will love our Ghanaian Red Red, a hearty black-eyed pea stew served with fried plantains. Each dish is prepared with authentic recipes and the freshest ingredients, bringing the true taste of Africa to your table.</p>
             </div>
             <img src="/images/food11.webp" alt="Main Course" className="highlight-image" />
           </div>
           <div className="highlight">
             <div className="highlight-content">
               <h3>Desserts</h3>
-              <p>No meal is complete without a sweet ending. Indulge in our decadent chocolate lava cake, served warm with a molten center of rich chocolate ganache. For a lighter option, savor our lemon tart with a buttery shortbread crust and a topping of sweet and citrusy lemon curd. Pair your dessert with a perfectly brewed espresso or a glass of dessert wine for a truly memorable dining experience.</p>
+              <p>Complete your meal with our selection of traditional African desserts. Try the South African Malva Pudding, a sweet and sticky sponge cake served with custard. For a tropical treat, our Tanzanian Kashata, a coconut and peanut brittle, offers a perfect balance of sweet and nutty flavors. Don't miss the Egyptian Umm Ali, a bread pudding infused with nuts and raisins, served warm and topped with a dollop of cream. These desserts are the perfect way to end your Roadrunner Food Ordering experience on a sweet note.</p>
             </div>
             <img src="/images/food12.jpg" alt="Dessert" className="highlight-image" />
           </div>
@@ -226,6 +223,7 @@ const HomePage = () => {
     </div>
   );
 };
+
 const Modal = ({ children, onClose }) => (
   <div className="modal-overlay" onClick={onClose}>
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
