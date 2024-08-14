@@ -268,7 +268,7 @@ const CheckoutPage = () => {
       };
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/payment/create-payment-link`,
+        `${process.env.REACT_APP_API_URL}/create-payment-link`,
         paymentPayload,
         {
           headers: {
