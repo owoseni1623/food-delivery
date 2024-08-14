@@ -141,8 +141,7 @@ form {
 }
 
 /* Modal styles */
-.modal-overlay,
-.modal-overlay61 {
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -156,10 +155,7 @@ form {
   backdrop-filter: blur(5px);
 }
 
-.modal-content,
-.get-started-modal61,
-.search-results-modal,
-.location-modal {
+.modal-content {
   background-color: #fefefe;
   padding: 30px;
   border-radius: 15px;
@@ -171,8 +167,7 @@ form {
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
-.close-button,
-.close-button61 {
+.close-button {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -184,9 +179,7 @@ form {
 }
 
 .close-button:hover,
-.close-button:focus,
-.close-button61:hover,
-.close-button61:focus {
+.close-button:focus {
   color: #333;
 }
 
@@ -295,36 +288,45 @@ form {
   color: #666;
 }
 
+.about-us {
+  padding: 40px 20px;
+}
+
 .about-content {
   display: flex;
-  gap: 60px;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+  justify-content: center;
 }
 
-.about-text {
-  width: 50%;
-}
-
-.about-text p {
-  font-size: 1.2rem;
-  line-height: 1.8;
-  margin-bottom: 20px;
-  color: #666;
-}
 .about-text-container {
-  max-height: 300px; /* Adjust this value as needed */
+  max-width: 800px;
+  max-height: 600px;
   overflow-y: auto;
-  padding-right: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.about-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
 
 .about-text {
   text-align: justify;
 }
 
-/* For WebKit browsers (Chrome, Safari) */
+.about-text p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Scrollbar styles for WebKit browsers */
 .about-text-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -373,7 +375,7 @@ form {
   .about-image,
   .dish-content,
   .highlight-content,
-  .about-text {
+  .about-text-container {
     width: 100%;
   }
 
@@ -414,6 +416,14 @@ form {
   .highlights-container,
   .about-content {
     padding: 0 30px;
+  }
+
+  .about-text-container {
+    max-width: 100%;
+  }
+  
+  .about-image {
+    max-width: 100%;
   }
 }
 
