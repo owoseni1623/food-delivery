@@ -167,14 +167,14 @@ const HomePage = () => {
           <img src="/images/food8.jpeg" alt="Signature Dish 1" className="dish-image" />
             <div className="dish-content">
               <h3>Jollof Rice with Grilled Chicken</h3>
-              <p>Our signature Jollof Rice is a beloved West African classic, perfected by Roadrunner Food Ordering. We start with the finest long-grain rice, simmered in a rich tomato and pepper sauce, infused with aromatic spices. The dish is complemented by tender, perfectly grilled chicken, marinated in a blend of African herbs and spices. This combination offers a harmonious balance of flavors, representing the vibrant and diverse culinary traditions of West Africa.</p>
+              <p>Our exquisite Jollof Rice is a testament to culinary perfection. We start with the finest long-grain rice, carefully seasoned with a blend of traditional spices and slow-cooked in a rich tomato and pepper sauce. The dish is elevated with our signature grilled chicken, marinated in a special blend of herbs and spices before being cooked to juicy perfection. This combination offers a harmonious balance of flavors that perfectly captures the essence of West African cuisine.</p>
             </div>
           </div>
           <div className="dish">
             <img src="/images/food9.webp" alt="Signature Dish 2" className="dish-image" />
             <div className="dish-content">
               <h3>Pap and Chakalaka</h3>
-              <p>Experience the heart of South African cuisine with our Pap and Chakalaka. The pap, a staple made from ground maize, is cooked to creamy perfection, providing a comforting base for the dish. It's paired with our zesty chakalaka, a spicy vegetable relish bursting with flavors of tomatoes, onions, peppers, and a secret blend of spices. This vegetarian-friendly option showcases the diversity of African cuisine and is a customer favorite across our locations.</p>
+              <p>Our Pap and Chakalaka is a luxurious dish that showcases the hearty, comforting flavors of South African cuisine. We begin with creamy pap, a staple made from ground maize, cooked to smooth perfection. This serves as the perfect canvas for our vibrant chakalaka - a spicy vegetable relish bursting with flavors. A medley of tomatoes, onions, peppers, and carrots is sautéed and seasoned with our secret blend of spices, creating a dish that's both nutritious and intensely flavorful. This vegetarian-friendly option is a customer favorite across our locations.</p>
             </div>
           </div>
         </div>
@@ -184,11 +184,29 @@ const HomePage = () => {
       <section className="about-us">
         <h2>Our Story</h2>
         <div className="about-content">
-        <img src="/images/food13.jpg" alt="Our Restaurant" className="about-image" />
-          <div className="about-text">
-            <p>Founded in 2015 by a group of passionate food enthusiasts, Roadrunner Food Ordering has been on a mission to revolutionize the African food delivery landscape. Our journey began with a simple idea: to make the rich, diverse flavors of African cuisine accessible to people across the continent, right at their doorstep.</p>
-            <p>Starting from a small office in Lagos, Nigeria, we quickly expanded our operations, driven by the overwhelming response from food lovers. Our commitment to quality, authenticity, and customer satisfaction has been the cornerstone of our growth. Today, Roadrunner Food Ordering proudly serves customers in numerous countries across the African continent, from the bustling streets of Cairo to the vibrant communities of Cape Town.</p>
-            <p>At Roadrunner, we believe that food is more than just sustenance - it's a celebration of culture, tradition, and community. Our platform brings together a curated selection of restaurants, from local gems serving traditional dishes to modern eateries offering innovative African fusion cuisine. We're not just delivering food; we're delivering a taste of Africa's culinary heritage to your doorstep.</p>
+          <img src="/images/food13.jpg" alt="Our Restaurant" className="about-image" />
+          <div className="about-text-container">
+            <div className="about-text">
+              <p>Founded in 2015, Roadrunner Food Ordering emerged from a vision to revolutionize the African food delivery landscape. Our journey began in Lagos, Nigeria, with a small team united by a passion for showcasing the rich tapestry of African cuisine to a wider audience.</p>
+              
+              <p>In our early days, we faced numerous challenges. The food delivery market in Africa was largely untapped, with fragmented local services and limited technology adoption. However, we saw this as an opportunity rather than an obstacle. We invested heavily in developing a user-friendly platform that could work seamlessly across various devices and internet speeds, ensuring accessibility for all our customers.</p>
+              
+              <p>Our first year was a whirlwind of activity. We partnered with local restaurants, from small family-owned establishments to popular chains, to bring a diverse array of African cuisines to our platform. Our commitment to quality and authenticity quickly gained us a loyal customer base in Lagos.</p>
+              
+              <p>By 2017, we had expanded to five major Nigerian cities. Our success caught the attention of investors, allowing us to secure funding for further expansion. This financial boost enabled us to enhance our technology, improving our app's functionality and expanding our delivery network.</p>
+              
+              <p>2018 marked our first international expansion as we ventured into Ghana and Kenya. We faced new challenges in adapting to different market dynamics and culinary preferences, but our adaptive approach and commitment to local tastes ensured our success.</p>
+              
+              <p>The COVID-19 pandemic in 2020 presented unprecedented challenges, but also opportunities. As lockdowns were implemented across the continent, our service became more essential than ever. We quickly implemented contactless delivery options and strict safety protocols, ensuring we could continue serving our customers while prioritizing health and safety.</p>
+              
+              <p>Today, Roadrunner Food Ordering proudly operates in over 20 countries across Africa. From the bustling streets of Cairo to the vibrant communities of Cape Town, we've become a household name in food delivery. Our platform now features thousands of restaurants, offering everything from traditional dishes to modern African fusion cuisine.</p>
+              
+              <p>But our journey is far from over. We continue to innovate, exploring new technologies like drone delivery for remote areas and AI-powered recommendation systems to enhance user experience. We're also deeply committed to supporting local communities, with initiatives to promote small businesses and reduce food waste.</p>
+              
+              <p>At Roadrunner, we believe that food is more than just sustenance - it's a celebration of culture, tradition, and community. Every order placed, every meal delivered, is a step towards our vision of connecting Africa through its rich culinary heritage.</p>
+              
+              <p>As we look to the future, we remain committed to our original mission: delivering not just food, but a taste of Africa's diverse and delicious culinary landscape to doorsteps across the continent. Join us on this exciting journey as we continue to redefine food delivery in Africa, one meal at a time.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -200,21 +218,21 @@ const HomePage = () => {
           <div className="highlight">
             <div className="highlight-content">
               <h3>Appetizers</h3>
-              <p>Begin your culinary journey across Africa with our diverse range of appetizers. Savor the crispy goodness of Kenyan Samosas, filled with spiced meat or vegetables. Try the Nigerian Suya, thinly sliced beef seasoned with ground peanuts and spices. For a lighter option, our Moroccan Zaalouk, a smoky eggplant dip, paired with warm pita bread, offers a burst of Mediterranean flavors. These starters are designed to awaken your palate to the rich tapestry of African cuisine.</p>
+              <p>Begin your culinary journey with our carefully crafted appetizers. From our crispy calamari served with a zesty lemon aioli to our bruschetta topped with vine-ripened tomatoes and fresh basil, each starter is designed to awaken your taste buds. Don't miss our chef's special: a creamy burrata served with grilled peaches, prosciutto, and a drizzle of aged balsamic vinegar.</p>
             </div>
             <img src="/images/food10.jpg" alt="Appetizer" className="highlight-image" />
           </div>
           <div className="highlight">
             <div className="highlight-content">
               <h3>Main Courses</h3>
-              <p>Our main courses showcase the diversity of African cuisine. Indulge in the aromatic Ethiopian Doro Wat, a spicy chicken stew served with injera bread. For seafood enthusiasts, our Senegalese Thieboudienne, a flavorful one-pot dish of fish, rice, and vegetables, is a must-try. Vegetarians will love our Ghanaian Red Red, a hearty black-eyed pea stew served with fried plantains. Each dish is prepared with authentic recipes and the freshest ingredients, bringing the true taste of Africa to your table.</p>
+              <p>Our main courses are the heart of our menu, showcasing the finest ingredients and our chefs' expertise. Try our tender braised short ribs, slow-cooked for 12 hours and served with a velvety potato purée and glazed root vegetables. For seafood lovers, our pan-seared scallops with a cauliflower cream and crispy pancetta offer a perfect balance of flavors and textures.</p>
             </div>
             <img src="/images/food11.webp" alt="Main Course" className="highlight-image" />
           </div>
           <div className="highlight">
             <div className="highlight-content">
               <h3>Desserts</h3>
-              <p>Complete your meal with our selection of traditional African desserts. Try the South African Malva Pudding, a sweet and sticky sponge cake served with custard. For a tropical treat, our Tanzanian Kashata, a coconut and peanut brittle, offers a perfect balance of sweet and nutty flavors. Don't miss the Egyptian Umm Ali, a bread pudding infused with nuts and raisins, served warm and topped with a dollop of cream. These desserts are the perfect way to end your Roadrunner Food Ordering experience on a sweet note.</p>
+              <p>No meal is complete without a sweet ending. Indulge in our decadent chocolate lava cake, served warm with a molten center of rich chocolate ganache. For a lighter option, savor our lemon tart with a buttery shortbread crust and a topping of sweet and citrusy lemon curd. Pair your dessert with a perfectly brewed espresso or a glass of dessert wine for a truly memorable dining experience.</p>
             </div>
             <img src="/images/food12.jpg" alt="Dessert" className="highlight-image" />
           </div>

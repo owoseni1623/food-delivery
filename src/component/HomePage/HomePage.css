@@ -314,6 +314,33 @@ form {
   margin-bottom: 20px;
   color: #666;
 }
+.about-text-container {
+  max-height: 300px; /* Adjust this value as needed */
+  overflow-y: auto;
+  padding-right: 20px;
+}
+
+.about-text {
+  text-align: justify;
+}
+
+/* For WebKit browsers (Chrome, Safari) */
+.about-text-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.about-text-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.about-text-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.about-text-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 
 /* Animation */
 @keyframes fadeIn {
