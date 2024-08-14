@@ -222,7 +222,7 @@ const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     if (!token) {
       console.log("No auth token found, redirecting to login");
       navigate('/login');
@@ -247,7 +247,7 @@ const CheckoutPage = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     if (!token) {
       setError("You are not authenticated. Please log in.");
       setLoading(false);
@@ -268,7 +268,7 @@ const CheckoutPage = () => {
       };
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/create-payment-link`,
+        `${process.env.REACT_APP_API_URL}/api/payment/create-payment-link`,
         paymentPayload,
         {
           headers: {
