@@ -24,7 +24,7 @@ const CheckoutPage = () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       console.log("No auth token found, redirecting to menu");
-      navigate('/menu');
+      navigate('/checkout');
       return;
     }
   
@@ -43,45 +43,45 @@ const CheckoutPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      setError("You are not authenticated. Please log in.");
-      return;
-    }
-  
-    const orderData = {
-      items: orderDetails.items,
-      totalAmount: orderDetails.totalPrice,
-      address: {
-        firstName: paymentData.firstName,
-        lastName: paymentData.lastName,
-        phone: paymentData.phone,
-        fullAddress: `${paymentData.street}, ${paymentData.city}, ${paymentData.state}, ${paymentData.country}`
-      },
-      description: paymentData.description
-    };
-  
-    try {
-      const response = await axios.post("https://roadrunner-food-ordering-api-4.onrender.com/api/orders/create", orderData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      });
-  
-      if (response.data.success) {
-        console.log("Order created successfully:", response.data.order);
-        // Navigate to payment page or thank you page
-        navigate('/thank-you');
-      } else {
-        setError("Order creation failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error creating order:", error);
-      setError(`An error occurred: ${error.response?.data?.message || error.message}`);
-    }
+  e.preventDefault();
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    setError("You are not authenticated. Please log in.");
+    return;
+  }
+
+  const orderData = {
+    items: orderDetails.items,
+    totalAmount: orderDetails.totalPrice,
+    address: {
+      firstName: paymentData.firstName,
+      lastName: paymentData.lastName,
+      phone: paymentData.phone,
+      fullAddress: `${paymentData.street}, ${paymentData.city}, ${paymentData.state}, ${paymentData.country}`
+    },
+    description: paymentData.description
   };
+
+  try {
+    const response = await axios.post("https://roadrunner-food-ordering-api-4.onrender.com/api/orders/create", orderData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+    });
+
+    if (response.data.success) {
+      console.log("Order created successfully:", response.data.order);
+      // Navigate to payment page or thank you page
+      navigate('/thank-you');
+    } else {
+      setError("Order creation failed. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error creating order:", error);
+    setError(`An error occurred: ${error.response?.data?.message || error.message}`);
+  }
+};
 
   if (!orderDetails || typeof orderDetails.totalPrice !== 'number') {
     return <div className="checkout-page4">Loading order details...</div>;
