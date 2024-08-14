@@ -23,13 +23,17 @@ const CheckoutPage = () => {
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (!token) {
+      console.log("No auth token found, redirecting to menu");
       navigate('/menu');
       return;
     }
-
+  
     if (!orderDetails || !orderDetails.totalPrice || !orderDetails.items || orderDetails.items.length === 0) {
-      setError("Your cart is empty. Redirecting to cart page.");
+      console.log("Invalid order details, redirecting to cart");
+      setError("Your cart is empty or order details are invalid. Redirecting to cart page.");
       navigate('/cart');
+    } else {
+      console.log("Order details present:", orderDetails);
     }
   }, [orderDetails, navigate]);
 
@@ -45,37 +49,37 @@ const CheckoutPage = () => {
       setError("You are not authenticated. Please log in.");
       return;
     }
-
-    const payloadData = {
-      amount: orderDetails.totalPrice,
-      currency: 'NGN',
-      ...paymentData,
-      items: orderDetails.items
+  
+    const orderData = {
+      items: orderDetails.items,
+      totalAmount: orderDetails.totalPrice,
+      address: {
+        firstName: paymentData.firstName,
+        lastName: paymentData.lastName,
+        phone: paymentData.phone,
+        fullAddress: `${paymentData.street}, ${paymentData.city}, ${paymentData.state}, ${paymentData.country}`
+      },
+      description: paymentData.description
     };
-
+  
     try {
-      const response = await axios.post("https://roadrunner-food-ordering-api-4.onrender.com/api/payment/create-payment-link", payloadData, {
+      const response = await axios.post("https://roadrunner-food-ordering-api-4.onrender.com/api/orders/create", orderData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
       });
-
+  
       if (response.data.success) {
-        localStorage.setItem('currentOrderId', response.data.data.orderId);
-        window.location.href = response.data.data.link;
+        console.log("Order created successfully:", response.data.order);
+        // Navigate to payment page or thank you page
+        navigate('/thank-you');
       } else {
-        setError("Payment initiation failed. Please try again.");
+        setError("Order creation failed. Please try again.");
       }
     } catch (error) {
-      console.error("Error initiating payment:", error);
-      if (error.response) {
-        setError(`An error occurred: ${error.response.data.message || 'Unknown error'}`);
-      } else if (error.request) {
-        setError("No response received from the server. Please check your internet connection and try again.");
-      } else {
-        setError("An error occurred while setting up the request. Please try again.");
-      }
+      console.error("Error creating order:", error);
+      setError(`An error occurred: ${error.response?.data?.message || error.message}`);
     }
   };
 

@@ -26,14 +26,15 @@ const CartPage = () => {
       });
       return;
     }
-
+  
     const orderDetails = {
       items: cart,
       subtotal: totalPrice,
       deliveryFee: deliveryFee,
       totalPrice: grandTotal,
     };
-
+  
+    console.log("Proceeding to checkout with order details:", orderDetails);
     saveOrderDetails(orderDetails);
     navigate('/checkout');
   };

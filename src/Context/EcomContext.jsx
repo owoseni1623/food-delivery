@@ -203,6 +203,7 @@ export const EcomProvider = ({ children }) => {
   };
 
   const saveOrderDetails = (details) => {
+    console.log("Saving order details:", details);
     setOrderDetails(details);
   };
 
