@@ -141,7 +141,8 @@ form {
 }
 
 /* Modal styles */
-.modal-overlay {
+.modal-overlay,
+.modal-overlay61 {
   position: fixed;
   top: 0;
   left: 0;
@@ -155,7 +156,10 @@ form {
   backdrop-filter: blur(5px);
 }
 
-.modal-content {
+.modal-content,
+.get-started-modal61,
+.search-results-modal,
+.location-modal {
   background-color: #fefefe;
   padding: 30px;
   border-radius: 15px;
@@ -167,7 +171,8 @@ form {
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
-.close-button {
+.close-button,
+.close-button61 {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -179,7 +184,9 @@ form {
 }
 
 .close-button:hover,
-.close-button:focus {
+.close-button:focus,
+.close-button61:hover,
+.close-button61:focus {
   color: #333;
 }
 
@@ -291,29 +298,14 @@ form {
 .about-content {
   display: flex;
   gap: 60px;
-  align-items: flex-start;
+  align-items: center;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.about-image {
-  width: 50%;
-  height: auto;
-  object-fit: cover;
-  border-radius: 15px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.about-text-container {
-  width: 50%;
-  max-height: 600px;
-  overflow-y: auto;
-  padding-right: 20px;
-}
-
 .about-text {
-  text-align: justify;
+  width: 50%;
 }
 
 .about-text p {
@@ -321,24 +313,6 @@ form {
   line-height: 1.8;
   margin-bottom: 20px;
   color: #666;
-}
-
-/* Scrollbar styles for WebKit browsers */
-.about-text-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.about-text-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.about-text-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.about-text-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
 
 /* Animation */
@@ -372,7 +346,7 @@ form {
   .about-image,
   .dish-content,
   .highlight-content,
-  .about-text-container {
+  .about-text {
     width: 100%;
   }
 
