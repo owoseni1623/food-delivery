@@ -184,8 +184,8 @@ const HomePage = () => {
       <section className="about-us">
         <h2>Our Story</h2>
         <div className="about-content">
+          <img src="/images/food13.jpg" alt="Our Restaurant" className="about-image" />
           <div className="about-text-container">
-            <img src="/images/food13.jpg" alt="Our Restaurant" className="about-image" />
             <div className="about-text">
               <p>Founded in 2015, Roadrunner Food Ordering emerged from a vision to revolutionize the African food delivery landscape. Our journey began in Lagos, Nigeria, with a small team united by a passion for showcasing the rich tapestry of African cuisine to a wider audience.</p>
               
