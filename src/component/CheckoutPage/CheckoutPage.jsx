@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEcom } from "../../Context/EcomContext";
+import { useAuth } from "../../Context/AuthContext"; // Add this import
 import axios from "axios";
 import "./CheckoutPage.css";
 
 const CheckoutPage = () => {
   const { orderDetails } = useEcom();
+  const { user } = useAuth(); // Add this line to get the user from AuthContext
   const navigate = useNavigate();
   const [paymentData, setPaymentData] = useState({
     firstName: "",
@@ -21,10 +23,9 @@ const CheckoutPage = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      console.log("No auth token found, redirecting to menu");
-      navigate('/checkout');
+    if (!user) {
+      console.log("No user found, redirecting to login");
+      navigate('/login', { state: { from: '/checkout' } });
       return;
     }
   
@@ -34,8 +35,18 @@ const CheckoutPage = () => {
       navigate('/cart');
     } else {
       console.log("Order details present:", orderDetails);
+      // Pre-fill the form with user data if available
+      if (user) {
+        setPaymentData(prevData => ({
+          ...prevData,
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          phone: user.phone || "",
+          email: user.email || "",
+        }));
+      }
     }
-  }, [orderDetails, navigate]);
+  }, [orderDetails, navigate, user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -43,45 +54,51 @@ const CheckoutPage = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  const token = localStorage.getItem('authToken');
-  if (!token) {
-    setError("You are not authenticated. Please log in.");
-    return;
-  }
-
-  const orderData = {
-    items: orderDetails.items,
-    totalAmount: orderDetails.totalPrice,
-    address: {
-      firstName: paymentData.firstName,
-      lastName: paymentData.lastName,
-      phone: paymentData.phone,
-      fullAddress: `${paymentData.street}, ${paymentData.city}, ${paymentData.state}, ${paymentData.country}`
-    },
-    description: paymentData.description
-  };
-
-  try {
-    const response = await axios.post("https://roadrunner-food-ordering-api-4.onrender.com/api/orders/create", orderData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-    });
-
-    if (response.data.success) {
-      console.log("Order created successfully:", response.data.order);
-      // Navigate to payment page or thank you page
-      navigate('/thank-you');
-    } else {
-      setError("Order creation failed. Please try again.");
+    e.preventDefault();
+    const token = localStorage.getItem('token'); // Change 'authToken' to 'token'
+    if (!token) {
+      setError("You are not authenticated. Please log in.");
+      navigate('/login', { state: { from: '/checkout' } });
+      return;
     }
-  } catch (error) {
-    console.error("Error creating order:", error);
-    setError(`An error occurred: ${error.response?.data?.message || error.message}`);
-  }
-};
+
+    const orderData = {
+      items: orderDetails.items,
+      totalAmount: orderDetails.totalPrice,
+      address: {
+        firstName: paymentData.firstName,
+        lastName: paymentData.lastName,
+        phone: paymentData.phone,
+        fullAddress: `${paymentData.street}, ${paymentData.city}, ${paymentData.state}, ${paymentData.country}`
+      },
+      description: paymentData.description
+    };
+
+    try {
+      const response = await axios.post("https://roadrunner-food-ordering-api-4.onrender.com/api/orders/create", orderData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      if (response.data.success) {
+        console.log("Order created successfully:", response.data.order);
+        // Navigate to payment page or thank you page
+        navigate('/thank-you');
+      } else {
+        setError("Order creation failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+      if (error.response && error.response.status === 401) {
+        setError("Your session has expired. Please log in again.");
+        navigate('/login', { state: { from: '/checkout' } });
+      } else {
+        setError(`An error occurred: ${error.response?.data?.message || error.message}`);
+      }
+    }
+  };
 
   if (!orderDetails || typeof orderDetails.totalPrice !== 'number') {
     return <div className="checkout-page4">Loading order details...</div>;
