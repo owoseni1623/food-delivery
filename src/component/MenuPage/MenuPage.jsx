@@ -30,7 +30,7 @@ const MenuPage = () => {
   const fetchMenuData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3000/api/menu/getAll');
+      const response = await axios.get('https://roadrunner-food-ordering-api-4.onrender.com/api/menu/getAll');
       setMenuData(response.data);
       setLoading(false);
     } catch (err) {
@@ -126,7 +126,7 @@ const MenuPage = () => {
     formData.append('image', imageFile);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/menu/add', formData, {
+      const response = await axios.post('https://roadrunner-food-ordering-api-4.onrender.com/api/menu/add', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -161,7 +161,7 @@ const MenuPage = () => {
       <div className="food-grid022">
         {menuData.map((food) => (
           <div key={food._id} className="food-card022">
-            <img src={`http://localhost:3000/uploads/${food.image}`} alt={food.name} onClick={() => openModal(food)} />
+            <img src={`https://roadrunner-food-ordering-api-4.onrender.com/uploads/${food.image}`} alt={food.name} onClick={() => openModal(food)} />
             <h3>{food.name}</h3>
             <p>{food.description}</p>
             <p className="price022">₦{food.price}</p>
@@ -177,7 +177,7 @@ const MenuPage = () => {
         <div className="modal022">
           <div className="modal-content022">
             <span className="close022" onClick={closeModal}>&times;</span>
-            <img src={`http://localhost:3000/uploads/${selectedFood.image}`} alt={selectedFood.name} />
+            <img src={`https://roadrunner-food-ordering-api-4.onrender.com/uploads/${selectedFood.image}`} alt={selectedFood.name} />
             <h2>{selectedFood.name}</h2>
             <p>{selectedFood.description}</p>
             <p className="price022">₦{selectedFood.price}</p>

@@ -54,7 +54,7 @@ const CheckoutPage = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:3000/api/payment/create-payment-link", payloadData, {
+      const response = await axios.post("https://roadrunner-food-ordering-api-4.onrender.com/api/payment/create-payment-link", payloadData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
