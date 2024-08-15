@@ -12,6 +12,7 @@ const CartPage = () => {
 
   useEffect(() => {
     console.log("Current cart:", cart);
+    console.log("CartPage rendered with cart:", cart);
   }, [cart]);
 
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -81,12 +82,6 @@ const CartPage = () => {
     return item.image.startsWith('http') ? item.image : `${apiUrl}${item.image}`;
   };
 
-  // Note: Add this comment in your EcomContext or wherever API calls are made
-  // For all API calls, include these headers:
-  // headers: { 
-  //   'Authorization': `Bearer ${localStorage.getItem('authToken')}`, 
-  //   'Content-Type': 'application/json' 
-  // }
 
   return (
     <div className="cart-page2">

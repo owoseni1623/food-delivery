@@ -22,8 +22,9 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     localStorage.setItem("isLoggedIn", JSON.stringify(true));
     localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("authToken", userData.token); // Make sure this line is present
+    console.log("Login successful, token set:", userData.token);
   };
-
   const logout = () => {
     setIsLoggedIn(false);
     clearUserData();

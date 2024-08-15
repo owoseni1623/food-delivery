@@ -24,8 +24,12 @@ export const EcomProvider = ({ children }) => {
   }, [user]);
 
   const fetchCart = async () => {
-    if (!user) return;
+    if (!user) {
+      console.log('No user, skipping cart fetch');
+      return;
+    }
     try {
+      console.log('Fetching cart data...');
       const response = await fetch(`${apiUrl}/api/cart/get`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -38,8 +42,10 @@ export const EcomProvider = ({ children }) => {
       const data = await response.json();
       console.log('Received cart data:', data);
       if (data.success) {
+        console.log('Setting cart data:', data.cartData);
         setCart(data.cartData || []);
       } else {
+        console.error('Failed to fetch cart data:', data.message);
         setError(data.message || 'Failed to fetch cart data');
       }
     } catch (e) {
