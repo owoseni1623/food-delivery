@@ -28,7 +28,8 @@ export const EcomProvider = ({ children }) => {
     try {
       const response = await fetch(`${apiUrl}/api/cart/get`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          'Content-Type': 'application/json'
         },
       });
       if (!response.ok) {
@@ -49,7 +50,7 @@ export const EcomProvider = ({ children }) => {
 
   const addToCart = async (item) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('authToken');
       if (!token) {
         throw new Error('No token found, please log in again.');
       }
@@ -72,7 +73,7 @@ export const EcomProvider = ({ children }) => {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
           itemId: itemToAdd.id, 
@@ -114,8 +115,8 @@ export const EcomProvider = ({ children }) => {
       const response = await fetch(`${apiUrl}/api/cart/remove`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ itemId }),
       });
@@ -146,8 +147,8 @@ export const EcomProvider = ({ children }) => {
       const response = await fetch(`${apiUrl}/api/cart/${method}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ itemId }),
       });
@@ -179,7 +180,8 @@ export const EcomProvider = ({ children }) => {
     try {
       const response = await fetch(`${apiUrl}/api/restaurants`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          'Content-Type': 'application/json'
         },
       });
       if (!response.ok) {

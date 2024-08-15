@@ -18,12 +18,6 @@ const CheckoutPage = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      navigate('/menu');
-      return;
-    }
-
     if (!orderDetails || !orderDetails.totalPrice || !orderDetails.items || orderDetails.items.length === 0) {
       setError("Your cart is empty. Redirecting to cart page.");
       navigate('/cart');
@@ -37,11 +31,6 @@ const CheckoutPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      setError("You are not authenticated. Please log in.");
-      return;
-    }
 
     const payloadData = {
       amount: orderDetails.totalPrice,
@@ -51,9 +40,9 @@ const CheckoutPage = () => {
     };
 
     try {
-      const response = await axios.post("https://roadrunner-food-ordering-api-4.onrender.com/api/payment/create-payment-link", payloadData, {
+      const response = await axios.post("https://your-backend-url.com/api/payment/create-payment-link", payloadData, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'
         },
       });

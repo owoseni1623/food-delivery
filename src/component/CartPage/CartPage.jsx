@@ -15,7 +15,7 @@ const CartPage = () => {
   }, [cart]);
 
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const deliveryFee = 300; // Fixed delivery fee
+  const deliveryFee = 300;
   const grandTotal = totalPrice + deliveryFee;
 
   const proceedToCheckout = () => {
@@ -75,11 +75,18 @@ const CartPage = () => {
 
   const getImageUrl = (item) => {
     if (!item.image) {
-      return 'https://via.placeholder.com/150'; // Default placeholder image
+      return 'https://via.placeholder.com/150';
     }
-    const apiUrl = window.REACT_APP_API_URL || 'https://roadrunner-food-ordering-api-4.onrender.com';
-    return item.image.startsWith('/') ? `${apiUrl}${item.image}` : item.image;
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://roadrunner-food-ordering-api-4.onrender.com';
+    return item.image.startsWith('http') ? item.image : `${apiUrl}${item.image}`;
   };
+
+  // Note: Add this comment in your EcomContext or wherever API calls are made
+  // For all API calls, include these headers:
+  // headers: { 
+  //   'Authorization': `Bearer ${localStorage.getItem('authToken')}`, 
+  //   'Content-Type': 'application/json' 
+  // }
 
   return (
     <div className="cart-page2">
@@ -93,7 +100,7 @@ const CartPage = () => {
       ) : (
         <>
           <div className="cart-items2">
-          {cart.map((item, index) => (
+            {cart.map((item, index) => (
               <div key={`${item.id}-${index}`} className="cart-item2">
                 <img
                   src={getImageUrl(item)}
