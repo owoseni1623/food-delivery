@@ -205,7 +205,7 @@ import axios from "axios";
 import "./CheckoutPage.css";
 
 const CheckoutPage = () => {
-  const { orderDetails } = useEcom();
+  const { orderDetails, apiUrl } = useEcom();
   const navigate = useNavigate();
   const [paymentData, setPaymentData] = useState({
     firstName: "",
@@ -268,7 +268,7 @@ const CheckoutPage = () => {
       };
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/payment/create-payment-link`,
+        `${apiUrl}/api/payment/create-payment-link`,
         paymentPayload,
         {
           headers: {
