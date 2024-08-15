@@ -251,7 +251,7 @@ const CheckoutPage = () => {
     if (!token) {
       setError("You are not authenticated. Please log in.");
       setLoading(false);
-      navigate('/login');
+      navigate('/menu');
       return;
     }
 
