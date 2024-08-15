@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',  // Replace with your backend server address
+        target: 'https://roadrunner-food-ordering-api-4.onrender.com',  // Replace with your backend server address
         changeOrigin: true,
         secure: false,
       }
