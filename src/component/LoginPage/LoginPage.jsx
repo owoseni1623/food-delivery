@@ -6,6 +6,9 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "./LoginPage.css";
 
+
+const API_BASE_URL = 'https://roadrunner-food-ordering-api-4.onrender.com';
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,7 +25,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        'https://roadrunner-food-ordering-api-4.onrender.com/api/users/login',
+        `${API_BASE_URL}/api/users/login`,
         { email, password },
         {
           headers: { 'Content-Type': 'application/json' },
