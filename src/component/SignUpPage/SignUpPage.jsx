@@ -80,13 +80,32 @@ const SignUp = () => {
       if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
         alert("Registration successful! Please check your email to verify your account.");
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          street: "",
+          city: "",
+          state: "",
+          country: "",
+          password: "",
+          confirmPassword: ""
+        });
         navigate("/login");
       } else {
         setError(response.data.message || "Sign up failed. Please try again.");
       }
     } catch (error) {
       console.error("Sign up failed:", error);
-      const errorMessage = error.response?.data?.message || "An unknown error occurred. Please try again later.";
+      let errorMessage = "An unknown error occurred. Please try again later.";
+      if (error.response) {
+        if (error.response.status === 400) {
+          errorMessage = error.response.data.message || "Invalid input. Please check your details.";
+        } else if (error.response.status === 409) {
+          errorMessage = "Email already exists. Please use a different email.";
+        }
+      }
       setError(errorMessage);
     } finally {
       setIsLoading(false);

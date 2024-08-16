@@ -22,7 +22,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        'https://roadrunner-food-ordering-api-4.onrender.com/api/user/login',
+        'https://roadrunner-food-ordering-api-4.onrender.com/api/users/login',
         { email, password },
         {
           headers: { 'Content-Type': 'application/json' },
