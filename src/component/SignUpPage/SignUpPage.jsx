@@ -53,13 +53,13 @@ const SignUp = () => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
-
+  
     if (!validateForm()) {
       return;
     }
-
+  
     setIsLoading(true);
-
+  
     const registrationData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -73,23 +73,21 @@ const SignUp = () => {
       },
       password: formData.password
     };
-
+  
     try {
-      const response = await api.post("/api/user/register", registrationData);
-
+      const response = await api.post("/api/users/register", registrationData);
+  
       if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
-        alert("⚠️ Registration successful! Please check your email to verify your account.");
+        alert("Registration successful! Please check your email to verify your account.");
         navigate("/login");
       } else {
         setError(response.data.message || "Sign up failed. Please try again.");
-        alert(`⚠️ ${response.data.message || "Sign up failed. Please try again."}`);
       }
     } catch (error) {
       console.error("Sign up failed:", error);
       const errorMessage = error.response?.data?.message || "An unknown error occurred. Please try again later.";
       setError(errorMessage);
-      alert(`⚠️ ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -152,6 +150,7 @@ const SignUp = () => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
