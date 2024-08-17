@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
 const api = axios.create({
-  baseURL: 'https://roadrunner-food-ordering-api-4.onrender.com'
+  baseURL: 'https://roadrunner-food-ordering-api-4.onrender.com/api/users'
 });
 
 const SignUp = () => {
@@ -75,7 +75,7 @@ const SignUp = () => {
     };
   
     try {
-      const response = await api.post("/api/users/register", registrationData);
+      const response = await api.post("/register", registrationData);
   
       if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
