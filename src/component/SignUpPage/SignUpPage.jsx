@@ -6,7 +6,10 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
 const api = axios.create({
-  baseURL: 'https://roadrunner-food-ordering-api-4.onrender.com/api'
+  baseURL: 'https://roadrunner-food-ordering-api-4.onrender.com/api',
+  validateStatus: function (status) {
+    return status < 500; // Resolve only if the status code is less than 500
+  }
 });
 
 const SignUp = () => {
@@ -75,6 +78,8 @@ const SignUp = () => {
     };
   
     try {
+      console.log("Sending request to:", api.defaults.baseURL + "/users/register");
+      console.log("Received response:", response);
       const response = await api.post("/users/register", registrationData);
   
       if (response.data.success) {
