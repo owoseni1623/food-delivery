@@ -5,12 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
-// const api = axios.create({
-//   baseURL: 'https://roadrunner-food-ordering-api-4.onrender.com',
-//   validateStatus: function (status) {
-//     return status < 500; // Resolve only if the status code is less than 500
-//   }
-// });
+
 const baseURL = 'https://food-delivery-api-rcff.onrender.com';
 
 
