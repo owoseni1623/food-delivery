@@ -5,12 +5,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
-const api = axios.create({
-  baseURL: 'https://roadrunner-food-ordering-api-4.onrender.com',
-  validateStatus: function (status) {
-    return status < 500; // Resolve only if the status code is less than 500
-  }
-});
+// const api = axios.create({
+//   baseURL: 'https://roadrunner-food-ordering-api-4.onrender.com',
+//   validateStatus: function (status) {
+//     return status < 500; // Resolve only if the status code is less than 500
+//   }
+// });
+const baseURL = 'https://roadrunner-food-ordering-api-4.onrender.com';
+
+
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -78,9 +81,12 @@ const SignUp = () => {
     };
   
     try {
-      console.log("Sending request to:", api.defaults.baseURL + "/users/register");
-      console.log("Received response:", response);
-      const response = await api.post(`${baseURL}/api/users/register`, registrationData);
+      // console.log("Sending request to:", api.defaults.baseURL + "/users/register");
+      // console.log("Received response:", response);
+      const response = await axios.post(`${baseURL}/api/users/register`, registrationData, {
+        method: "POST",
+        
+      });
   
       if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
