@@ -21,25 +21,25 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// axiosInstance.interceptors.response.use(
-//   response => response,
-//   async (error) => {
-//     if (error.response && error.response.status === 401) {
-//       try {
-//         const tokenResponse = await axios.post(`${API_BASE_URL}/api/auth/token`, { /* your credentials */ });
-//         if (tokenResponse.data && tokenResponse.data.token) {
-//           localStorage.setItem('token', tokenResponse.data.token);
-//           axios.defaults.headers.common['Authorization'] = `Bearer ${tokenResponse.data.token}`;
-//           error.config.headers['Authorization'] = `Bearer ${tokenResponse.data.token}`;
-//           return axiosInstance.request(error.config);
-//         }
-//       } catch (tokenError) {
-//         console.error('Failed to refresh token', tokenError);
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axiosInstance.interceptors.response.use(
+  response => response,
+  async (error) => {
+    if (error.response && error.response.status === 401) {
+      try {
+        const tokenResponse = await axios.post(`${API_BASE_URL}/api/auth/token`, { /* your credentials */ });
+        if (tokenResponse.data && tokenResponse.data.token) {
+          localStorage.setItem('token', tokenResponse.data.token);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${tokenResponse.data.token}`;
+          error.config.headers['Authorization'] = `Bearer ${tokenResponse.data.token}`;
+          return axiosInstance.request(error.config);
+        }
+      } catch (tokenError) {
+        console.error('Failed to refresh token', tokenError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 const ProfilePage = () => {
   const { user, updateUser } = useAuth();
