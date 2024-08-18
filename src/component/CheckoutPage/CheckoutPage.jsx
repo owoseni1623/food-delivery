@@ -40,7 +40,7 @@ const CheckoutPage = () => {
     };
 
     try {
-      const response = await axios.post("https://your-backend-url.com/api/payment/create-payment-link", payloadData, {
+      const response = await axios.post("https://food-delivery-api-rcff.onrender.com/api/payment/create-payment-link", payloadData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'

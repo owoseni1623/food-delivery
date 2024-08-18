@@ -30,7 +30,7 @@ const MenuPage = () => {
   const fetchMenuData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('https://roadrunner-food-ordering-api-4.onrender.com/api/menu/getAll');
+      const response = await axios.get('https://food-delivery-api-rcff.onrender.com/api/menu/getAll');
       setMenuData(response.data);
       setLoading(false);
     } catch (err) {

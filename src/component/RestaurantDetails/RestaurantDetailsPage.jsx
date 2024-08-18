@@ -14,7 +14,7 @@ const RestaurantDetailsPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(`https://roadrunner-food-ordering-api-4.onrender.com/api/restaurants/${id}`)
+        fetch(`https://food-delivery-api-rcff.onrender.com/api/restaurants/${id}`)
             .then(response => {
                 if (!response.ok) {
                     console.error('Response not OK:', response.status, response.statusText);

@@ -8,7 +8,7 @@ const EcomContext = createContext();
 export const useEcom = () => useContext(EcomContext);
 
 export const EcomProvider = ({ children }) => {
-  const apiUrl = 'https://roadrunner-food-ordering-api-4.onrender.com';
+  const apiUrl = 'https://food-delivery-api-rcff.onrender.com';
   const { user } = useAuth();
   const [ecoMode, setEcoMode] = useState(false);
   const [menuData, setMenuData] = useState(null);

@@ -78,7 +78,7 @@ const CartPage = () => {
     if (!item.image) {
       return 'https://via.placeholder.com/150';
     }
-    const apiUrl = process.env.REACT_APP_API_URL || 'https://roadrunner-food-ordering-api-4.onrender.com';
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://food-delivery-api-rcff.onrender.com';
     return item.image.startsWith('http') ? item.image : `${apiUrl}${item.image}`;
   };
 

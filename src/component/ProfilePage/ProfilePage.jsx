@@ -4,7 +4,7 @@ import { useAuth } from "../../Context/AuthContext";
 import { debounce } from 'lodash';
 import './ProfilePage.css';
 
-const API_BASE_URL = 'https://roadrunner-food-ordering-api-4.onrender.com';
+const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -70,7 +70,7 @@ const ProfilePage = () => {
     if (fetchedRef.current) return;
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get('/api/user/profile');
+      const response = await axiosInstance.get('https://food-delivery-api-rcff.onrender.com/api/user/profile');
       if (response.data && response.data.user) {
         const updatedUser = {
           ...response.data.user,
@@ -116,7 +116,7 @@ const ProfilePage = () => {
     if (ordersFetched || orders.length > 0) return;
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get('/api/orders');
+      const response = await axiosInstance.get('https://food-delivery-api-rcff.onrender.com/api/orders');
       if (response.data && response.data.orders) {
         setOrders(response.data.orders);
         setOrdersFetched(true);
@@ -153,7 +153,7 @@ const ProfilePage = () => {
     }
   
     try {
-      const response = await axiosInstance.put('/api/user/profile', updatedFormData, {
+      const response = await axiosInstance.put('https://food-delivery-api-rcff.onrender.com/api/user/profile', updatedFormData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       if (response.data && response.data.user) {
