@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEco } from "../../Context/EcomContext";
+import { useEcom } from "../../Context/EcomContext";
 import axios from "axios";
 import "./CheckoutPage.css";
 
 const CheckoutPage = () => {
-  const { orderDetails } = useEco();
+  const { orderDetails } = useEcom();
   const navigate = useNavigate();
   const [paymentData, setPaymentData] = useState({
     firstName: "",
