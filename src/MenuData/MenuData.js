@@ -5,7 +5,7 @@ export const africanFoods = [
       shortDesc: "Spicy and flavorful rice dish",
       price: 400,
       image: "/images/jollof-rice.jpg",
-      description: "A popular West African dish made with rice, tomatoes, and a blend of spices. Often served with chicken or fish."
+      description: "A popular West African dish made of with rice, tomatoes, and a blend of spices. Often served with chicken or fish."
     },
     {
       id: 2,
