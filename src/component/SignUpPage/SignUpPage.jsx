@@ -80,7 +80,7 @@ const SignUp = () => {
     try {
       console.log("Sending request to:", api.defaults.baseURL + "/users/register");
       console.log("Received response:", response);
-      const response = await api.post("/api/users/register", registrationData);
+      const response = await api.post(`${baseURL}/api/users/register`, registrationData);
   
       if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
