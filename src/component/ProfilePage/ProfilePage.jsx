@@ -70,7 +70,7 @@ const ProfilePage = () => {
     if (fetchedRef.current) return;
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get('https://food-delivery-api-rcff.onrender.com/api/user/profile');
+      const response = await axiosInstance.get('https://food-delivery-api-rcff.onrender.com/api/users/profile');
       if (response.data && response.data.user) {
         const updatedUser = {
           ...response.data.user,
@@ -153,7 +153,7 @@ const ProfilePage = () => {
     }
   
     try {
-      const response = await axiosInstance.put('https://food-delivery-api-rcff.onrender.com/api/user/profile', updatedFormData, {
+      const response = await axiosInstance.put('https://food-delivery-api-rcff.onrender.com/api/users/profile', updatedFormData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       if (response.data && response.data.user) {

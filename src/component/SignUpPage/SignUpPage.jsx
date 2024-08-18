@@ -78,7 +78,7 @@ const SignUp = () => {
     try {
       // console.log("Sending request to:", api.defaults.baseURL + "/users/register");
       // console.log("Received response:", response);
-      const response = await axios.post(`${baseURL}/api/user/register`, registrationData, {
+      const response = await axios.post(`${baseURL}/api/users/register`, registrationData, {
         method: "POST",
         
       });

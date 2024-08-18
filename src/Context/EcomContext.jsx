@@ -42,7 +42,6 @@ export const EcomProvider = ({ children }) => {
       const data = await response.json();
       console.log('Received cart data:', data);
       if (data.success) {
-        console.log('Setting cart data:', data.cartData);
         setCart(data.cartData || []);
       } else {
         console.error('Failed to fetch cart data:', data.message);
@@ -56,47 +55,29 @@ export const EcomProvider = ({ children }) => {
 
   const addToCart = async (item) => {
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        throw new Error('No token found, please log in again.');
-      }
-  
-      const phoneNumber = user?.phone || localStorage.getItem('userPhone');
-  
-      if (!phoneNumber) {
-        throw new Error('User phone number is missing. Please update your profile.');
-      }
-  
-      console.log('Sending request to add item:', item);
-      console.log('User phone number:', phoneNumber);
-  
       const itemToAdd = {
         ...item,
         image: item.image.startsWith('/') ? item.image : `/uploads/${item.image}`
       };
-  
+
       const response = await fetch(`${apiUrl}/api/cart/add`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 
-          itemId: itemToAdd.id, 
+        body: JSON.stringify({
+          itemId: itemToAdd.id,
           item: itemToAdd,
-          phone: phoneNumber,
           quantity: 1
         }),
       });
-  
-      console.log('Response status:', response.status);
+
       const responseData = await response.json();
-      console.log('Response data:', responseData);
-  
+
       if (!response.ok) {
         throw new Error(responseData.message || `HTTP error! status: ${response.status}`);
       }
-  
+
       if (responseData.success) {
         setCart(responseData.cartData);
         toast.success("Item added to cart", {
@@ -121,7 +102,6 @@ export const EcomProvider = ({ children }) => {
       const response = await fetch(`${apiUrl}/api/cart/remove`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ itemId }),
@@ -153,7 +133,6 @@ export const EcomProvider = ({ children }) => {
       const response = await fetch(`${apiUrl}/api/cart/${method}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ itemId }),
@@ -211,7 +190,6 @@ export const EcomProvider = ({ children }) => {
   };
 
   const saveOrderDetails = (details) => {
-    console.log("Saving order details:", details);
     setOrderDetails(details);
   };
 
