@@ -5,10 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
-
 const baseURL = 'https://food-delivery-api-rcff.onrender.com';
-
-
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +20,7 @@ const SignUp = () => {
     password: "",
     confirmPassword: ""
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
@@ -32,9 +30,9 @@ const SignUp = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -54,13 +52,13 @@ const SignUp = () => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
-  
+
     if (!validateForm()) {
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     const registrationData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -70,19 +68,14 @@ const SignUp = () => {
         street: formData.street,
         city: formData.city,
         state: formData.state,
-        country: formData.country
+        country: formData.country,
       },
-      password: formData.password
+      password: formData.password,
     };
-  
+
     try {
-      
-      // console.log("Received response:", response);
-      const response = await axios.post(`${baseURL}/api/user/register`, registrationData, {
-        method: "POST",
-        
-      });
-  
+      const response = await axios.post(`${baseURL}/api/users/register`, registrationData);
+
       if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
         alert("Registration successful! Please check your email to verify your account.");
