@@ -18,7 +18,7 @@ export const africanFoods = [
     {
       id: 3,
       name: "Fufu and Egusi Soup",
-      shortDesc: "Dough-like dish with melon seed soup",
+      shortDesc: "Dough-like dish with melon seed soups",
       price: 700,
       image: "/images/fufu-egusi.jpeg",
       description: "A West African favorite. Fufu, made from cassava flour, is served with egusi soup, a rich stew made with ground melon seeds, vegetables, and meat."
