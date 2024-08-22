@@ -1,3 +1,4 @@
+// EcomContext.jsx
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import { toast } from 'react-toastify';
@@ -7,11 +8,19 @@ const EcomContext = createContext();
 
 export const useEcom = () => useContext(EcomContext);
 
+const sendAlert = (message, isDev) => {
+  if (isDev) {
+    console.log('DEV ALERT:', message);
+  } else {
+    console.log('PROD ALERT:', message);
+  }
+};
+
 export const EcomProvider = ({ children }) => {
-  const apiUrl = 'https://food-delivery-api-rcff.onrender.com';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
   const { user } = useAuth();
   const [ecoMode, setEcoMode] = useState(false);
-  const [menuData, setMenuData] = useState(null);
+  const [menuData, setMenuData] = useState([]);
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
   const [orderDetails, setOrderDetails] = useState(null);
@@ -21,23 +30,36 @@ export const EcomProvider = ({ children }) => {
 
   useEffect(() => {
     fetchCart();
+    fetchMenuData();
   }, [user]);
+
+  const getHeaders = () => {
+    const token = localStorage.getItem('authToken');
+    return {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    };
+  };
 
   const fetchCart = async () => {
     if (!user) {
       console.log('No user, skipping cart fetch');
+      setCart([]);
       return;
     }
     try {
       console.log('Fetching cart data...');
       const response = await fetch(`${apiUrl}/api/cart/get`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-          'Content-Type': 'application/json'
-        },
+        headers: getHeaders(),
       });
+      if (response.status === 401) {
+        console.log('Unauthorized access, clearing cart');
+        setCart([]);
+        return;
+      }
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
       console.log('Received cart data:', data);
@@ -57,39 +79,59 @@ export const EcomProvider = ({ children }) => {
     try {
       const itemToAdd = {
         ...item,
-        image: item.image.startsWith('/') ? item.image : `/uploads/${item.image}`
+        image: item.image ? (item.image.startsWith('/') ? item.image : `/uploads/${item.image}`) : 'https://via.placeholder.com/300x300',
       };
 
-      const response = await fetch(`${apiUrl}/api/cart/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          itemId: itemToAdd.id,
-          item: itemToAdd,
-          quantity: 1
-        }),
-      });
+      if (user) {
+        const response = await fetch(`${apiUrl}/api/cart/add`, {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({
+            productId: itemToAdd.id,
+            name: itemToAdd.name,
+            price: itemToAdd.price,
+            quantity: 1,
+            image: itemToAdd.image,
+          }),
+        });
 
-      const responseData = await response.json();
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
 
-      if (!response.ok) {
-        throw new Error(responseData.message || `HTTP error! status: ${response.status}`);
-      }
+        const responseData = await response.json();
 
-      if (responseData.success) {
-        setCart(responseData.cartData);
+        if (responseData.success) {
+          setCart(responseData.cartData);
+          sendAlert(`Added to cart: ${itemToAdd.name}`, process.env.NODE_ENV === 'development');
+          toast.success("Item added to cart", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+        } else {
+          throw new Error(responseData.message || 'Failed to add item to cart');
+        }
+      } else {
+        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingItem = localCart.find(cartItem => cartItem.id === itemToAdd.id);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          localCart.push({ ...itemToAdd, quantity: 1 });
+        }
+        localStorage.setItem('cart', JSON.stringify(localCart));
+        setCart(localCart);
+        sendAlert(`Added to cart: ${itemToAdd.name}`, process.env.NODE_ENV === 'development');
         toast.success("Item added to cart", {
           position: "top-center",
           autoClose: 2000,
         });
-      } else {
-        throw new Error(responseData.message || 'Failed to add item to cart');
       }
     } catch (e) {
       console.error("Error adding to cart:", e);
       setError(e.message);
+      sendAlert(`Error adding to cart: ${e.message}`, process.env.NODE_ENV === 'development');
       toast.error(e.message, {
         position: "top-center",
         autoClose: 2000,
@@ -101,14 +143,17 @@ export const EcomProvider = ({ children }) => {
     try {
       const response = await fetch(`${apiUrl}/api/cart/remove`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: getHeaders(),
         body: JSON.stringify({ itemId }),
       });
 
+      if (response.status === 401) {
+        throw new Error("Please log in to remove items from your cart.");
+      }
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -123,23 +168,29 @@ export const EcomProvider = ({ children }) => {
       }
     } catch (e) {
       console.error("Error removing from cart:", e);
-      setError("Failed to remove item from cart. Please try again later.");
+      setError(e.message);
+      toast.error(e.message, {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
   };
 
   const updateQuantity = async (itemId, change) => {
     try {
-      const method = change > 0 ? 'add' : 'remove';
-      const response = await fetch(`${apiUrl}/api/cart/${method}`, {
+      const response = await fetch(`${apiUrl}/api/cart/update`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ itemId }),
+        headers: getHeaders(),
+        body: JSON.stringify({ itemId, change }),
       });
 
+      if (response.status === 401) {
+        throw new Error("Please log in to update your cart.");
+      }
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -154,36 +205,32 @@ export const EcomProvider = ({ children }) => {
       }
     } catch (e) {
       console.error("Error updating quantity:", e);
-      setError("Failed to update item quantity. Please try again later.");
+      setError(e.message);
+      toast.error(e.message, {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
   };
 
   const getCartItemCount = () => cart.reduce((total, item) => total + item.quantity, 0);
 
-  const fetchMenu = async () => {
-    setLoading(true);
+  const fetchMenuData = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/restaurants`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-          'Content-Type': 'application/json'
-        },
+      setLoading(true);
+      const response = await fetch(`${apiUrl}/api/menu/getAll`, {
+        headers: getHeaders(),
       });
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        const allMenuItems = data.flatMap(restaurant => restaurant.menu || []);
-        setMenuData(allMenuItems);
-      } else {
-        throw new Error('No menu data available');
-      }
+      setMenuData(data);
       setError(null);
-    } catch (e) {
-      console.error("Error fetching menu:", e);
-      setError("Failed to fetch menu data. Please try again later.");
-      setMenuData(null);
+    } catch (err) {
+      console.error("Error fetching menu data:", err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -193,9 +240,9 @@ export const EcomProvider = ({ children }) => {
     setOrderDetails(details);
   };
 
-  useEffect(() => {
-    fetchMenu();
-  }, []);
+  const clearCart = () => {
+    setCart([]);
+  };
 
   return (
     <EcomContext.Provider
@@ -212,6 +259,8 @@ export const EcomProvider = ({ children }) => {
         orderDetails,
         saveOrderDetails,
         loading,
+        clearCart,
+        fetchMenuData,
       }}
     >
       {children}

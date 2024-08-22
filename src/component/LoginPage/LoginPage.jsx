@@ -3,11 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import "./LoginPage.css";
-
-
-const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -24,34 +20,17 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/users/login`,
-        { email, password },
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-
-      if (response.data.success) {
-        const { token, user } = response.data;
-        localStorage.setItem('token', token);
-        login(user);
+      const result = await login(email, password);
+      if (result.success) {
         alert("⚠️ Login successful!");
         navigate('/');
       } else {
-        setError(response.data.message || 'Login failed. Please check your credentials and try again.');
-        alert(`⚠️ ${response.data.message || 'Login failed. Please check your credentials and try again.'}`);
+        setError(result.message);
+        alert(`⚠️ ${result.message}`);
       }
     } catch (error) {
       console.error('Login failed:', error);
-      let errorMessage = 'An error occurred. Please try again.';
-      if (error.response) {
-        errorMessage = error.response.data.message || 'Login failed. Please check your credentials and try again.';
-      } else if (error.request) {
-        errorMessage = 'No response from server. Please try again later.';
-      }
-      setError(errorMessage);
-      alert(`⚠️ ${errorMessage}`);
+      setError('An unexpected error occurred. Please try again later.');
     } finally {
       setIsLoading(false);
     }

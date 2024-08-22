@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useEcom } from "../../Context/EcomContext";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 import "./ThankYouPage.css";
@@ -10,6 +11,7 @@ const ThankYouPage = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const {apiUrl} = useEcom()
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -24,7 +26,7 @@ const ThankYouPage = () => {
       }
 
       try {
-        const response = await axios.get(`/api/verify-payment?transaction_id=${transactionId}`);
+        const response = await axios.get(`${apiUrl}/api/verify?transaction_id=${transactionId}`);
 
         if (response.data.success) {
           setOrderDetails(response.data.data);

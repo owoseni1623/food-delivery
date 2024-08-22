@@ -4,6 +4,8 @@ import { useEcom } from "../../Context/EcomContext";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./RestaurantDetailsPage.css";
+import { toast } from 'react-toastify';
+
 
 const RestaurantDetailsPage = () => {
     const { id } = useParams();
@@ -14,7 +16,7 @@ const RestaurantDetailsPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(`https://food-delivery-api-rcff.onrender.com/api/restaurants/${id}`)
+        fetch(`http://localhost:3000/api/restaurants/${id}`)
             .then(response => {
                 if (!response.ok) {
                     console.error('Response not OK:', response.status, response.statusText);
@@ -25,10 +27,12 @@ const RestaurantDetailsPage = () => {
             .then(data => {
                 console.log('Received restaurant data:', data);
                 setRestaurant(data);
+                toast.success("Restaurant details loaded successfully")
             })
             .catch(error => {
                 console.error('Error fetching restaurant details:', error);
                 setError(error.message);
+                toast.error("Failed to load restaurant details");
             });
     }, [id]);
 
@@ -49,6 +53,7 @@ const RestaurantDetailsPage = () => {
                         longitude: position.coords.longitude,
                     });
                     setIsLocationModalOpen(true);
+                    toast.info("Location retrieved successfully");
                 },
                 (error) => {
                     console.error("Error getting location", error);
@@ -111,6 +116,7 @@ const RestaurantDetailsPage = () => {
           quantity: 1,
           image: item.image,
         });
+        toast.success(`${item.name} added to cart`);
     };
 
     const renderStars = (rating) => {
@@ -133,7 +139,7 @@ const RestaurantDetailsPage = () => {
                 {restaurant.menu.map((item) => (
                     <div key={item._id} className="menu-item-102">
                         <h3 className="category-title-102">{item.category}</h3>
-                        <img src={`https://roadrunner-food-ordering-api-4.onrender.com${item.image}`} alt={item.name} className="menu-item-image-102" />
+                        <img src={`http://localhost:3000${item.image}`} alt={item.name} className="menu-item-image-102" />
                         <h4>{item.name}</h4>
                         <p className="item-description-102">{item.description}</p>
                         <p className="item-price-102">₦{item.price.toFixed(2)}</p>
@@ -148,7 +154,7 @@ const RestaurantDetailsPage = () => {
         <div className={`restaurant-details-102 ${ecoMode ? 'eco-mode-102' : ''}`}>
             <div className="restaurant-header-102">
                 <img
-                    src={`https://roadrunner-food-ordering-api-4.onrender.com${restaurant.image}`}
+                    src={`http://localhost:3000${restaurant.image}`}
                     alt={restaurant.name}
                     className="restaurant-image-102"
                 />

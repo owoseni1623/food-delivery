@@ -22,7 +22,7 @@ const RestaurantPage = () => {
 
   return (
     <div className="restaurant-page">
-      <header className="header">
+      <div className="menu-header">
         <h1 className="title">Discover RoadRunner African Cuisines</h1>
         <div className="search-bar">
           <FaSearch />
@@ -33,21 +33,19 @@ const RestaurantPage = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-      </header>
-      <div className="page-wrapper">
+      </div>
+
+      <div className="menu-page">
         <div className="restaurant-grid">
           {filteredRestaurants.map((restaurant) => (
             <div key={restaurant.id} className="restaurant-card" onClick={() => openModal(restaurant)}>
-              <img 
-                className="restaurant-image" 
-                src={restaurant.image} 
-                alt={restaurant.name} 
-              />
+              <img src={restaurant.image} alt={restaurant.name} className="restaurant-image" />
               <div className="restaurant-info">
                 <h2 className="restaurant-name">{restaurant.name}</h2>
                 <p className="cuisine">{restaurant.cuisine}</p>
                 <div className="rating">
-                  <FaStar /> {restaurant.rating}
+                  <FaStar />
+                  <span>{restaurant.rating}</span>
                 </div>
               </div>
             </div>
@@ -59,21 +57,20 @@ const RestaurantPage = () => {
         <div className="modal">
           <div className="modal-content">
             <button className="back-button" onClick={closeModal}>
-              <FaArrowLeft /> Back
+              <FaArrowLeft />
+              Back
             </button>
-            <img 
-              className="modal-image" 
-              src={selectedRestaurant.image} 
-              alt={selectedRestaurant.name} 
-            />
+            <img src={selectedRestaurant.image} alt={selectedRestaurant.name} className="modal-image" />
             <h2>{selectedRestaurant.name}</h2>
             <p className="cuisine">{selectedRestaurant.cuisine}</p>
             <div className="rating">
-              <FaStar /> {selectedRestaurant.rating}
+              <FaStar />
+              <span>{selectedRestaurant.rating}</span>
             </div>
             {selectedRestaurant.isEco && (
               <div className="eco-friendly">
-                <FaLeaf /> Eco-Friendly
+                <FaLeaf />
+                Eco-Friendly
               </div>
             )}
             <p className="description">{selectedRestaurant.description}</p>
@@ -86,13 +83,13 @@ const RestaurantPage = () => {
             <div className="contact-info">
               <p><FaPhone /> {selectedRestaurant.phone}</p>
               <p><FaClock /> {selectedRestaurant.hours}</p>
-              <p><FaGlobe /> <a href={selectedRestaurant.website} target="_blank" rel="noopener noreferrer">{selectedRestaurant.website}</a></p>
+              <p><FaGlobe /> {selectedRestaurant.website}</p>
             </div>
-            <p>Address: {selectedRestaurant.address}</p>
-            <p>Price Range: {selectedRestaurant.priceRange}</p>
-            <p>Delivery Options: {selectedRestaurant.deliveryOptions.join(", ")}</p>
-            <p>Ambiance: {selectedRestaurant.ambiance}</p>
-            <p>Founded: {selectedRestaurant.foundedYear}</p>
+            <p><strong>Address:</strong> {selectedRestaurant.address}</p>
+            <p><strong>Price Range:</strong> {selectedRestaurant.priceRange}</p>
+            <p><strong>Delivery Options:</strong> {selectedRestaurant.deliveryOptions.join(", ")}</p>
+            <p><strong>Ambiance:</strong> {selectedRestaurant.ambiance}</p>
+            <p><strong>Founded:</strong> {selectedRestaurant.foundedYear}</p>
           </div>
         </div>
       )}

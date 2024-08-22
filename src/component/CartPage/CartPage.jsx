@@ -27,14 +27,14 @@ const CartPage = () => {
       });
       return;
     }
-  
+
     const orderDetails = {
       items: cart,
       subtotal: totalPrice,
       deliveryFee: deliveryFee,
       totalPrice: grandTotal,
     };
-  
+
     console.log("Proceeding to checkout with order details:", orderDetails);
     saveOrderDetails(orderDetails);
     navigate('/checkout');
@@ -60,7 +60,7 @@ const CartPage = () => {
         [itemId]: ''
       }));
     }, 500);
-    
+
     if (change > 0) {
       toast.success(`${itemName} added to cart`, {
         position: "top-center",
@@ -73,19 +73,22 @@ const CartPage = () => {
       });
     }
   };
-
+  const apiUrl = "http://localhost:3000";
   const getImageUrl = (item) => {
     if (!item.image) {
       return 'https://via.placeholder.com/150';
     }
-    const apiUrl = process.env.REACT_APP_API_URL || 'https://food-delivery-api-rcff.onrender.com';
-    return item.image.startsWith('http') ? item.image : `${apiUrl}${item.image}`;
+    if (item.image.startsWith('http')) {
+      return item.image;
+    }
+    if (item.image.startsWith('/')) {
+      return `${apiUrl}${item.image}`;
+    }
+    return `${apiUrl}/uploads/${item.image}`;
   };
-
-
   return (
     <div className="cart-page2">
-      <ToastContainer />
+      
       <h1 className="cart-title2">Your Cart</h1>
       {cart.length === 0 ? (
         <div className="empty-cart2">

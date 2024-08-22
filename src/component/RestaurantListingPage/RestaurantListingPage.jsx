@@ -9,7 +9,7 @@ const RestaurantListingPage = () => {
   const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
-    fetch('https://food-delivery-api-rcff.onrender.com/api/restaurants')
+    fetch('http://localhost:3000/api/restaurants')
       .then(response => {
         console.log('Response status:', response.status);
         return response.json();
@@ -51,7 +51,7 @@ const RestaurantListingPage = () => {
           <Link to={`/restaurant/${restaurant._id}`} key={restaurant._id} className="restaurant-card-101">
             <div className="card-image-container-101">
               <img
-                src={`https://food-delivery-api-rcff.onrender.com${restaurant.image}`}
+                src={`http://localhost:3000${restaurant.image}`}
                 alt={restaurant.name}
                 className="restaurant-thumbnail-101"
               />

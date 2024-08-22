@@ -44,7 +44,7 @@ function App() {
       <ScrollToTop />
       <AuthProvider>
         <EcomProvider>
-          <ToastContainer />
+          
           <div className="App">
             <Header />
             <Routes>
@@ -66,6 +66,17 @@ function App() {
               <Route path="/verification" element={<VerifyPage />} />
             </Routes>
             <FooterPage />
+            <ToastContainer 
+             position=" top-right"
+             autoClose={3000}
+             hideProgressBar={false}
+             newestOnTop={false}
+             closeOnClick
+             rtl={false}
+             pauseOnFocusLoss
+             draggable
+             pauseOnHover
+            />
           </div>
         </EcomProvider>
       </AuthProvider>

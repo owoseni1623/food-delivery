@@ -25,9 +25,7 @@ const FooterPage = ({ isLoggedIn }) => {
             <li><Link to="/faq">FAQ</Link></li>
             {!isLoggedIn ? (
               <>
-                {/* Uncomment if you want to add login and signup links */}
-                {/* <li><Link to="/login">Login</Link></li>
-                <li><Link to="/signup">Sign Up</Link></li> */}
+               
               </>
             ) : (
               <li><Link to="/profile">My Profile</Link></li>

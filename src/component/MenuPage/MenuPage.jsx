@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useEcom } from "../../Context/EcomContext";
 import { useAuth } from "../../Context/AuthContext";
-import axios from "axios";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./MenuPage.css";
 
 const MenuPage = () => {
-  const { addToCart, ecoMode } = useEcom();
+  const { addToCart, ecoMode, menuData, loading, error, fetchMenuData } = useEcom();
   const { isLoggedIn } = useAuth();
-  const [menuData, setMenuData] = useState([]);
   const [selectedFood, setSelectedFood] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddingItem, setIsAddingItem] = useState(false);
@@ -20,41 +18,6 @@ const MenuPage = () => {
     category: "",
   });
   const [imageFile, setImageFile] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchMenuData();
-  }, []);
-
-  const fetchMenuData = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get('https://food-delivery-api-rcff.onrender.com/api/menu/getAll');
-      setMenuData(response.data);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return (
-      <div>
-        <p>Error: {error}</p>
-        <button onClick={fetchMenuData}>Try Again</button>
-      </div>
-    );
-  }
-
-  if (!menuData || menuData.length === 0) {
-    return <div>No menu items available.</div>;
-  }
 
   const openModal = (food) => {
     setSelectedFood(food);
@@ -91,7 +54,7 @@ const MenuPage = () => {
       const itemToAdd = {
         ...food,
         id: food._id,
-        image: `/uploads/${food.image}`
+        image: `http://localhost:3000/uploads/${food.image}`
       };
       addToCart(itemToAdd);
       toast.success(`${food.name} added to cart`, {
@@ -115,29 +78,22 @@ const MenuPage = () => {
     setImageFile(e.target.files[0]);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    
-    const formData = new FormData();
-    formData.append('name', newItem.name);
-    formData.append('description', newItem.description);
-    formData.append('price', newItem.price);
-    formData.append('category', newItem.category);
-    formData.append('image', imageFile);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    try {
-      const response = await axios.post('https://roadrunner-food-ordering-api-4.onrender.com/api/menu/add', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response.data);
-      setIsAddingItem(false);
-      fetchMenuData();
-    } catch (error) {
-      console.error('Error:', error.response ? error.response.data : error.message);
-    }
-  };
+  if (error) {
+    return (
+      <div>
+        <p>Error: {error}</p>
+        <button onClick={fetchMenuData}>Try Again</button>
+      </div>
+    );
+  }
+
+  if (!menuData || menuData.length === 0) {
+    return <div>No menu items available.</div>;
+  }
 
   return (
     <div className={`menu-page022 ${ecoMode ? 'eco-mode022' : ''}`}>
@@ -145,23 +101,14 @@ const MenuPage = () => {
       <h1 className="title022">Menu Page</h1>
       {isLoggedIn && (
         <button onClick={() => setIsAddingItem(!isAddingItem)} className="add-item-btn022">
-          {isAddingItem ? "Cancel" : ""}
+          {isAddingItem ? 'Cancel' : 'Add New Item'}
         </button>
       )}
-      {isAddingItem && (
-        <form onSubmit={handleSubmit} className="add-item-form022" encType="multipart/form-data">
-          <input type="text" name="name" placeholder="Name" onChange={handleInputChange} required />
-          <input type="text" name="description" placeholder="Description" onChange={handleInputChange} required />
-          <input type="number" name="price" placeholder="Price" onChange={handleInputChange} required />
-          <input type="text" name="category" placeholder="Category" onChange={handleInputChange} required />
-          <input type="file" name="image" onChange={handleFileChange} required />
-          <button type="submit">Add Item</button>
-        </form>
-      )}
+      
       <div className="food-grid022">
         {menuData.map((food) => (
           <div key={food._id} className="food-card022">
-            <img src={`https://roadrunner-food-ordering-api-4.onrender.com/uploads/${food.image}`} alt={food.name} onClick={() => openModal(food)} />
+            <img src={`http://localhost:3000/uploads/${food.image}`} alt={food.name} onClick={() => openModal(food)} />
             <h3>{food.name}</h3>
             <p>{food.description}</p>
             <p className="price022">₦{food.price}</p>
@@ -177,7 +124,7 @@ const MenuPage = () => {
         <div className="modal022">
           <div className="modal-content022">
             <span className="close022" onClick={closeModal}>&times;</span>
-            <img src={`https://roadrunner-food-ordering-api-4.onrender.com/uploads/${selectedFood.image}`} alt={selectedFood.name} />
+            <img src={`http://localhost:3000/uploads/${selectedFood.image}`} alt={selectedFood.name} />
             <h2>{selectedFood.name}</h2>
             <p>{selectedFood.description}</p>
             <p className="price022">₦{selectedFood.price}</p>
