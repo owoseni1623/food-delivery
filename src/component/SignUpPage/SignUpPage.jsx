@@ -546,6 +546,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
+
+const baseURL = 'https://food-delivery-api-rcff.onrender.com';
+
 const SignUp = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -592,13 +595,13 @@ const SignUp = () => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
-  
+
     if (!validateForm()) {
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     const registrationData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -612,10 +615,11 @@ const SignUp = () => {
       },
       password: formData.password,
     };
-  
+
     try {
-      const result = await signup(registrationData);
-      if (result.success) {
+      const response = await axios.post(`${baseURL}/api/users/register`, registrationData);
+
+      if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
         alert("Registration successful! Please check your email to verify your account.");
         setFormData({
@@ -632,7 +636,7 @@ const SignUp = () => {
         });
         navigate("/login");
       } else {
-        setError(result.message);
+        setError(response.data.message);
       }
     } catch (error) {
       console.error("Sign up failed:", error);
