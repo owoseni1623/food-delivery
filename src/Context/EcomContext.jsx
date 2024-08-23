@@ -1,4 +1,3 @@
-// EcomContext.jsx
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import { toast } from 'react-toastify';
@@ -77,11 +76,20 @@ export const EcomProvider = ({ children }) => {
 
   const addToCart = async (item) => {
     try {
+      let imagePath = item.image;
+      if (imagePath) {
+        if (!imagePath.startsWith('http') && !imagePath.startsWith('/')) {
+          imagePath = `/uploads/${imagePath}`;
+        }
+      } else {
+        imagePath = 'https://via.placeholder.com/300x300';
+      }
+  
       const itemToAdd = {
         ...item,
-        image: item.image ? (item.image.startsWith('/') ? item.image : `/uploads/${item.image}`) : 'https://via.placeholder.com/300x300',
+        image: imagePath,
       };
-
+  
       if (user) {
         const response = await fetch(`${apiUrl}/api/cart/add`, {
           method: 'POST',
@@ -94,14 +102,14 @@ export const EcomProvider = ({ children }) => {
             image: itemToAdd.image,
           }),
         });
-
+  
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
-
+  
         const responseData = await response.json();
-
+  
         if (responseData.success) {
           setCart(responseData.cartData);
           sendAlert(`Added to cart: ${itemToAdd.name}`, process.env.NODE_ENV === 'development');

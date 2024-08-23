@@ -105,20 +105,26 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getUserProfile = async () => {
-  try {
-    if (!token) {
-      throw new Error("No authentication token found");
+    try {
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+      const response = await axios.get(`${API_BASE_URL}/api/profile/get`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUserProfile(response.data.profile);
+      // Update the user state with the new profile data
+      setUser(prevUser => ({ ...prevUser, ...response.data.profile }));
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
     }
+  };
 
-    const response = await axios.get("http://localhost:3000/api/profile/get", {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    setUserProfile(response.data.profile);
-    console.log("Fetch user profile:", response.data.profile);
-  } catch (error) {
-    console.error("Error fetching user profile:", error);
-  }
-};
+  useEffect(() => {
+    if (isLoggedIn && token) {
+      getUserProfile();
+    }
+  }, [isLoggedIn, token]);
 
 const updateUserProfile = async (profileData) => {
   try {

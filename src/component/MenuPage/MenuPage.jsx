@@ -19,6 +19,8 @@ const MenuPage = () => {
   });
   const [imageFile, setImageFile] = useState(null);
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   const openModal = (food) => {
     setSelectedFood(food);
     setIsModalOpen(true);
@@ -49,12 +51,19 @@ const MenuPage = () => {
     );
   };
 
+
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return 'https://via.placeholder.com/150';
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${apiUrl}/uploads/${imagePath.split('/').pop()}`;
+  };
+
   const handleAddToCart = (food) => {
     if (isLoggedIn) {
       const itemToAdd = {
         ...food,
         id: food._id,
-        image: `http://localhost:3000/uploads/${food.image}`
+        image: getImageUrl(food.image)
       };
       addToCart(itemToAdd);
       toast.success(`${food.name} added to cart`, {
@@ -108,7 +117,7 @@ const MenuPage = () => {
       <div className="food-grid022">
         {menuData.map((food) => (
           <div key={food._id} className="food-card022">
-            <img src={`http://localhost:3000/uploads/${food.image}`} alt={food.name} onClick={() => openModal(food)} />
+            <img src={getImageUrl(food.image)} alt={food.name} onClick={() => openModal(food)} />
             <h3>{food.name}</h3>
             <p>{food.description}</p>
             <p className="price022">₦{food.price}</p>
@@ -124,7 +133,7 @@ const MenuPage = () => {
         <div className="modal022">
           <div className="modal-content022">
             <span className="close022" onClick={closeModal}>&times;</span>
-            <img src={`http://localhost:3000/uploads/${selectedFood.image}`} alt={selectedFood.name} />
+            <img src={getImageUrl(selectedFood.image)} alt={selectedFood.name} />
             <h2>{selectedFood.name}</h2>
             <p>{selectedFood.description}</p>
             <p className="price022">₦{selectedFood.price}</p>

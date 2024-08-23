@@ -73,22 +73,54 @@ const CartPage = () => {
       });
     }
   };
-  const apiUrl = "http://localhost:3000";
+
+  // const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+  // const getImageUrl = (item) => {
+  //   console.log("Item image:", item.image);
+  //   if (!item.image) {
+  //     console.log("Using placeholder image");
+  //     return 'https://via.placeholder.com/150';
+  //   }
+    
+  //   let imageUrl = item.image;
+    
+  //   // Remove http://localhost:3000 if it exists
+  //   imageUrl = imageUrl.replace('http://localhost:3000', '');
+    
+  //   // Remove duplicate /uploads/ if it exists
+  //   imageUrl = imageUrl.replace('/uploads//uploads/', '/uploads/');
+    
+  //   // If the URL doesn't start with /, add it
+  //   if (!imageUrl.startsWith('/')) {
+  //     imageUrl = '/' + imageUrl;
+  //   }
+    
+  //   console.log("Final image URL:", `${apiUrl}${imageUrl}`);
+  //   return `${apiUrl}${imageUrl}`;
+  // };
+
+
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   const getImageUrl = (item) => {
+    console.log("Item image:", item.image);
     if (!item.image) {
+      console.log("Using placeholder image");
       return 'https://via.placeholder.com/150';
     }
+    
     if (item.image.startsWith('http')) {
       return item.image;
     }
-    if (item.image.startsWith('/')) {
-      return `${apiUrl}${item.image}`;
-    }
-    return `${apiUrl}/uploads/${item.image}`;
+    
+    // Handle the case where the image path might already contain '/uploads/'
+    const imagePath = item.image.includes('/uploads/') ? item.image.split('/uploads/').pop() : item.image;
+    return `${apiUrl}/uploads/${imagePath}`;
   };
+
   return (
     <div className="cart-page2">
-      
       <h1 className="cart-title2">Your Cart</h1>
       {cart.length === 0 ? (
         <div className="empty-cart2">
@@ -105,6 +137,7 @@ const CartPage = () => {
                   alt={item.name}
                   className="item-image2"
                   onError={(e) => {
+                    console.log("Image failed to load, using placeholder");
                     e.target.src = 'https://via.placeholder.com/150';
                   }}
                 />

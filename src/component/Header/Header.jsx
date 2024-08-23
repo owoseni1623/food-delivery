@@ -8,7 +8,7 @@ import avatarImage from "/images/Avatar.png"
 import logo from "/images/logo.jpeg"
 import "./Header.css";
 
-const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com';
+const API_BASE_URL = 'http://localhost:3000';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,7 +16,7 @@ const Header = () => {
   const [hideHeader, setHideHeader] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn, user, logout, userProfile } = useAuth();
   const { getCartItemCount } = useEcom();
 
   const toggleMenu = () => {
@@ -67,13 +67,8 @@ const Header = () => {
   };
 
   const getAvatarUrl = () => {
-    if (user && user.avatar) {
-      // Check if the avatar is already a full URL
-      if (user.avatar.startsWith('http')) {
-        return user.avatar;
-      }
-      // If it's not a full URL, prepend the API_BASE_URL
-      return `${API_BASE_URL}/${user.avatar}`;
+    if (userProfile && userProfile.image) {
+      return `${API_BASE_URL}/uploads/${userProfile.image}`;
     }
     return avatarImage;
   };
@@ -106,14 +101,14 @@ const Header = () => {
                 </li>
                 <li className="nav-item auth-items">
                   <Link to="/profile" className="profile-link" onClick={() => setIsMenuOpen(false)}>
-                    <img 
-                      src={getAvatarUrl()} 
-                      alt={user.firstName || "User"} 
-                      className="user-avatar" 
-                    />
-                    <span className="user-name" title={user.firstName || "User"}>
-                      {user.firstName || "User"}
-                    </span>
+                  <img 
+                    src={getAvatarUrl()} 
+                    alt={userProfile?.firstName || user?.firstName || "User"} 
+                    className="user-avatar" 
+                  />
+                  <span className="user-name" title={userProfile?.firstName || user?.firstName || "User"}>
+                    {userProfile?.firstName || user?.firstName || "User"}
+                  </span>
                   </Link>
                   <button className="auth-link" onClick={handleLogout}>Log Out</button>
                 </li>
