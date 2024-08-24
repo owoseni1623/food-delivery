@@ -3,8 +3,7 @@ import axios from "axios";
 
 const AuthContext = createContext();
 
-// const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com/api';
-const API_BASE_URL = process.env.REACT_APP_API_URL + '/api';
+const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com/api';
 
 export const useAuth = () => useContext(AuthContext);
 

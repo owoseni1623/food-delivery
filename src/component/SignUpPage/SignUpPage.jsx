@@ -7,8 +7,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
 
-// const baseURL = 'https://food-delivery-api-rcff.onrender.com';
-const API_BASE_URL = process.env.REACT_APP_API_URL + '/api';
+const baseURL = 'https://food-delivery-api-rcff.onrender.com';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -78,7 +77,7 @@ const SignUp = () => {
     };
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/users/register`, registrationData);
+      const response = await axios.post(`${baseURL}/api/users/register`, registrationData);
 
       if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
