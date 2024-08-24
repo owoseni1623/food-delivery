@@ -138,9 +138,15 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       setSuccess(false);
   
+      // Ensure token is available
+      const currentToken = localStorage.getItem("authToken");
+      if (!currentToken) {
+        throw new Error("No authentication token found");
+      }
+  
       const response = await axios.post(`${API_BASE_URL}/profile/update`, profileData, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${currentToken}`,
           'Content-Type': 'multipart/form-data'
         }
       });
@@ -161,7 +167,12 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error updating user profile:", error);
-      setError("Failed to update profile. Please try again.");
+      if (error.response && error.response.status === 401) {
+        setError("Your session has expired. Please log in again.");
+        // Optionally, you can trigger a logout or redirect to login page here
+      } else {
+        setError("Failed to update profile. Please try again.");
+      }
       throw error;
     }
   };

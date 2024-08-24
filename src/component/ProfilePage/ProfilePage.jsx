@@ -64,14 +64,16 @@ function ProfilePage() {
       if (result.success && result.profile) {
         setProfileData(result.profile);
         setSelectedImage(null);
+        await getUserProfile();
+        console.log("Profile update submitted and refreshed");
+      } else {
+        console.error('Profile update failed:', result.message);
       }
-      await getUserProfile();
-      console.log("Profile update submitted and refreshed");
     } catch (error) {
       console.error('Failed to update profile:', error);
+      // You might want to show an error message to the user here
     }
   };
-
   
   const getImageUrl = (imagePath) => {
     if (!imagePath) return '/images/Avatar.png';
