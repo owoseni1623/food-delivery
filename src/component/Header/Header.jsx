@@ -68,7 +68,9 @@ const Header = () => {
 
   const getAvatarUrl = () => {
     if (userProfile && userProfile.image) {
-      return `${API_BASE_URL}/uploads/${userProfile.image}`;
+      return userProfile.image.startsWith('http') 
+        ? userProfile.image 
+        : `${API_BASE_URL}/uploads/${userProfile.image}`;
     }
     return avatarImage;
   };

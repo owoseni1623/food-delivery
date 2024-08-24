@@ -74,32 +74,6 @@ const CartPage = () => {
     }
   };
 
-  // const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-  // const getImageUrl = (item) => {
-  //   console.log("Item image:", item.image);
-  //   if (!item.image) {
-  //     console.log("Using placeholder image");
-  //     return 'https://via.placeholder.com/150';
-  //   }
-    
-  //   let imageUrl = item.image;
-    
-  //   // Remove http://localhost:3000 if it exists
-  //   imageUrl = imageUrl.replace('http://localhost:3000', '');
-    
-  //   // Remove duplicate /uploads/ if it exists
-  //   imageUrl = imageUrl.replace('/uploads//uploads/', '/uploads/');
-    
-  //   // If the URL doesn't start with /, add it
-  //   if (!imageUrl.startsWith('/')) {
-  //     imageUrl = '/' + imageUrl;
-  //   }
-    
-  //   console.log("Final image URL:", `${apiUrl}${imageUrl}`);
-  //   return `${apiUrl}${imageUrl}`;
-  // };
-
 
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 

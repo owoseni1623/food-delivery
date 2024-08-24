@@ -51,7 +51,6 @@ const MenuPage = () => {
     );
   };
 
-
   const getImageUrl = (imagePath) => {
     if (!imagePath) return 'https://via.placeholder.com/150';
     if (imagePath.startsWith('http')) return imagePath;

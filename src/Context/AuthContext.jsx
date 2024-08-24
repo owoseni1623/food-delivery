@@ -3,7 +3,7 @@ import axios from "axios";
 
 const AuthContext = createContext();
 
-const API_BASE_URL = 'http://localhost:3000/api/users';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -15,9 +15,9 @@ export const AuthProvider = ({ children }) => {
       : false;
   });
 
-  const [ userProfile, setUserProfile] = useState(null)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState(null)
+  const [userProfile, setUserProfile] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("authToken"));
 
   const [user, setUser] = useState(() => {
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/login`,
+        `${API_BASE_URL}/users/login`,
         { email, password },
         {
           headers: { 'Content-Type': 'application/json' },
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (userData) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/register`, userData, {
+      const response = await axios.post(`${API_BASE_URL}/users/register`, userData, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -109,11 +109,11 @@ export const AuthProvider = ({ children }) => {
       if (!token) {
         throw new Error("No authentication token found");
       }
-      const response = await axios.get(`${API_BASE_URL}/api/profile/get`, {
+      const response = await axios.get(`${API_BASE_URL}/profile/get`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      
       setUserProfile(response.data.profile);
-      // Update the user state with the new profile data
       setUser(prevUser => ({ ...prevUser, ...response.data.profile }));
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -126,32 +126,38 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isLoggedIn, token]);
 
-const updateUserProfile = async (profileData) => {
-  try {
-    setError(null);
-    setSuccess(false);
-
-    const response = await axios.post("http://localhost:3000/api/profile/update", profileData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data'
+  const updateUserProfile = async (profileData) => {
+    try {
+      setError(null);
+      setSuccess(false);
+  
+      const response = await axios.post(`${API_BASE_URL}/profile/update`, profileData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+  
+      console.log("Server response:", response.data);
+  
+      if (response.data.success && response.data.profile) {
+        const updatedProfile = response.data.profile;
+        console.log("Received updated profile:", updatedProfile);
+        setUserProfile(updatedProfile);
+        setUser(prevUser => ({ ...prevUser, ...updatedProfile }));
+        setSuccess(true);
+        console.log("Profile updated successfully:", updatedProfile);
+        return response.data;
+      } else {
+        setError("Failed to update profile. Please try again.");
+        return { success: false, message: "Failed to update profile" };
       }
-    });
-
-    console.log("Server response:", response.data);
-
-    if (response.data.success && response.data.profile) {
-      setUserProfile(response.data.profile);
-      setSuccess(true);
-      console.log("Profile updated successfully:", response.data.profile);
-    } else {
+    } catch (error) {
+      console.error("Error updating user profile:", error);
       setError("Failed to update profile. Please try again.");
+      throw error;
     }
-  } catch (error) {
-    console.error("Error updating user profile:", error);
-    setError("Failed to update profile. Please try again.");
-  }
-};
+  };
 
   const clearUserData = () => {
     setUser(null);
@@ -177,7 +183,7 @@ const updateUserProfile = async (profileData) => {
       updateUserProfile, 
       error, 
       success 
-      }}>
+    }}>
       {children}
     </AuthContext.Provider>
   );

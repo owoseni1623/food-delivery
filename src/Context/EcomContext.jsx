@@ -5,6 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const EcomContext = createContext();
 
+
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export const useEcom = () => useContext(EcomContext);
 
 const sendAlert = (message, isDev) => {
@@ -16,7 +19,6 @@ const sendAlert = (message, isDev) => {
 };
 
 export const EcomProvider = ({ children }) => {
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
   const { user } = useAuth();
   const [ecoMode, setEcoMode] = useState(false);
   const [menuData, setMenuData] = useState([]);
