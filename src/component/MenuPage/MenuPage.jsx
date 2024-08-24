@@ -19,7 +19,7 @@ const MenuPage = () => {
   });
   const [imageFile, setImageFile] = useState(null);
 
-  const apiUrl = import.meta.env.VITE_API_URL || "https://food-delivery-c1lp.onrender.com";
+  const apiUrl = import.meta.env.VITE_API_URL || "https://food-delivery-api-rcff.onrender.com";
 
   const openModal = (food) => {
     setSelectedFood(food);

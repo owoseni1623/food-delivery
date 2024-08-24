@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from "../../Context/AuthContext";
 import './ProfilePage.css';
 
-const API_URL = 'https://food-delivery-c1lp.onrender.com';
+const API_URL = 'https://food-delivery-api-rcff.onrender.com';
 
 function ProfilePage() {
   const { userProfile, updateUserProfile, error, success, getUserProfile } = useAuth();

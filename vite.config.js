@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://food-delivery-c1lp.onrender.com',
+        target: 'https://food-delivery-api-rcff.onrender.com',
         changeOrigin: true,
         secure: false,
       }

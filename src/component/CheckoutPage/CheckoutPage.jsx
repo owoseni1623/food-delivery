@@ -39,7 +39,7 @@ const CheckoutPage = () => {
       items: orderDetails.items
     };
      try {
-      const response = await axios.post("https://food-delivery-c1lp.onrender.com/api/payment/create-payment-link", payloadData, {
+      const response = await axios.post("https://food-delivery-api-rcff.onrender.com/api/payment/create-payment-link", payloadData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
           'Content-Type': 'application/json'

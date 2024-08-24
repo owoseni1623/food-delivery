@@ -7,7 +7,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
 
-const baseURL = 'https://food-delivery-c1lp.onrender.com';
+const baseURL = 'https://food-delivery-api-rcff.onrender.com';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
