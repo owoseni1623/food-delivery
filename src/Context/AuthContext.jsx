@@ -52,10 +52,17 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      return { 
-        success: false, 
-        message: error.response?.data?.message || "An error occurred during login"
-      };
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        return { success: false, message: error.response.data.message || "Server error" };
+      } else if (error.request) {
+        // The request was made but no response was received
+        return { success: false, message: "No response from server" };
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        return { success: false, message: "Error setting up request" };
+      }
     }
   };
 
