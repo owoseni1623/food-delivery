@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const EcomContext = createContext();
 
 
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const apiUrl = import.meta.env.VITE_API_URL || 'https://food-delivery-c1lp.onrender.com';
 
 export const useEcom = () => useContext(EcomContext);
 

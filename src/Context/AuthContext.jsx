@@ -3,7 +3,7 @@ import axios from "axios";
 
 const AuthContext = createContext();
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = 'https://food-delivery-c1lp.onrender.com/api';
 
 export const useAuth = () => useContext(AuthContext);
 

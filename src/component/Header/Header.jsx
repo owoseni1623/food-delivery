@@ -8,7 +8,7 @@ import avatarImage from "/images/Avatar.png"
 import logo from "/images/logo.jpeg"
 import "./Header.css";
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://food-delivery-c1lp.onrender.com';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

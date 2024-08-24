@@ -16,7 +16,7 @@ const RestaurantDetailsPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/restaurants/${id}`)
+        fetch(`https://food-delivery-c1lp.onrender.com/api/restaurants/${id}`)
             .then(response => {
                 if (!response.ok) {
                     console.error('Response not OK:', response.status, response.statusText);
@@ -139,7 +139,7 @@ const RestaurantDetailsPage = () => {
                 {restaurant.menu.map((item) => (
                     <div key={item._id} className="menu-item-102">
                         <h3 className="category-title-102">{item.category}</h3>
-                        <img src={`http://localhost:3000${item.image}`} alt={item.name} className="menu-item-image-102" />
+                        <img src={`https://food-delivery-c1lp.onrender.com${item.image}`} alt={item.name} className="menu-item-image-102" />
                         <h4>{item.name}</h4>
                         <p className="item-description-102">{item.description}</p>
                         <p className="item-price-102">₦{item.price.toFixed(2)}</p>
@@ -154,7 +154,7 @@ const RestaurantDetailsPage = () => {
         <div className={`restaurant-details-102 ${ecoMode ? 'eco-mode-102' : ''}`}>
             <div className="restaurant-header-102">
                 <img
-                    src={`http://localhost:3000${restaurant.image}`}
+                    src={`https://food-delivery-c1lp.onrender.com${restaurant.image}`}
                     alt={restaurant.name}
                     className="restaurant-image-102"
                 />
