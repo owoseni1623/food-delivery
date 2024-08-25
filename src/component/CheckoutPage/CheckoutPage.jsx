@@ -80,16 +80,7 @@ const CheckoutPage = () => {
     };
   
     try {
-      // Get the current token from localStorage
-      const currentToken = localStorage.getItem('authToken');
-  
-      // Make the API call
-      const response = await axios.post("https://food-delivery-api-rcff.onrender.com/api/payment/create-payment-link", payloadData, {
-        headers: {
-          'Authorization': `Bearer ${currentToken}`,
-          'Content-Type': 'application/json'
-        },
-      });
+      const response = await axiosInstance.post("/api/payment/create-payment-link", payloadData);
   
       if (response.data.success) {
         localStorage.setItem('currentOrderId', response.data.data.orderId);
@@ -99,11 +90,7 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error("Error initiating payment:", error);
-      if (error.response && error.response.status === 401) {
-        // Token has expired, redirect to login page
-        setError("Your session has expired. Please log in again.");
-        navigate('/login'); // Make sure you have the navigate function from useNavigate
-      } else if (error.response) {
+      if (error.response) {
         setError(`An error occurred: ${error.response.data.message || 'Unknown error'}`);
       } else if (error.request) {
         setError("No response received from the server. Please check your internet connection and try again.");
@@ -112,6 +99,9 @@ const CheckoutPage = () => {
       }
     }
   };
+
+
+  
   if (!orderDetails || typeof orderDetails.totalPrice !== 'number') {
     return <div className="checkout-page4">Loading order details...</div>;
   }
