@@ -129,16 +129,63 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isLoggedIn, token]);
 
+  // const updateUserProfile = async (profileData) => {
+  //   try {
+  //     setError(null);
+  //     setSuccess(false);
+  
+  //     const currentToken = localStorage.getItem("authToken");
+  //     if (!currentToken) {
+  //       throw new Error("No authentication token found");
+  //     }
+  
+  //     console.log("Token being sent:", currentToken);
+  
+  //     const response = await axios.post(`${API_BASE_URL}/profile/update`, profileData, {
+  //       headers: {
+  //         'Authorization': `Bearer ${currentToken}`,
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     });
+  
+  //     console.log("Server response:", response.data);
+  
+  //     if (response.data.success && response.data.profile) {
+  //       const updatedProfile = response.data.profile;
+  //       console.log("Received updated profile:", updatedProfile);
+  //       setUserProfile(updatedProfile);
+  //       setUser(prevUser => ({ ...prevUser, ...updatedProfile }));
+  //       setSuccess(true);
+  //       console.log("Profile updated successfully:", updatedProfile);
+  //       return response.data;
+  //     } else {
+  //       setError("Failed to update profile. Please try again.");
+  //       return { success: false, message: "Failed to update profile" };
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating user profile:", error);
+  //     if (error.response && error.response.status === 401) {
+  //       setError("Your session has expired. Please log in again.");
+  //       handleTokenExpiration();
+  //     } else {
+  //       setError("Failed to update profile. Please try again.");
+  //     }
+  //     throw error;
+  //   }
+  // };
+
+
   const updateUserProfile = async (profileData) => {
     try {
       setError(null);
       setSuccess(false);
   
-      // Ensure token is available
       const currentToken = localStorage.getItem("authToken");
       if (!currentToken) {
         throw new Error("No authentication token found");
       }
+  
+      console.log("Token being sent:", currentToken);
   
       const response = await axios.post(`${API_BASE_URL}/profile/update`, profileData, {
         headers: {
@@ -147,30 +194,38 @@ export const AuthProvider = ({ children }) => {
         }
       });
   
-      console.log("Server response:", response.data);
+      console.log("Full server response:", response);
   
       if (response.data.success && response.data.profile) {
         const updatedProfile = response.data.profile;
-        console.log("Received updated profile:", updatedProfile);
         setUserProfile(updatedProfile);
         setUser(prevUser => ({ ...prevUser, ...updatedProfile }));
         setSuccess(true);
-        console.log("Profile updated successfully:", updatedProfile);
         return response.data;
       } else {
         setError("Failed to update profile. Please try again.");
         return { success: false, message: "Failed to update profile" };
       }
     } catch (error) {
-      console.error("Error updating user profile:", error);
+      console.error("Full error object:", error);
+      console.error("Error response data:", error.response?.data);
+      console.error("Error response status:", error.response?.status);
+      console.error("Error response headers:", error.response?.headers);
+  
       if (error.response && error.response.status === 401) {
         setError("Your session has expired. Please log in again.");
-        // Optionally, you can trigger a logout or redirect to login page here
+        logout(); // Assuming you have a logout function that clears the token
       } else {
         setError("Failed to update profile. Please try again.");
       }
       throw error;
     }
+  };
+
+  const handleTokenExpiration = () => {
+    logout();
+    // You might want to redirect to the login page here
+    // For example: history.push('/login');
   };
 
   const clearUserData = () => {

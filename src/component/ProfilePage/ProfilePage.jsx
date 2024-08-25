@@ -44,6 +44,38 @@ function ProfilePage() {
     setSelectedImage(file);
   };
  
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   console.log("Submitting profile update:", profileData);
+  
+  //   const formData = new FormData();
+  //   formData.append('firstName', profileData.firstName);
+  //   formData.append('lastName', profileData.lastName);
+  //   formData.append('email', profileData.email);
+  //   formData.append('phone', profileData.phone);
+  //   formData.append('address', profileData.address);
+  
+  //   if (selectedImage) {
+  //     formData.append('image', selectedImage);
+  //   }
+  
+  //   try {
+  //     const result = await updateUserProfile(formData);
+  //     if (result.success && result.profile) {
+  //       setProfileData(result.profile);
+  //       setSelectedImage(null);
+  //       await getUserProfile();
+  //       console.log("Profile update submitted and refreshed");
+  //     } else {
+  //       console.error('Profile update failed:', result.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to update profile:', error);
+  //     // The error message will be set in the AuthContext
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting profile update:", profileData);
@@ -61,6 +93,7 @@ function ProfilePage() {
   
     try {
       const result = await updateUserProfile(formData);
+      console.log("Update profile result:", result);
       if (result.success && result.profile) {
         setProfileData(result.profile);
         setSelectedImage(null);
@@ -71,7 +104,6 @@ function ProfilePage() {
       }
     } catch (error) {
       console.error('Failed to update profile:', error);
-      // You might want to show an error message to the user here
     }
   };
   
