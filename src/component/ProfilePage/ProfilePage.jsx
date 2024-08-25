@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from "../../Context/AuthContext";
+import { useAuth, axiosInstance, refreshToken } from "../../Context/AuthContext";
 import './ProfilePage.css';
 
 const API_URL = 'https://food-delivery-api-rcff.onrender.com';
