@@ -29,23 +29,68 @@ const CheckoutPage = () => {
     setPaymentData({ ...paymentData, [name]: value });
   };
 
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const payloadData = {
+  //     amount: orderDetails.totalPrice,
+  //     currency: 'NGN',
+  //     ...paymentData,
+  //     items: orderDetails.items
+  //   };
+  //    try {
+  //     const response = await axios.post("https://food-delivery-api-rcff.onrender.com/api/payment/create-payment-link", payloadData, {
+  //       headers: {
+  //         'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+  //         'Content-Type': 'application/json'
+  //       },
+  //     });
+
+  //     if (response.data.success) {
+  //       localStorage.setItem('currentOrderId', response.data.data.orderId);
+  //       window.location.href = response.data.data.link;
+  //     } else {
+  //       setError("Payment initiation failed. Please try again.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error initiating payment:", error);
+  //     if (error.response) {
+  //       setError(`An error occurred: ${error.response.data.message || 'Unknown error'}`);
+  //     } else if (error.request) {
+  //       setError("No response received from the server. Please check your internet connection and try again.");
+  //     } else {
+  //       setError("An error occurred while setting up the request. Please try again.");
+  //     }
+  //   }
+  // };
+
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const payloadData = {
       amount: orderDetails.totalPrice,
       currency: 'NGN',
       ...paymentData,
       items: orderDetails.items
     };
-     try {
+  
+    try {
+      // Get the current token from localStorage
+      const currentToken = localStorage.getItem('authToken');
+  
+      // Make the API call
       const response = await axios.post("https://food-delivery-api-rcff.onrender.com/api/payment/create-payment-link", payloadData, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          'Authorization': `Bearer ${currentToken}`,
           'Content-Type': 'application/json'
         },
       });
-
+  
       if (response.data.success) {
         localStorage.setItem('currentOrderId', response.data.data.orderId);
         window.location.href = response.data.data.link;
@@ -54,7 +99,11 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error("Error initiating payment:", error);
-      if (error.response) {
+      if (error.response && error.response.status === 401) {
+        // Token has expired, redirect to login page
+        setError("Your session has expired. Please log in again.");
+        navigate('/login'); // Make sure you have the navigate function from useNavigate
+      } else if (error.response) {
         setError(`An error occurred: ${error.response.data.message || 'Unknown error'}`);
       } else if (error.request) {
         setError("No response received from the server. Please check your internet connection and try again.");
@@ -63,7 +112,6 @@ const CheckoutPage = () => {
       }
     }
   };
-
   if (!orderDetails || typeof orderDetails.totalPrice !== 'number') {
     return <div className="checkout-page4">Loading order details...</div>;
   }

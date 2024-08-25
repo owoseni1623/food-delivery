@@ -248,16 +248,18 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
-  // Add a request interceptor
-  axiosInstance.interceptors.request.use(
-    (config) => {
-      const token = localStorage.getItem("authToken");
-      if (token) {
-        config.headers["Authorization"] = `Bearer ${token}`;
-      }
-      return config;
-    },
+  axiosInstance.interceptors.response.use(
+    (response) => response,
     (error) => {
+      if (error.response && error.response.status === 401) {
+        // Clear local storage
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('isLoggedIn');
+        
+        // Redirect to login page
+        window.location = '/login';
+      }
       return Promise.reject(error);
     }
   );
