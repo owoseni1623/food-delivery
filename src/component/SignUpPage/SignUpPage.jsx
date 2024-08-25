@@ -264,8 +264,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
-const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com/api';
-
 const SignUp = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -334,9 +332,8 @@ const SignUp = () => {
     };
 
     try {
-      const response = await signup(registrationData);
-
-      if (response.success) {
+      const result = await signup(registrationData);
+      if (result.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
         alert("Registration successful! Please check your email to verify your account.");
         setFormData({
@@ -353,7 +350,8 @@ const SignUp = () => {
         });
         navigate("/login");
       } else {
-        setError(response.message);
+        setError(result.message);
+        alert(`⚠️ ${result.message}`);
       }
     } catch (error) {
       console.error("Sign up failed:", error);
