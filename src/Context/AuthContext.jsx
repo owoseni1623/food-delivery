@@ -288,7 +288,7 @@ export const AuthProvider = ({ children }) => {
       : null;
   });
 
-  const [token, setToken] = useState(localStorage.getItem("authToken"));
+  const [token, setToken] = useState(() => localStorage.getItem("authToken") || null);
   const [userProfile, setUserProfile] = useState(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -382,10 +382,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isLoggedIn, token]);
 
-  const clearUserData = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-  };
+  // const clearUserData = () => {
+  //   setUser(null);
+  //   localStorage.removeItem("user");
+  // };
 
   return (
     <AuthContext.Provider
