@@ -288,7 +288,7 @@ export const AuthProvider = ({ children }) => {
       : null;
   });
 
-  const [token, setToken] = useState(() => localStorage.getItem("authToken") || null);
+  const [token, setToken] = useState(localStorage.getItem("authToken"));
   const [userProfile, setUserProfile] = useState(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
