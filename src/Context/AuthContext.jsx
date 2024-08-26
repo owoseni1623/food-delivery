@@ -375,16 +375,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setIsLoggedIn(false);
-    setUser(null);
-    setUserProfile(null);
-    setToken(null);
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("user");
-    localStorage.removeItem("authToken");
-    updateAxiosToken(null);
-  };
+  // const logout = () => {
+  //   setIsLoggedIn(false);
+  //   setUser(null);
+  //   setUserProfile(null);
+  //   setToken(null);
+  //   localStorage.removeItem("isLoggedIn");
+  //   localStorage.removeItem("user");
+  //   localStorage.removeItem("authToken");
+  //   updateAxiosToken(null);
+  // };
 
   const updateUser = (updatedUserData) => {
     const newUserData = { ...user, ...updatedUserData };
