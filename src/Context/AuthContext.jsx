@@ -301,6 +301,14 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
+  useEffect(() => {
+    if (token) {
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete axiosInstance.defaults.headers.common['Authorization'];
+    }
+  }, [token]);
+
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
@@ -328,10 +336,10 @@ export const AuthProvider = ({ children }) => {
         const { token, user } = response.data;
         setIsLoggedIn(true);
         setUser(user);
+        setToken(token); // Set token in state immediately
         localStorage.setItem("isLoggedIn", JSON.stringify(true));
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("authToken", token);
-        setToken(token);
         console.log("Login successful, token set:", token);
         return { success: true, message: "Login successful" };
       } else {
@@ -354,10 +362,10 @@ export const AuthProvider = ({ children }) => {
         const { token, user } = response.data;
         setIsLoggedIn(true);
         setUser(user);
+        setToken(token); // Set token in state immediately
         localStorage.setItem("isLoggedIn", JSON.stringify(true));
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("authToken", token);
-        setToken(token);
         console.log("Signup successful, token set:", token);
         return { success: true, message: "Registration successful" };
       } else {
@@ -449,20 +457,21 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider 
-    value={{ 
-      isLoggedIn,
-      user, 
-      login, 
-      token,
-      logout, 
-      signup, 
-      updateUser, 
-      getUserProfile, 
-      userProfile, 
-      updateUserProfile, 
-      error, 
-      success 
-    }}>
+      value={{ 
+        isLoggedIn,
+        user, 
+        login, 
+        token,
+        setToken,
+        logout, 
+        signup, 
+        updateUser, 
+        getUserProfile, 
+        userProfile, 
+        updateUserProfile, 
+        error, 
+        success 
+      }}>
       {children}
     </AuthContext.Provider>
   );
