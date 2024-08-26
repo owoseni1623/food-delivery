@@ -300,6 +300,8 @@ export const AuthProvider = ({ children }) => {
         }
       );
 
+      console.log("Login response:", response.data);
+
       if (response.data.success) {
         const { token, user } = response.data;
         setIsLoggedIn(true);
@@ -308,6 +310,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("authToken", token);
         setToken(token);
+        console.log("Login successful, token set:", token);
         return { success: true, message: "Login successful" };
       } else {
         return { success: false, message: response.data.message || "Login failed" };
@@ -332,6 +335,8 @@ export const AuthProvider = ({ children }) => {
         }
       });
 
+      console.log("Signup response:", response.data);
+
       if (response.data.success) {
         const { token, user } = response.data;
         setIsLoggedIn(true);
@@ -340,6 +345,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("authToken", token);
         setToken(token);
+        console.log("Signup successful, token set:", token);
         return { success: true, message: "Registration successful" };
       } else {
         return { success: false, message: response.data.message || "Signup failed" };
