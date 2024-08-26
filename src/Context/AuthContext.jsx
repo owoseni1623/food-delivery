@@ -281,6 +281,11 @@ export const AuthProvider = ({ children }) => {
       : false;
   });
 
+  const [userProfile, setUserProfile] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("authToken"));
+
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser && storedUser !== "undefined"
@@ -288,29 +293,45 @@ export const AuthProvider = ({ children }) => {
       : null;
   });
 
-  const [token, setToken] = useState(() => localStorage.getItem("authToken") || null);
-  const [userProfile, setUserProfile] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(null);
+  // Create an axios instance with default headers
+  const axiosInstance = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        // Clear local storage
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('isLoggedIn');
+        
+        // Redirect to login page
+        window.location = '/login';
+      }
+      return Promise.reject(error);
+    }
+  );
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/users/login`,
-        { email, password },
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
+      const response = await axiosInstance.post(
+        `/users/login`,
+        { email, password }
       );
 
       if (response.data.success) {
         const { token, user } = response.data;
         setIsLoggedIn(true);
         setUser(user);
-        setToken(token);
         localStorage.setItem("isLoggedIn", JSON.stringify(true));
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("authToken", token);
+        setToken(token);
         console.log("Login successful, token set:", token);
         return { success: true, message: "Login successful" };
       } else {
@@ -318,28 +339,25 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      return { success: false, message: "Login failed. Please try again." };
+      return { 
+        success: false, 
+        message: error.response?.data?.message || "An error occurred during login"
+      };
     }
   };
 
   const signup = async (userData) => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/users/register`,
-        userData,
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      const response = await axiosInstance.post(`/users/register`, userData);
 
       if (response.data.success) {
         const { token, user } = response.data;
         setIsLoggedIn(true);
         setUser(user);
-        setToken(token);
         localStorage.setItem("isLoggedIn", JSON.stringify(true));
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("authToken", token);
+        setToken(token);
         console.log("Signup successful, token set:", token);
         return { success: true, message: "Registration successful" };
       } else {
@@ -347,32 +365,75 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Signup error:", error);
-      return { success: false, message: "Signup failed. Please try again." };
+      return { 
+        success: false, 
+        message: error.response?.data?.message || "An error occurred during signup"
+      };
     }
   };
 
   const logout = () => {
     setIsLoggedIn(false);
-    clearUserData();
+    setUser(null);
+    setUserProfile(null);
     setToken(null);
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user");
     localStorage.removeItem("authToken");
-    localStorage.setItem("isLoggedIn", JSON.stringify(false));
+  };
+
+  const updateUser = (updatedUserData) => {
+    const newUserData = { ...user, ...updatedUserData };
+    setUser(newUserData);
+    localStorage.setItem("user", JSON.stringify(newUserData));
+    window.dispatchEvent(new Event('user-updated'));
   };
 
   const getUserProfile = async () => {
     try {
-      if (!token) throw new Error("No authentication token found");
-
-      const response = await axios.get(`${API_BASE_URL}/users/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const response = await axiosInstance.get(`/profile/get`);
       setUserProfile(response.data.profile);
-      setUser((prevUser) => ({ ...prevUser, ...response.data.profile }));
+      setUser(prevUser => ({ ...prevUser, ...response.data.profile }));
     } catch (error) {
       console.error("Error fetching user profile:", error);
+      if (error.response && error.response.status === 401) {
+        logout(); // Logout if unauthorized
+      }
+    }
+  };
+
+  const updateUserProfile = async (profileData) => {
+    try {
+      setError(null);
+      setSuccess(false);
+
+      const response = await axiosInstance.post(`/profile/update`, profileData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      console.log("Server response:", response.data);
+
+      if (response.data.success && response.data.profile) {
+        const updatedProfile = response.data.profile;
+        console.log("Received updated profile:", updatedProfile);
+        setUserProfile(updatedProfile);
+        setUser(prevUser => ({ ...prevUser, ...updatedProfile }));
+        setSuccess(true);
+        console.log("Profile updated successfully:", updatedProfile);
+        return response.data;
+      } else {
+        setError("Failed to update profile. Please try again.");
+        return { success: false, message: "Failed to update profile" };
+      }
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      setError("Failed to update profile. Please try again.");
+      if (error.response && error.response.status === 401) {
+        logout(); // Logout if unauthorized
+      }
+      throw error;
     }
   };
 
@@ -382,25 +443,26 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isLoggedIn, token]);
 
-  // const clearUserData = () => {
-  //   setUser(null);
-  //   localStorage.removeItem("user");
-  // };
+  useEffect(() => {
+    localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
+  }, [isLoggedIn]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn,
-        user,
-        token,
-        login,
-        logout,
-        signup,
-        userProfile,
-        success,
-        error,
-      }}
-    >
+    <AuthContext.Provider 
+    value={{ 
+      isLoggedIn,
+      user, 
+      login, 
+      token,
+      logout, 
+      signup, 
+      updateUser, 
+      getUserProfile, 
+      userProfile, 
+      updateUserProfile, 
+      error, 
+      success 
+    }}>
       {children}
     </AuthContext.Provider>
   );
