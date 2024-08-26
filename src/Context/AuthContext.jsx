@@ -777,6 +777,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Add the updateUser function here
+  const updateUser = (updatedUserData) => {
+    const newUserData = { ...user, ...updatedUserData };
+    setUser(newUserData);
+    localStorage.setItem("user", JSON.stringify(newUserData));
+    window.dispatchEvent(new Event('user-updated'));
+  };
+
   const logout = useCallback(() => {
     setIsLoggedIn(false);
     setUser(null);
@@ -849,7 +857,7 @@ export const AuthProvider = ({ children }) => {
         setToken,
         logout, 
         signup, 
-        updateUser, 
+        updateUser,  // Ensure updateUser is included here
         getUserProfile, 
         userProfile, 
         updateUserProfile, 
