@@ -276,24 +276,26 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const storedLoggedIn = localStorage.getItem("isLoggedIn");
-    return storedLoggedIn && storedLoggedIn !== "undefined"
-      ? JSON.parse(storedLoggedIn)
-      : false;
+    console.log("Initial isLoggedIn from localStorage:", storedLoggedIn);
+    return storedLoggedIn === "true";
+  });
+
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    console.log("Initial user from localStorage:", storedUser);
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  const [token, setToken] = useState(() => {
+    const storedToken = localStorage.getItem("authToken");
+    console.log("Initial token from localStorage:", storedToken);
+    return storedToken || null;
   });
 
   const [userProfile, setUserProfile] = useState(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("authToken"));
 
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser && storedUser !== "undefined"
-      ? JSON.parse(storedUser)
-      : null;
-  });
-
-  // Create an axios instance with default headers
   const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
     headers: {
@@ -304,8 +306,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      console.log("Set axios Authorization header with token:", token);
     } else {
       delete axiosInstance.defaults.headers.common['Authorization'];
+      console.log("Removed axios Authorization header");
     }
   }, [token]);
 
@@ -313,13 +317,8 @@ export const AuthProvider = ({ children }) => {
     (response) => response,
     (error) => {
       if (error.response && error.response.status === 401) {
-        // Clear local storage
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        localStorage.removeItem('isLoggedIn');
-        
-        // Redirect to login page
-        window.location = '/login';
+        console.log("Received 401 error, logging out");
+        logout();
       }
       return Promise.reject(error);
     }
@@ -327,22 +326,22 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axiosInstance.post(
-        `/users/login`,
-        { email, password }
-      );
+      console.log("Attempting login for email:", email);
+      const response = await axiosInstance.post(`/users/login`, { email, password });
+      console.log("Login response:", response.data);
 
       if (response.data.success) {
-        const { token, user } = response.data;
+        const { token: newToken, user: newUser } = response.data;
         setIsLoggedIn(true);
-        setUser(user);
-        setToken(token); // Set token in state immediately
-        localStorage.setItem("isLoggedIn", JSON.stringify(true));
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("authToken", token);
-        console.log("Login successful, token set:", token);
+        setUser(newUser);
+        setToken(newToken);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("user", JSON.stringify(newUser));
+        localStorage.setItem("authToken", newToken);
+        console.log("Login successful, token set:", newToken);
         return { success: true, message: "Login successful" };
       } else {
+        console.log("Login failed:", response.data.message);
         return { success: false, message: response.data.message || "Login failed" };
       }
     } catch (error) {
@@ -356,19 +355,22 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (userData) => {
     try {
+      console.log("Attempting signup with data:", userData);
       const response = await axiosInstance.post(`/users/register`, userData);
+      console.log("Signup response:", response.data);
 
       if (response.data.success) {
-        const { token, user } = response.data;
+        const { token: newToken, user: newUser } = response.data;
         setIsLoggedIn(true);
-        setUser(user);
-        setToken(token); // Set token in state immediately
-        localStorage.setItem("isLoggedIn", JSON.stringify(true));
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("authToken", token);
-        console.log("Signup successful, token set:", token);
+        setUser(newUser);
+        setToken(newToken);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("user", JSON.stringify(newUser));
+        localStorage.setItem("authToken", newToken);
+        console.log("Signup successful, token set:", newToken);
         return { success: true, message: "Registration successful" };
       } else {
+        console.log("Signup failed:", response.data.message);
         return { success: false, message: response.data.message || "Signup failed" };
       }
     } catch (error) {
@@ -381,6 +383,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    console.log("Logging out");
     setIsLoggedIn(false);
     setUser(null);
     setUserProfile(null);
@@ -391,6 +394,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = (updatedUserData) => {
+    console.log("Updating user data:", updatedUserData);
     const newUserData = { ...user, ...updatedUserData };
     setUser(newUserData);
     localStorage.setItem("user", JSON.stringify(newUserData));
@@ -399,19 +403,22 @@ export const AuthProvider = ({ children }) => {
 
   const getUserProfile = async () => {
     try {
+      console.log("Fetching user profile");
       const response = await axiosInstance.get(`/profile/get`);
+      console.log("User profile response:", response.data);
       setUserProfile(response.data.profile);
       setUser(prevUser => ({ ...prevUser, ...response.data.profile }));
     } catch (error) {
       console.error("Error fetching user profile:", error);
       if (error.response && error.response.status === 401) {
-        logout(); // Logout if unauthorized
+        logout();
       }
     }
   };
 
   const updateUserProfile = async (profileData) => {
     try {
+      console.log("Updating user profile:", profileData);
       setError(null);
       setSuccess(false);
 
@@ -421,11 +428,10 @@ export const AuthProvider = ({ children }) => {
         }
       });
 
-      console.log("Server response:", response.data);
+      console.log("Profile update response:", response.data);
 
       if (response.data.success && response.data.profile) {
         const updatedProfile = response.data.profile;
-        console.log("Received updated profile:", updatedProfile);
         setUserProfile(updatedProfile);
         setUser(prevUser => ({ ...prevUser, ...updatedProfile }));
         setSuccess(true);
@@ -439,7 +445,7 @@ export const AuthProvider = ({ children }) => {
       console.error("Error updating user profile:", error);
       setError("Failed to update profile. Please try again.");
       if (error.response && error.response.status === 401) {
-        logout(); // Logout if unauthorized
+        logout();
       }
       throw error;
     }
@@ -452,8 +458,8 @@ export const AuthProvider = ({ children }) => {
   }, [isLoggedIn, token]);
 
   useEffect(() => {
-    localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
-  }, [isLoggedIn]);
+    console.log("AuthContext state updated:", { isLoggedIn, user, token });
+  }, [isLoggedIn, user, token]);
 
   return (
     <AuthContext.Provider 

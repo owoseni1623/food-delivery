@@ -85,7 +85,7 @@
 // export default Login;
 
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -98,26 +98,40 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login, token } = useAuth();
+  const { login, token, isLoggedIn, user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("Login component mounted");
+    return () => console.log("Login component unmounted");
+  }, []);
+
+  useEffect(() => {
+    console.log("Auth state in Login:", { isLoggedIn, token, user });
+  }, [isLoggedIn, token, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
+    console.log("Login attempt for email:", email);
+
     try {
       const result = await login(email, password);
+      console.log("Login result:", result);
+      
       if (result.success) {
         console.log("Login successful, token:", token);
         alert("✅ Login successful!");
         navigate('/');
       } else {
+        console.log("Login failed:", result.message);
         setError(result.message);
         alert(`❌ ${result.message}`);
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('Login error:', error);
       setError('An unexpected error occurred. Please try again later.');
       alert('❌ An unexpected error occurred. Please try again later.');
     } finally {
