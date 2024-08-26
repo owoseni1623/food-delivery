@@ -264,7 +264,7 @@
 // export default AuthProvider;
 
 
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
 
 const AuthContext = createContext();
@@ -274,27 +274,13 @@ const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com/api';
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const storedLoggedIn = localStorage.getItem("isLoggedIn");
-    console.log("Initial isLoggedIn from localStorage:", storedLoggedIn);
-    return storedLoggedIn === "true";
-  });
-
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    console.log("Initial user from localStorage:", storedUser);
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
-
-  const [token, setToken] = useState(() => {
-    const storedToken = localStorage.getItem("authToken");
-    console.log("Initial token from localStorage:", storedToken);
-    return storedToken || null;
-  });
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
@@ -303,21 +289,36 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
-  useEffect(() => {
-    if (token) {
-      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      console.log("Set axios Authorization header with token:", token);
+  const updateAxiosToken = useCallback((newToken) => {
+    if (newToken) {
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     } else {
       delete axiosInstance.defaults.headers.common['Authorization'];
-      console.log("Removed axios Authorization header");
     }
-  }, [token]);
+  }, [axiosInstance]);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("authToken");
+    const storedUser = localStorage.getItem("user");
+
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(JSON.parse(storedUser));
+      setIsLoggedIn(true);
+      updateAxiosToken(storedToken);
+    }
+
+    setIsLoading(false);
+  }, [updateAxiosToken]);
+
+  useEffect(() => {
+    updateAxiosToken(token);
+  }, [token, updateAxiosToken]);
 
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
       if (error.response && error.response.status === 401) {
-        console.log("Received 401 error, logging out");
         logout();
       }
       return Promise.reject(error);
@@ -326,9 +327,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      console.log("Attempting login for email:", email);
       const response = await axiosInstance.post(`/users/login`, { email, password });
-      console.log("Login response:", response.data);
 
       if (response.data.success) {
         const { token: newToken, user: newUser } = response.data;
@@ -338,10 +337,8 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("user", JSON.stringify(newUser));
         localStorage.setItem("authToken", newToken);
-        console.log("Login successful, token set:", newToken);
         return { success: true, message: "Login successful" };
       } else {
-        console.log("Login failed:", response.data.message);
         return { success: false, message: response.data.message || "Login failed" };
       }
     } catch (error) {
@@ -355,9 +352,7 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (userData) => {
     try {
-      console.log("Attempting signup with data:", userData);
       const response = await axiosInstance.post(`/users/register`, userData);
-      console.log("Signup response:", response.data);
 
       if (response.data.success) {
         const { token: newToken, user: newUser } = response.data;
@@ -367,10 +362,8 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("user", JSON.stringify(newUser));
         localStorage.setItem("authToken", newToken);
-        console.log("Signup successful, token set:", newToken);
         return { success: true, message: "Registration successful" };
       } else {
-        console.log("Signup failed:", response.data.message);
         return { success: false, message: response.data.message || "Signup failed" };
       }
     } catch (error) {
@@ -383,7 +376,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    console.log("Logging out");
     setIsLoggedIn(false);
     setUser(null);
     setUserProfile(null);
@@ -391,10 +383,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     localStorage.removeItem("authToken");
+    updateAxiosToken(null);
   };
 
   const updateUser = (updatedUserData) => {
-    console.log("Updating user data:", updatedUserData);
     const newUserData = { ...user, ...updatedUserData };
     setUser(newUserData);
     localStorage.setItem("user", JSON.stringify(newUserData));
@@ -403,9 +395,7 @@ export const AuthProvider = ({ children }) => {
 
   const getUserProfile = async () => {
     try {
-      console.log("Fetching user profile");
       const response = await axiosInstance.get(`/profile/get`);
-      console.log("User profile response:", response.data);
       setUserProfile(response.data.profile);
       setUser(prevUser => ({ ...prevUser, ...response.data.profile }));
     } catch (error) {
@@ -418,7 +408,6 @@ export const AuthProvider = ({ children }) => {
 
   const updateUserProfile = async (profileData) => {
     try {
-      console.log("Updating user profile:", profileData);
       setError(null);
       setSuccess(false);
 
@@ -428,14 +417,11 @@ export const AuthProvider = ({ children }) => {
         }
       });
 
-      console.log("Profile update response:", response.data);
-
       if (response.data.success && response.data.profile) {
         const updatedProfile = response.data.profile;
         setUserProfile(updatedProfile);
         setUser(prevUser => ({ ...prevUser, ...updatedProfile }));
         setSuccess(true);
-        console.log("Profile updated successfully:", updatedProfile);
         return response.data;
       } else {
         setError("Failed to update profile. Please try again.");
@@ -457,10 +443,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isLoggedIn, token]);
 
-  useEffect(() => {
-    console.log("AuthContext state updated:", { isLoggedIn, user, token });
-  }, [isLoggedIn, user, token]);
-
   return (
     <AuthContext.Provider 
       value={{ 
@@ -476,7 +458,8 @@ export const AuthProvider = ({ children }) => {
         userProfile, 
         updateUserProfile, 
         error, 
-        success 
+        success,
+        isLoading
       }}>
       {children}
     </AuthContext.Provider>
