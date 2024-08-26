@@ -288,7 +288,10 @@ export const AuthProvider = ({ children }) => {
       : null;
   });
 
-  const [token, setToken] = useState(localStorage.getItem("authToken"));
+  const [token, setToken] = useState(() => localStorage.getItem("authToken") || null);
+  const [userProfile, setUserProfile] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
 
   const login = async (email, password) => {
     try {
@@ -300,16 +303,14 @@ export const AuthProvider = ({ children }) => {
         }
       );
 
-      console.log("Login response:", response.data);
-
       if (response.data.success) {
         const { token, user } = response.data;
         setIsLoggedIn(true);
         setUser(user);
+        setToken(token);
         localStorage.setItem("isLoggedIn", JSON.stringify(true));
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("authToken", token);
-        setToken(token);
         console.log("Login successful, token set:", token);
         return { success: true, message: "Login successful" };
       } else {
@@ -317,34 +318,28 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      if (error.response) {
-        return { success: false, message: error.response.data.message || "Server error" };
-      } else if (error.request) {
-        return { success: false, message: "No response from server" };
-      } else {
-        return { success: false, message: "Error setting up request" };
-      }
+      return { success: false, message: "Login failed. Please try again." };
     }
   };
 
   const signup = async (userData) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/users/register`, userData, {
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await axios.post(
+        `${API_BASE_URL}/users/register`,
+        userData,
+        {
+          headers: { 'Content-Type': 'application/json' },
         }
-      });
-
-      console.log("Signup response:", response.data);
+      );
 
       if (response.data.success) {
         const { token, user } = response.data;
         setIsLoggedIn(true);
         setUser(user);
+        setToken(token);
         localStorage.setItem("isLoggedIn", JSON.stringify(true));
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("authToken", token);
-        setToken(token);
         console.log("Signup successful, token set:", token);
         return { success: true, message: "Registration successful" };
       } else {
@@ -352,38 +347,60 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Signup error:", error);
-      return { 
-        success: false, 
-        message: error.response?.data?.message || "An error occurred during signup"
-      };
+      return { success: false, message: "Signup failed. Please try again." };
     }
   };
 
   const logout = () => {
     setIsLoggedIn(false);
-    setUser(null);
+    clearUserData();
     setToken(null);
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("user");
     localStorage.removeItem("authToken");
+    localStorage.setItem("isLoggedIn", JSON.stringify(false));
+  };
+
+  const getUserProfile = async () => {
+    try {
+      if (!token) throw new Error("No authentication token found");
+
+      const response = await axios.get(`${API_BASE_URL}/users/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setUserProfile(response.data.profile);
+      setUser((prevUser) => ({ ...prevUser, ...response.data.profile }));
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
   };
 
   useEffect(() => {
     if (isLoggedIn && token) {
-      // Optionally, you could fetch the user profile here
+      getUserProfile();
     }
   }, [isLoggedIn, token]);
 
+  const clearUserData = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
   return (
-    <AuthContext.Provider 
-      value={{ 
+    <AuthContext.Provider
+      value={{
         isLoggedIn,
-        user, 
-        login, 
+        user,
         token,
-        logout, 
-        signup, 
-      }}>
+        login,
+        logout,
+        signup,
+        userProfile,
+        success,
+        error,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
