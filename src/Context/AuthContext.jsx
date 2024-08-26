@@ -470,6 +470,216 @@
 
 
 
+// import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
+// import axios from "axios";
+
+// const AuthContext = createContext();
+
+// const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com/api';
+
+// export const useAuth = () => useContext(AuthContext);
+
+// export const AuthProvider = ({ children }) => {
+//   const [isLoggedIn, setIsLoggedIn] = useState(false);
+//   const [user, setUser] = useState(null);
+//   const [token, setToken] = useState(null);
+//   const [userProfile, setUserProfile] = useState(null);
+//   const [success, setSuccess] = useState(false);
+//   const [error, setError] = useState(null);
+//   const [isLoading, setIsLoading] = useState(true);
+
+//   const axiosInstance = axios.create({
+//     baseURL: API_BASE_URL,
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   });
+
+//   const updateAxiosToken = useCallback((newToken) => {
+//     if (newToken) {
+//       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+//     } else {
+//       delete axiosInstance.defaults.headers.common['Authorization'];
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     const storedToken = localStorage.getItem("authToken");
+//     const storedUser = localStorage.getItem("user");
+
+//     if (storedToken && storedUser) {
+//       setToken(storedToken);
+//       setUser(JSON.parse(storedUser));
+//       setIsLoggedIn(true);
+//       updateAxiosToken(storedToken);
+//     }
+
+//     setIsLoading(false);
+//   }, [updateAxiosToken]);
+
+//   useEffect(() => {
+//     if (token) {
+//       updateAxiosToken(token);
+//     }
+//   }, [token, updateAxiosToken]);
+
+//   axiosInstance.interceptors.response.use(
+//     (response) => response,
+//     (error) => {
+//       if (error.response && error.response.status === 401) {
+//         logout();
+//       }
+//       return Promise.reject(error);
+//     }
+//   );
+
+//   const login = async (email, password) => {
+//     try {
+//       const response = await axiosInstance.post(`/users/login`, { email, password });
+
+//       if (response.data.success) {
+//         const { token: newToken, user: newUser } = response.data;
+//         setIsLoggedIn(true);
+//         setUser(newUser);
+//         setToken(newToken);
+//         localStorage.setItem("isLoggedIn", "true");
+//         localStorage.setItem("user", JSON.stringify(newUser));
+//         localStorage.setItem("authToken", newToken);
+//         updateAxiosToken(newToken);
+//         return { success: true, message: "Login successful" };
+//       } else {
+//         return { success: false, message: response.data.message || "Login failed" };
+//       }
+//     } catch (error) {
+//       console.error("Login error:", error);
+//       return { 
+//         success: false, 
+//         message: error.response?.data?.message || "An error occurred during login"
+//       };
+//     }
+//   };
+
+//   const signup = async (userData) => {
+//     try {
+//       const response = await axiosInstance.post(`/users/register`, userData);
+
+//       if (response.data.success) {
+//         const { token: newToken, user: newUser } = response.data;
+//         setIsLoggedIn(true);
+//         setUser(newUser);
+//         setToken(newToken);
+//         localStorage.setItem("isLoggedIn", "true");
+//         localStorage.setItem("user", JSON.stringify(newUser));
+//         localStorage.setItem("authToken", newToken);
+//         updateAxiosToken(newToken);
+//         return { success: true, message: "Registration successful" };
+//       } else {
+//         return { success: false, message: response.data.message || "Signup failed" };
+//       }
+//     } catch (error) {
+//       console.error("Signup error:", error);
+//       return { 
+//         success: false, 
+//         message: error.response?.data?.message || "An error occurred during signup"
+//       };
+//     }
+//   };
+
+//   const logout = useCallback(() => {
+//     setIsLoggedIn(false);
+//     setUser(null);
+//     setUserProfile(null);
+//     setToken(null);
+//     localStorage.removeItem("isLoggedIn");
+//     localStorage.removeItem("user");
+//     localStorage.removeItem("authToken");
+//     updateAxiosToken(null);
+//   }, []);
+
+//   const updateUser = (updatedUserData) => {
+//     const newUserData = { ...user, ...updatedUserData };
+//     setUser(newUserData);
+//     localStorage.setItem("user", JSON.stringify(newUserData));
+//     window.dispatchEvent(new Event('user-updated'));
+//   };
+
+//   const getUserProfile = useCallback(async () => {
+//     if (!token) return;
+//     try {
+//       const response = await axiosInstance.get(`/profile/get`);
+//       setUserProfile(response.data.profile);
+//       setUser(prevUser => ({ ...prevUser, ...response.data.profile }));
+//     } catch (error) {
+//       console.error("Error fetching user profile:", error);
+//       if (error.response && error.response.status === 401) {
+//         logout();
+//       }
+//     }
+//   }, [token, logout]);
+
+//   const updateUserProfile = async (profileData) => {
+//     try {
+//       setError(null);
+//       setSuccess(false);
+
+//       const response = await axiosInstance.post(`/profile/update`, profileData, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data'
+//         }
+//       });
+
+//       if (response.data.success && response.data.profile) {
+//         const updatedProfile = response.data.profile;
+//         setUserProfile(updatedProfile);
+//         setUser(prevUser => ({ ...prevUser, ...updatedProfile }));
+//         setSuccess(true);
+//         return response.data;
+//       } else {
+//         setError("Failed to update profile. Please try again.");
+//         return { success: false, message: "Failed to update profile" };
+//       }
+//     } catch (error) {
+//       console.error("Error updating user profile:", error);
+//       setError("Failed to update profile. Please try again.");
+//       if (error.response && error.response.status === 401) {
+//         logout();
+//       }
+//       throw error;
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (isLoggedIn && token) {
+//       getUserProfile();
+//     }
+//   }, [isLoggedIn, token, getUserProfile]);
+
+//   return (
+//     <AuthContext.Provider 
+//       value={{ 
+//         isLoggedIn,
+//         user, 
+//         login, 
+//         token,
+//         setToken,
+//         logout, 
+//         signup, 
+//         updateUser, 
+//         getUserProfile, 
+//         userProfile, 
+//         updateUserProfile, 
+//         error, 
+//         success,
+//         isLoading
+//       }}>
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
+
+// export default AuthProvider;
+
+
 import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
 
@@ -523,33 +733,27 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, updateAxiosToken]);
 
-  axiosInstance.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response && error.response.status === 401) {
-        logout();
-      }
-      return Promise.reject(error);
+  const handleAuthResponse = (response) => {
+    if (response.data.success) {
+      const { token: newToken, user: newUser } = response.data;
+      setIsLoggedIn(true);
+      setUser(newUser);
+      setToken(newToken);
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("user", JSON.stringify(newUser));
+      localStorage.setItem("authToken", newToken);
+      updateAxiosToken(newToken);
+      console.log("Auth token set:", newToken);  // Debugging: log the token
+    } else {
+      throw new Error(response.data.message || "Authentication failed");
     }
-  );
+  };
 
   const login = async (email, password) => {
     try {
       const response = await axiosInstance.post(`/users/login`, { email, password });
-
-      if (response.data.success) {
-        const { token: newToken, user: newUser } = response.data;
-        setIsLoggedIn(true);
-        setUser(newUser);
-        setToken(newToken);
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("user", JSON.stringify(newUser));
-        localStorage.setItem("authToken", newToken);
-        updateAxiosToken(newToken);
-        return { success: true, message: "Login successful" };
-      } else {
-        return { success: false, message: response.data.message || "Login failed" };
-      }
+      handleAuthResponse(response);
+      return { success: true, message: "Login successful" };
     } catch (error) {
       console.error("Login error:", error);
       return { 
@@ -562,20 +766,8 @@ export const AuthProvider = ({ children }) => {
   const signup = async (userData) => {
     try {
       const response = await axiosInstance.post(`/users/register`, userData);
-
-      if (response.data.success) {
-        const { token: newToken, user: newUser } = response.data;
-        setIsLoggedIn(true);
-        setUser(newUser);
-        setToken(newToken);
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("user", JSON.stringify(newUser));
-        localStorage.setItem("authToken", newToken);
-        updateAxiosToken(newToken);
-        return { success: true, message: "Registration successful" };
-      } else {
-        return { success: false, message: response.data.message || "Signup failed" };
-      }
+      handleAuthResponse(response);
+      return { success: true, message: "Registration successful" };
     } catch (error) {
       console.error("Signup error:", error);
       return { 
@@ -594,14 +786,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
     localStorage.removeItem("authToken");
     updateAxiosToken(null);
-  }, []);
-
-  const updateUser = (updatedUserData) => {
-    const newUserData = { ...user, ...updatedUserData };
-    setUser(newUserData);
-    localStorage.setItem("user", JSON.stringify(newUserData));
-    window.dispatchEvent(new Event('user-updated'));
-  };
+  }, [updateAxiosToken]);
 
   const getUserProfile = useCallback(async () => {
     if (!token) return;
@@ -615,7 +800,7 @@ export const AuthProvider = ({ children }) => {
         logout();
       }
     }
-  }, [token, logout]);
+  }, [token, logout, axiosInstance]);
 
   const updateUserProfile = async (profileData) => {
     try {
