@@ -693,6 +693,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [authToken, setAuthToken] = useState(null)
   const [userProfile, setUserProfile] = useState(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -720,6 +721,7 @@ export const AuthProvider = ({ children }) => {
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
+      setAuthToken(token); 
       setIsLoggedIn(true);
       updateAxiosToken(storedToken);
     }
@@ -739,6 +741,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
       setUser(newUser);
       setToken(newToken);
+      setAuthToken(newToken); 
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("user", JSON.stringify(newUser));
       localStorage.setItem("authToken", newToken);
@@ -790,6 +793,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setUserProfile(null);
     setToken(null);
+    setAuthToken(null); 
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     localStorage.removeItem("authToken");
@@ -854,7 +858,9 @@ export const AuthProvider = ({ children }) => {
         user, 
         login, 
         token,
+        authToken,
         setToken,
+        setAuthToken,
         logout, 
         signup, 
         updateUser,  // Ensure updateUser is included here
