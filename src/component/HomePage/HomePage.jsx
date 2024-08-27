@@ -171,7 +171,7 @@ const HomePage = () => {
             </div>
           </div>
           <div className="dish">
-            <img src="/images/Grilled Spiced Lamb Chops.jpeg" alt="Signature Dish 2" className="dish-image" />
+            <img src="/images/Grilled Spiced Lamb Chops1.jpg" alt="Signature Dish 2" className="dish-image" />
             <div className="dish-content">
               <h3>Grilled Spiced Lamb Chops</h3>
               <p>Our Grilled Spiced Lamb Chops are a culinary masterpiece that tantalizes the taste buds. We start with premium, tender lamb chops, carefully selected for their quality and flavor. These succulent cuts are marinated in a bespoke blend of aromatic spices, including rosemary, thyme, and garlic, infusing them with rich, complex flavors. Grilled to perfection, the chops boast a delightfully crispy exterior while remaining juicy and tender inside. The result is a dish that balances the natural sweetness of the lamb with a subtle, spicy kick, creating a memorable dining experience that keeps our patrons coming back for more.</p>
