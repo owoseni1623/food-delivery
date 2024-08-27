@@ -227,6 +227,15 @@
     padding: 0.8rem 1.6rem;
     font-size: 1rem;
   }
+
+  .qr-code {
+    max-width: 80%;
+  }
+
+  .qr-code svg {
+    width: 100%;
+    height: auto;
+  }
 }
 
 /* Mobile view (up to 767px) */
@@ -280,7 +289,13 @@
   }
 
   .qr-code {
-    max-width: 80%;
+    max-width: 70%;
+  }
+
+  .qr-code svg {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
   }
 
   .social-share p {
