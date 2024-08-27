@@ -166,15 +166,15 @@ const HomePage = () => {
           <div className="dish">
           <img src="/images/food8.jpeg" alt="Signature Dish 1" className="dish-image" />
             <div className="dish-content">
-              <h3>Jollof Rice with Grilled Chicken</h3>
-              <p>Our exquisite Jollof Rice is a testament to culinary perfection. We start with the finest long-grain rice, carefully seasoned with a blend of traditional spices and slow-cooked in a rich tomato and pepper sauce. The dish is elevated with our signature grilled chicken, marinated in a special blend of herbs and spices before being cooked to juicy perfection. This combination offers a harmonious balance of flavors that perfectly captures the essence of West African cuisine.</p>
+              <h3>Ewa Agonyin with Bread and Pepsi Cola</h3>
+              <p>Our delectable Ewa Agonyin is a true culinary delight. We begin with premium black-eyed peas, slow-cooked to creamy perfection and generously smothered in a rich, spicy palm oil sauce. This hearty dish is complemented by our freshly baked bread, offering a perfect balance of textures. To round out this satisfying meal, we serve it with an ice-cold Pepsi cola, providing a refreshing contrast to the savory flavors. This classic combination represents the best of Nigerian street food, bringing together traditional tastes with modern convenience for a truly memorable dining experience.</p>
             </div>
           </div>
           <div className="dish">
-            <img src="/images/food9.webp" alt="Signature Dish 2" className="dish-image" />
+            <img src="/images/Grilled Spiced Lamb Chops.jpeg" alt="Signature Dish 2" className="dish-image" />
             <div className="dish-content">
-              <h3>Pap and Chakalaka</h3>
-              <p>Our Pap and Chakalaka is a luxurious dish that showcases the hearty, comforting flavors of South African cuisine. We begin with creamy pap, a staple made from ground maize, cooked to smooth perfection. This serves as the perfect canvas for our vibrant chakalaka - a spicy vegetable relish bursting with flavors. A medley of tomatoes, onions, peppers, and carrots is sautéed and seasoned with our secret blend of spices, creating a dish that's both nutritious and intensely flavorful. This vegetarian-friendly option is a customer favorite across our locations.</p>
+              <h3>Grilled Spiced Lamb Chops</h3>
+              <p>Our Grilled Spiced Lamb Chops are a culinary masterpiece that tantalizes the taste buds. We start with premium, tender lamb chops, carefully selected for their quality and flavor. These succulent cuts are marinated in a bespoke blend of aromatic spices, including rosemary, thyme, and garlic, infusing them with rich, complex flavors. Grilled to perfection, the chops boast a delightfully crispy exterior while remaining juicy and tender inside. The result is a dish that balances the natural sweetness of the lamb with a subtle, spicy kick, creating a memorable dining experience that keeps our patrons coming back for more.</p>
             </div>
           </div>
         </div>
