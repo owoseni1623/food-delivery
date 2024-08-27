@@ -4,8 +4,8 @@ import { useEcom } from "../../Context/EcomContext";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./RestaurantDetailsPage.css";
-import { toast } from 'react-toastify';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RestaurantDetailsPage = () => {
     const { id } = useParams();
@@ -19,7 +19,6 @@ const RestaurantDetailsPage = () => {
         fetch(`https://food-delivery-api-rcff.onrender.com/api/restaurants/${id}`)
             .then(response => {
                 if (!response.ok) {
-                    console.error('Response not OK:', response.status, response.statusText);
                     throw new Error('Failed to fetch restaurant details');
                 }
                 return response.json();
@@ -27,12 +26,10 @@ const RestaurantDetailsPage = () => {
             .then(data => {
                 console.log('Received restaurant data:', data);
                 setRestaurant(data);
-                toast.success("Restaurant details loaded successfully")
             })
             .catch(error => {
                 console.error('Error fetching restaurant details:', error);
                 setError(error.message);
-                toast.error("Failed to load restaurant details");
             });
     }, [id]);
 
@@ -41,7 +38,7 @@ const RestaurantDetailsPage = () => {
     }
 
     if (!restaurant) {
-        return <div className="loading-102">Loading...</div>;
+        return null;
     }
 
     const getCurrentLocation = () => {
@@ -58,10 +55,12 @@ const RestaurantDetailsPage = () => {
                 (error) => {
                     console.error("Error getting location", error);
                     setError("Unable to retrieve your location. Please try again.");
+                    toast.error("Unable to retrieve your location. Please try again.");
                 }
             );
         } else {
             setError("Geolocation is not supported by this browser.");
+            toast.error("Geolocation is not supported by this browser.");
         }
     };
 
@@ -69,7 +68,7 @@ const RestaurantDetailsPage = () => {
 
     const isOpenNow = () => {
         if (!restaurant.openingHours) return false;
-    
+
         const parseTime = (timeStr) => {
             if (!timeStr) return null;
             timeStr = timeStr.toLowerCase().replace(/\s/g, '');
@@ -77,24 +76,24 @@ const RestaurantDetailsPage = () => {
             const [hoursStr, minutesStr] = timeStr.replace(/[ap]m/, '').split(':');
             let hours = parseInt(hoursStr);
             const minutes = minutesStr ? parseInt(minutesStr) : 0;
-    
+
             if (isNaN(hours) || isNaN(minutes)) return null;
             if (isPM && hours !== 12) hours += 12;
             if (!isPM && hours === 12) hours = 0;
-    
+
             return hours * 60 + minutes;
         };
-    
+
         const [openTime, closeTime] = restaurant.openingHours.split('-').map(t => t.trim());
-        
+
         const openMinutes = parseTime(openTime);
         const closeMinutes = parseTime(closeTime);
-    
+
         if (openMinutes === null || closeMinutes === null) return false;
-    
+
         const now = new Date();
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    
+
         if (closeMinutes > openMinutes) {
             return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
         } else {
@@ -108,7 +107,7 @@ const RestaurantDetailsPage = () => {
     const handleAddToCart = (event, item) => {
         event.preventDefault();
         event.stopPropagation();
-    
+
         addToCart({
           id: item._id,
           name: item.name,
@@ -203,6 +202,7 @@ const RestaurantDetailsPage = () => {
                     </div>
                 )}
             </div>
+            <ToastContainer />
         </div>
     );
 };

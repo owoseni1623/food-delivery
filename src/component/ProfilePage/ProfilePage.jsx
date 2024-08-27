@@ -5,7 +5,17 @@ import './ProfilePage.css';
 const API_URL = 'https://food-delivery-api-rcff.onrender.com';
 
 function ProfilePage() {
-  const { userProfile, updateUserProfile, error, success, getUserProfile } = useAuth();
+  const { 
+    userProfile, 
+    updateUserProfile, 
+    error, 
+    success, 
+    getUserProfile, 
+    setError, 
+    setSuccess,
+    isLoggedIn 
+  } = useAuth();
+  
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
@@ -15,24 +25,26 @@ function ProfilePage() {
     image: ''
   });
   const [selectedImage, setSelectedImage] = useState(null);
+  const [localError, setLocalError] = useState(null);
 
   useEffect(() => {
-    getUserProfile();
-  }, []);
+    if (isLoggedIn) {
+      getUserProfile();
+    }
+  }, [isLoggedIn, getUserProfile]);
 
   useEffect(() => {
-    if (userProfile) {
-      setProfileData(prevData => ({
-        ...prevData,
+    if (isLoggedIn && userProfile) {
+      setProfileData({
         firstName: userProfile.firstName || '',
         lastName: userProfile.lastName || '',
         email: userProfile.email || '',
         phone: userProfile.phone || '',
         address: userProfile.address || '',
         image: userProfile.image || ''
-      }));
+      });
     }
-  }, [userProfile, userProfile?.image]);
+  }, [isLoggedIn, userProfile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,57 +55,72 @@ function ProfilePage() {
     const file = e.target.files[0];
     setSelectedImage(file);
   };
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting profile update:", profileData);
-  
+
     const formData = new FormData();
-    formData.append('firstName', profileData.firstName);
-    formData.append('lastName', profileData.lastName);
-    formData.append('email', profileData.email);
-    formData.append('phone', profileData.phone);
-    formData.append('address', profileData.address);
-  
+    Object.keys(profileData).forEach(key => {
+      if (profileData[key] !== null && profileData[key] !== undefined) {
+        formData.append(key, profileData[key]);
+      }
+    });
+
     if (selectedImage) {
       formData.append('image', selectedImage);
     }
-  
+
     try {
       const result = await updateUserProfile(formData);
-      if (result.success && result.profile) {
-        setProfileData(result.profile);
+      console.log("Profile update result:", result);
+
+      if (result.success) {
+        setProfileData(prevData => ({
+          ...prevData,
+          ...result.profile
+        }));
         setSelectedImage(null);
-        await getUserProfile();
+        setSuccess(true);
+        setLocalError(null);
         console.log("Profile update submitted and refreshed");
+
+        // Refresh the profile data
+        await getUserProfile();
       } else {
         console.error('Profile update failed:', result.message);
+        setLocalError(result.message);
+        setSuccess(false);
       }
     } catch (error) {
       console.error('Failed to update profile:', error);
-      // You might want to show an error message to the user here
+      setLocalError('An error occurred while updating the profile. Please try again.');
+      setSuccess(false);
     }
   };
-  
+
   const getImageUrl = (imagePath) => {
     if (!imagePath) return '/images/Avatar.png';
-    return imagePath;
+    return imagePath.startsWith('http') ? imagePath : `${API_URL}${imagePath}`;
   };
+
+  console.log("Current profile data:", profileData);
 
   return (
     <div className="profile-page-container">
       <h2 className="profile-page-title">Profile</h2>
+      {localError && <div className="alert alert-error show">{localError}</div>}
       {error && <div className="alert alert-error show">{error}</div>}
       {success && <div className="alert alert-success show">Profile updated successfully!</div>}
       <div className="profile-page-info">
         <form onSubmit={handleSubmit} className="profile-page-form">
           <div className="profile-page-info-item">
-          <img
-            key={profileData.image}
-            src={getImageUrl(profileData.image)}
-            alt="Profile"
-            className="profile-avatar"
-          />
+            <img
+              key={profileData.image}
+              src={getImageUrl(profileData.image)}
+              alt="Profile"
+              className="profile-avatar"
+            />
             <input
               type="file"
               accept="image/*"

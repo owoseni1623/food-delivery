@@ -40,9 +40,9 @@ const CartPage = () => {
     navigate('/checkout');
   };
 
-  const handleRemoveFromCart = (itemId) => {
+  const handleRemoveFromCart = (itemId, itemName) => {
     removeFromCart(itemId);
-    toast.error("Item removed from cart", {
+    toast.error(`${itemName} removed from cart`, {
       position: "top-center",
       autoClose: 2000,
     });
@@ -61,19 +61,11 @@ const CartPage = () => {
       }));
     }, 500);
 
-    if (change > 0) {
-      toast.success(`${itemName} added to cart`, {
-        position: "top-center",
-        autoClose: 2000,
-      });
-    } else {
-      toast.info(`${itemName} removed from cart`, {
-        position: "top-center",
-        autoClose: 2000,
-      });
-    }
+    toast.info(`${itemName} ${change > 0 ? 'added to' : 'removed from'} cart`, {
+      position: "top-center",
+      autoClose: 2000,
+    });
   };
-
 
   const apiUrl = import.meta.env.VITE_API_URL || "https://food-delivery-api-rcff.onrender.com";
 
@@ -88,7 +80,6 @@ const CartPage = () => {
       return item.image;
     }
     
-    // Handle the case where the image path might already contain '/uploads/'
     const imagePath = item.image.includes('/uploads/') ? item.image.split('/uploads/').pop() : item.image;
     return `${apiUrl}/uploads/${imagePath}`;
   };
@@ -124,7 +115,7 @@ const CartPage = () => {
                     <span style={{ color: quantityColors[item.id] || 'inherit' }}>{item.quantity}</span>
                     <button onClick={() => handleUpdateQuantity(item.id, 1, item.name)}>+</button>
                   </div>
-                  <button className="remove-btn2" onClick={() => handleRemoveFromCart(item.id)}>
+                  <button className="remove-btn2" onClick={() => handleRemoveFromCart(item.id, item.name)}>
                     Remove
                   </button>
                 </div>
@@ -154,6 +145,7 @@ const CartPage = () => {
           </div>
         </>
       )}
+      <ToastContainer />
     </div>
   );
 };
