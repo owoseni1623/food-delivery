@@ -3,7 +3,7 @@ import { useLocation, Link } from "react-router-dom";
 import { useEcom } from "../../Context/EcomContext";
 import { useAuth } from "../../Context/AuthContext";
 import { toast } from 'react-toastify';
-import "./SearchResultsPage.css";
+import "./SearchResultPage.css";
 
 const SearchResultsPage = () => {
   const location = useLocation();
