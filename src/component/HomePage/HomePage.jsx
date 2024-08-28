@@ -24,7 +24,7 @@ const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState(null);
-  const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
+  // const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
   useEffect(() => {
@@ -89,9 +89,9 @@ const HomePage = () => {
         </div>
         <div className="slider-overlay">
           <div className="search-section">
-            <button onClick={() => setIsGetStartedModalOpen(true)} className="get-started-button">
+            {/* <button onClick={() => setIsGetStartedModalOpen(true)} className="get-started-button">
               Get Started
-            </button>
+            </button> */}
             <form onSubmit={handleSearch}>
               <input
                 type="text"
@@ -115,11 +115,11 @@ const HomePage = () => {
       </section>
 
       {/* Modals */}
-      {isGetStartedModalOpen && (
+      {/* {isGetStartedModalOpen && (
         <Modal onClose={closeModal(setIsGetStartedModalOpen)}>
           <GetStarted onClose={closeModal(setIsGetStartedModalOpen)} />
         </Modal>
-      )}
+      )} */}
 
       {isLocationModalOpen && location && (
         <Modal onClose={closeModal(setIsLocationModalOpen)}>
