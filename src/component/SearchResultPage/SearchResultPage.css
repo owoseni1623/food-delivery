@@ -1,6 +1,7 @@
 .search-results-page {
   max-width: 1200px;
   margin: 0 auto;
+  margin-top: 4rem;
   padding: 20px;
   font-family: 'Arial', sans-serif;
 }
