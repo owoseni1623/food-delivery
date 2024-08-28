@@ -16,7 +16,7 @@ import { AuthProvider } from "./Context/AuthContext";
 import LogoutButton from "./component/LogoutPage/LogoutPage";
 import LoginPage from "./component/LoginPage/LoginPage";
 import SignUpPage from "./component/SignUpPage/SignUpPage";
-import GetStarted from "./component/GetStart/GetStarted";
+// import GetStarted from "./component/GetStart/GetStarted";
 import ScrollToTop from "./component/ScrollToTop/ScrollToTop";
 import RestaurantPage from "./component/RestaurantPage/RestaurantPage";
 import RestaurantListingPage from "./component/RestaurantListingPage/RestaurantListingPage";
@@ -57,7 +57,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/logout" element={<LogoutButton />} />
               <Route path="/signup" element={<SignUpPage />} />
-              <Route path="/getstarted" element={<GetStarted />} />
+              {/* <Route path="/getstarted" element={<GetStarted />} /> */}
               {/* <Route path="/search" element={<SearchPage />} /> */}
               <Route path="/listing" element={<RestaurantListingPage />} />
               <Route path="/restaurant/:id" element={<RestaurantDetailsPage />} />
