@@ -24,6 +24,7 @@ import RestaurantDetailsPage from "./component/RestaurantDetails/RestaurantDetai
 import ThankYouPage from "./component/Thank You/ThankYouPage";
 import ProfilePage from "./component/ProfilePage/ProfilePage";
 import VerifyPage from "./component/VerificationPage/VerifyPage";
+import SearchResultsPage from "./component/SearchResultPage/SearchResultPage";
 
 
 axios.interceptors.request.use(
@@ -64,6 +65,7 @@ function App() {
               <Route path="/thank-you" element={<ThankYouPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/verification" element={<VerifyPage />} />
+              <Route path="/search" element={<SearchResultsPage />} />
             </Routes>
             <FooterPage />
             <ToastContainer 

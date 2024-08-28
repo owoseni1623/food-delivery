@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "./HomePage.css";
 import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick-theme.css"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useAuth } from "../Context/AuthContext";
 import GetStarted from "../GetStart/GetStarted";
 
 const HomePage = () => {
@@ -20,32 +19,15 @@ const HomePage = () => {
     '/images/food6.jpg',
     '/images/food7.jpg'
   ];
-
+  
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState(null);
-  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isSearchResultsModalOpen, setIsSearchResultsModalOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [cart, setCart] = useState([]);
-  const [signUpData, setSignUpData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    street: "",
-    city: "",
-    state: "",
-    country: "",
-    password: "",
-    confirmPassword: ""
-  });
-  const [signUpError, setSignUpError] = useState("");
-  const [signUpSuccess, setSignUpSuccess] = useState("");
-
-  const navigate = useNavigate();
-  const { signup } = useAuth();
 
   useEffect(() => {
     const timer = setInterval(nextSlide, 5000);
@@ -66,6 +48,7 @@ const HomePage = () => {
 
   const handleSearch = (event) => {
     event.preventDefault();
+    navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
     const results = FoodOrderingPage.africanFoods.filter(food => 
       food.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       food.shortDesc.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -97,39 +80,8 @@ const HomePage = () => {
     }
   };
 
-  const handleSignUpChange = (e) => {
-    const { name, value } = e.target;
-    setSignUpData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleSignUpSubmit = async (e) => {
-    e.preventDefault();
-    setSignUpError("");
-    setSignUpSuccess("");
-
-    if (signUpData.password !== signUpData.confirmPassword) {
-      setSignUpError("Passwords do not match");
-      return;
-    }
-
-    try {
-      const response = await signup(signUpData);
-      if (response.success) {
-        setSignUpSuccess("Registration successful! Please check your email to verify your account.");
-        setIsSignUpModalOpen(false);
-        navigate("/login");
-      } else {
-        setSignUpError(response.message);
-      }
-    } catch (error) {
-      setSignUpError("An unexpected error occurred. Please try again later.");
-    }
-  };
-
   const closeModal = (setModalState) => () => setModalState(false);
+  
 
   return (
     <div className="home-page">
@@ -150,13 +102,13 @@ const HomePage = () => {
         </div>
         <div className="slider-overlay">
           <div className="search-section">
-            <button onClick={() => setIsSignUpModalOpen(true)} className="get-started-button">
+            <button onClick={() => setIsGetStartedModalOpen(true)} className="get-started-button">
               Get Started
             </button>
             <form onSubmit={handleSearch}>
               <input
                 type="text"
-                placeholder="Search for dishes or ingredients..."
+                placeholder="Search for restaurants, dishes, or ingredients..."
                 value={searchTerm}
                 onChange={handleSearchChange}
                 className="search-bar"
@@ -174,30 +126,14 @@ const HomePage = () => {
           )}
         </div>
       </section>
-
-      {/* Sign Up Modal */}
-      {isSignUpModalOpen && (
-        <Modal onClose={closeModal(setIsSignUpModalOpen)}>
-          <h2>Sign Up</h2>
-          {signUpError && <p className="error-message">{signUpError}</p>}
-          {signUpSuccess && <p className="success-message">{signUpSuccess}</p>}
-          <form onSubmit={handleSignUpSubmit}>
-            <input type="text" name="firstName" placeholder="First Name" value={signUpData.firstName} onChange={handleSignUpChange} required />
-            <input type="text" name="lastName" placeholder="Last Name" value={signUpData.lastName} onChange={handleSignUpChange} required />
-            <input type="email" name="email" placeholder="Email" value={signUpData.email} onChange={handleSignUpChange} required />
-            <input type="tel" name="phone" placeholder="Phone" value={signUpData.phone} onChange={handleSignUpChange} required />
-            <input type="text" name="street" placeholder="Street" value={signUpData.street} onChange={handleSignUpChange} />
-            <input type="text" name="city" placeholder="City" value={signUpData.city} onChange={handleSignUpChange} />
-            <input type="text" name="state" placeholder="State" value={signUpData.state} onChange={handleSignUpChange} />
-            <input type="text" name="country" placeholder="Country" value={signUpData.country} onChange={handleSignUpChange} />
-            <input type="password" name="password" placeholder="Password" value={signUpData.password} onChange={handleSignUpChange} required />
-            <input type="password" name="confirmPassword" placeholder="Confirm Password" value={signUpData.confirmPassword} onChange={handleSignUpChange} required />
-            <button type="submit">Sign Up</button>
-          </form>
+  
+      {/* Modals */}
+      {isGetStartedModalOpen && (
+        <Modal onClose={closeModal(setIsGetStartedModalOpen)}>
+          <GetStarted onClose={closeModal(setIsGetStartedModalOpen)} />
         </Modal>
       )}
-
-      {/* Location Modal */}
+  
       {isLocationModalOpen && location && (
         <Modal onClose={closeModal(setIsLocationModalOpen)}>
           <MapContainer
@@ -215,18 +151,7 @@ const HomePage = () => {
           </MapContainer>
         </Modal>
       )}
-
-      {/* Search Results Modal */}
-      {isSearchResultsModalOpen && (
-        <Modal onClose={closeModal(setIsSearchResultsModalOpen)}>
-          {searchResults.length > 0 ? (
-            <FoodOrderingPage foods={searchResults} cart={cart} setCart={setCart} />
-          ) : (
-            <p>Food item not found. Please try another search.</p>
-          )}
-        </Modal>
-      )}
-
+  
       {/* Featured Dishes Section */}
       <section className="featured-dishes">
         <h2>Featured Dishes</h2>
@@ -239,10 +164,10 @@ const HomePage = () => {
             </div>
           </div>
           <div className="dish">
-            <img src="/images/Grilled Spiced Lamb Chops1.jpg" alt="Signature Dish 2" className="dish-image" />
+            <img src="/images/Grilled Spiced Lamb Chops.jpeg" alt="Signature Dish 2" className="dish-image" />
             <div className="dish-content">
               <h3>Grilled Spiced Lamb Chops</h3>
-              <p>Our Grilled Spiced Lamb Chops are a culinary masterpiece that tantalizes the taste buds. We start with premium, tender lamb chops, carefully selected for their quality and flavor. These succulent cuts are marinated in a bespoke blend of aromatic spices, including rosemary, thyme, and garlic, infusing them with rich, complex flavors. Grilled to perfection, the chops boast a delightfully crispy exterior while remaining juicy and tender inside. The result is a dish that balances the natural sweetness of the lamb with a subtle, spicy kick, creating a memorable dining experience that keeps our patrons coming back for more.</p>
+              <p>Our Pap and Chakalaka is a luxurious dish that showcases the hearty, comforting flavors of South African cuisine. We begin with creamy pap, a staple made from ground maize, cooked to smooth perfection. This serves as the perfect canvas for our vibrant chakalaka - a spicy vegetable relish bursting with flavors. A medley of tomatoes, onions, peppers, and carrots is sautéed and seasoned with our secret blend of spices, creating a dish that's both nutritious and intensely flavorful. This vegetarian-friendly option is a customer favorite across our locations.</p>
             </div>
           </div>
         </div>
@@ -252,7 +177,7 @@ const HomePage = () => {
       <section className="about-us">
         <h2>Our Story</h2>
         <div className="about-content">
-          <img src="/images/kitchen01.jpg" alt="Our Restaurant" className="about-image" />
+          <img src="/images/food13.jpg" alt="Our Restaurant" className="about-image" />
           <div className="about-text-container">
             <div className="about-text">
               <p>Founded in 2015, Roadrunner Food Ordering emerged from a vision to revolutionize the African food delivery landscape. Our journey began in Lagos, Nigeria, with a small team united by a passion for showcasing the rich tapestry of African cuisine to a wider audience.</p>
