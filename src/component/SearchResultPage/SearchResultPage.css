@@ -1,74 +1,176 @@
 .search-results-page {
-    padding: 20px;
-  }
-  
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.search-results-page h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.search-results-page h2 {
+  font-size: 2rem;
+  color: #444;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #4CAF50;
+  padding-bottom: 10px;
+}
+
+.restaurant-grid,
+.menu-item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.restaurant-card,
+.menu-item-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.restaurant-card:hover,
+.menu-item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.restaurant-card:hover .card-image img,
+.menu-item-card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-content h3 {
+  font-size: 1.4rem;
+  margin: 0 0 10px;
+  color: #333;
+}
+
+.card-content p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+.cuisine-type,
+.rating {
+  font-weight: bold;
+}
+
+.price {
+  font-size: 1.2rem;
+  color: #4CAF50;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.menu-item-card button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.menu-item-card button:hover {
+  background-color: #45a049;
+}
+
+/* Eco-mode styles */
+.eco-mode {
+  background-color: #f0f7f0;
+  color: #333;
+}
+
+.eco-mode .restaurant-card,
+.eco-mode .menu-item-card {
+  background-color: #e6f3e6;
+}
+
+.eco-mode .menu-item-card button {
+  background-color: #3a8a3a;
+}
+
+.eco-mode .menu-item-card button:hover {
+  background-color: #2e6e2e;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
   .search-results-page h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 2rem;
   }
-  
+
   .search-results-page h2 {
-    font-size: 20px;
-    margin-top: 30px;
-    margin-bottom: 15px;
+    font-size: 1.6rem;
   }
-  
+
   .restaurant-grid,
   .menu-item-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
   }
-  
-  .restaurant-card,
-  .menu-item-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.2s;
+
+  .card-image {
+    height: 160px;
   }
-  
-  .restaurant-card:hover,
-  .menu-item-card:hover {
-    transform: translateY(-5px);
+
+  .card-content h3 {
+    font-size: 1.2rem;
   }
-  
-  .restaurant-card img,
-  .menu-item-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+
+  .card-content p {
+    font-size: 0.9rem;
   }
-  
-  .restaurant-card h3,
-  .menu-item-card h3 {
-    font-size: 18px;
-    margin: 10px;
+}
+
+@media (max-width: 480px) {
+  .search-results-page h1 {
+    font-size: 1.8rem;
   }
-  
-  .restaurant-card p,
-  .menu-item-card p {
-    margin: 5px 10px;
-    font-size: 14px;
+
+  .search-results-page h2 {
+    font-size: 1.4rem;
   }
-  
-  .menu-item-card button {
-    display: block;
-    width: calc(100% - 20px);
-    margin: 10px;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+
+  .restaurant-grid,
+  .menu-item-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .menu-item-card button:hover {
-    background-color: #45a049;
+
+  .card-image {
+    height: 180px;
   }
-  
-  .eco-mode {
-    /* Add your eco-mode styles here */
-  }
+}

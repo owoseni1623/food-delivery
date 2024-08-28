@@ -28,48 +28,53 @@ const SearchResultsPage = () => {
   }, [searchTerm]);
 
   const handleAddToCart = (item) => {
-    if (isLoggedIn) {
-      addToCart(item);
-      toast.success(`${item.name} added to cart`, {
-        position: "top-center",
-        autoClose: 2000,
-      });
-    } else {
-      toast.error("Please log in to add items to your cart.", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-    }
+    addToCart(item);
+    toast.success(`${item.name} added to cart`, {
+      position: "top-center",
+      autoClose: 2000,
+    });
   };
 
   return (
     <div className={`search-results-page ${ecoMode ? 'eco-mode' : ''}`}>
       <h1>Search Results for "{searchTerm}"</h1>
 
-      <h2>Restaurants</h2>
-      <div className="restaurant-grid">
-        {restaurants.map(restaurant => (
-          <Link to={`/restaurant/${restaurant._id}`} key={restaurant._id} className="restaurant-card">
-            <img src={`https://food-delivery-api-rcff.onrender.com${restaurant.image}`} alt={restaurant.name} />
-            <h3>{restaurant.name}</h3>
-            <p>{restaurant.cuisineType}</p>
-            <p>Rating: {restaurant.rating}</p>
-          </Link>
-        ))}
-      </div>
+      <section className="restaurants-section">
+        <h2>Restaurants</h2>
+        <div className="restaurant-grid">
+          {restaurants.map(restaurant => (
+            <Link to={`/restaurant/${restaurant._id}`} key={restaurant._id} className="restaurant-card">
+              <div className="card-image">
+                <img src={`https://food-delivery-api-rcff.onrender.com${restaurant.image}`} alt={restaurant.name} />
+              </div>
+              <div className="card-content">
+                <h3>{restaurant.name}</h3>
+                <p className="cuisine-type">{restaurant.cuisineType}</p>
+                <p className="rating">Rating: {restaurant.rating}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
 
-      <h2>Menu Items</h2>
-      <div className="menu-item-grid">
-        {menuItems.map(item => (
-          <div key={item._id} className="menu-item-card">
-            <img src={`https://food-delivery-api-rcff.onrender.com/uploads/${item.image}`} alt={item.name} />
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-            <p>₦{item.price}</p>
-            <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
-          </div>
-        ))}
-      </div>
+      <section className="menu-items-section">
+        <h2>Menu Items</h2>
+        <div className="menu-item-grid">
+          {menuItems.map(item => (
+            <div key={item._id} className="menu-item-card">
+              <div className="card-image">
+                <img src={`https://food-delivery-api-rcff.onrender.com/uploads/${item.image}`} alt={item.name} />
+              </div>
+              <div className="card-content">
+                <h3>{item.name}</h3>
+                <p className="description">{item.description}</p>
+                <p className="price">₦{item.price}</p>
+                <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
