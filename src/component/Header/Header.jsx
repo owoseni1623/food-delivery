@@ -90,31 +90,32 @@ const Header = () => {
             <li className="nav-item">
               <Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
             </li>
+            <li className="nav-item">
+              <Link to="/menu" onClick={() => setIsMenuOpen(false)}>Menu</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/listing" onClick={() => setIsMenuOpen(false)}>Restaurant</Link>
+            </li>
+            <li className="nav-item cart-icon">
+              <Link to="/cart" onClick={() => setIsMenuOpen(false)}>
+                <FontAwesomeIcon icon={faShoppingCart} />
+                {getCartItemCount() > 0 && <span className="cart-count">{getCartItemCount()}</span>}
+              </Link>
+            </li>
             {isLoggedIn && user ? (
-              <>
-                <li className="nav-item">
-                  <Link to="/menu" onClick={() => setIsMenuOpen(false)}>Restaurant Menu</Link>
-                </li>
-                <li className="nav-item cart-icon">
-                  <Link to="/cart" onClick={() => setIsMenuOpen(false)}>
-                    <FontAwesomeIcon icon={faShoppingCart} />
-                    {getCartItemCount() > 0 && <span className="cart-count">{getCartItemCount()}</span>}
-                  </Link>
-                </li>
-                <li className="nav-item auth-items">
-                  <Link to="/profile" className="profile-link" onClick={() => setIsMenuOpen(false)}>
-                  <img 
-                    src={getAvatarUrl()} 
-                    alt={userProfile?.firstName || user?.firstName || "User"} 
-                    className="user-avatar" 
-                  />
-                  <span className="user-name" title={userProfile?.firstName || user?.firstName || "User"}>
-                    {userProfile?.firstName || user?.firstName || "User"}
-                  </span>
-                  </Link>
-                  <button className="auth-link" onClick={handleLogout}>Log Out</button>
-                </li>
-              </>
+              <li className="nav-item auth-items">
+                <Link to="/profile" className="profile-link" onClick={() => setIsMenuOpen(false)}>
+                <img 
+                  src={getAvatarUrl()} 
+                  alt={userProfile?.firstName || user?.firstName || "User"} 
+                  className="user-avatar" 
+                />
+                <span className="user-name" title={userProfile?.firstName || user?.firstName || "User"}>
+                  {userProfile?.firstName || user?.firstName || "User"}
+                </span>
+                </Link>
+                <button className="auth-link" onClick={handleLogout}>Log Out</button>
+              </li>
             ) : (
               <>
                 <li className="nav-item auth-items">
