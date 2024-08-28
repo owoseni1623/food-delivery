@@ -58,23 +58,16 @@ const MenuPage = () => {
   };
 
   const handleAddToCart = (food) => {
-    if (isLoggedIn) {
-      const itemToAdd = {
-        ...food,
-        id: food._id,
-        image: getImageUrl(food.image)
-      };
-      addToCart(itemToAdd);
-      toast.success(`${food.name} added to cart`, {
-        position: "top-center",
-        autoClose: 2000,
-      });
-    } else {
-      toast.error("Please log in to add items to your cart.", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-    }
+    const itemToAdd = {
+      ...food,
+      id: food._id,
+      image: getImageUrl(food.image)
+    };
+    addToCart(itemToAdd);
+    toast.success(`${food.name} added to cart`, {
+      position: "top-center",
+      autoClose: 2000,
+    });
   };
 
   const handleInputChange = (e) => {
@@ -112,7 +105,7 @@ const MenuPage = () => {
           {isAddingItem ? 'Cancel' : 'Add New Item'}
         </button>
       )}
-      
+
       <div className="food-grid022">
         {menuData.map((food) => (
           <div key={food._id} className="food-card022">
