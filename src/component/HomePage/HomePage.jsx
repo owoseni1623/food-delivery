@@ -9,6 +9,7 @@ import "leaflet/dist/leaflet.css";
 import GetStarted from "../GetStart/GetStarted";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const sliderImages = [
     '/images/food.jpeg',
     '/images/food1.jpeg',
@@ -25,9 +26,6 @@ const HomePage = () => {
   const [location, setLocation] = useState(null);
   const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-  const [isSearchResultsModalOpen, setIsSearchResultsModalOpen] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     const timer = setInterval(nextSlide, 5000);
@@ -49,16 +47,6 @@ const HomePage = () => {
   const handleSearch = (event) => {
     event.preventDefault();
     navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
-    const results = FoodOrderingPage.africanFoods.filter(food => 
-      food.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      food.shortDesc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      food.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (food.ingredients && food.ingredients.some(ingredient => 
-        ingredient.toLowerCase().includes(searchTerm.toLowerCase())
-      ))
-    );
-    setSearchResults(results);
-    setIsSearchResultsModalOpen(true);
   };
 
   const getCurrentLocation = () => {
@@ -81,7 +69,6 @@ const HomePage = () => {
   };
 
   const closeModal = (setModalState) => () => setModalState(false);
-  
 
   return (
     <div className="home-page">
@@ -126,14 +113,14 @@ const HomePage = () => {
           )}
         </div>
       </section>
-  
+
       {/* Modals */}
       {isGetStartedModalOpen && (
         <Modal onClose={closeModal(setIsGetStartedModalOpen)}>
           <GetStarted onClose={closeModal(setIsGetStartedModalOpen)} />
         </Modal>
       )}
-  
+
       {isLocationModalOpen && location && (
         <Modal onClose={closeModal(setIsLocationModalOpen)}>
           <MapContainer
@@ -151,7 +138,7 @@ const HomePage = () => {
           </MapContainer>
         </Modal>
       )}
-  
+
       {/* Featured Dishes Section */}
       <section className="featured-dishes">
         <h2>Featured Dishes</h2>
