@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "./HomePage.css";
 import "slick-carousel/slick/slick.css"; 
@@ -72,13 +72,6 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      <header>
-        <Link to="/">
-          <img src="/images/Logo1.png" alt="Roadrunner Food Ordering Logo" className="logo" />
-        </Link>
-        {/* Add any other header content here */}
-      </header>
-
       <section className="hero-section">
         <div className="slider">
           <div className="slider-container" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
