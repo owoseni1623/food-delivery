@@ -74,7 +74,7 @@ const HomePage = () => {
     <div className="home-page">
       <header>
         <Link to="/">
-          <img src="/path/to/your/logo.png" alt="Roadrunner Food Ordering Logo" className="logo" />
+          <img src="/images/Logo1.png" alt="Roadrunner Food Ordering Logo" className="logo" />
         </Link>
         {/* Add any other header content here */}
       </header>
