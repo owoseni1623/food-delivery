@@ -10,7 +10,7 @@ import MenuPage from "./component/MenuPage/MenuPage";
 import CartPage from "./component/CartPage/CartPage";
 import FAQ from "./component/FAQ/FAQ";
 import CheckoutPage from "./component/CheckoutPage/CheckoutPage";
-import SearchPage from "./component/SearchPage/SearchPage";
+// import SearchPage from "./component/SearchPage/SearchPage";
 import { EcomProvider } from "./Context/EcomContext";
 import { AuthProvider } from "./Context/AuthContext";
 import LogoutButton from "./component/LogoutPage/LogoutPage";
@@ -58,7 +58,7 @@ function App() {
               <Route path="/logout" element={<LogoutButton />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/getstarted" element={<GetStarted />} />
-              <Route path="/search" element={<SearchPage />} />
+              {/* <Route path="/search" element={<SearchPage />} /> */}
               <Route path="/listing" element={<RestaurantListingPage />} />
               <Route path="/restaurant/:id" element={<RestaurantDetailsPage />} />
               <Route path="/restaurant" element={<RestaurantPage />} />
