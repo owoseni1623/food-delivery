@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEcom } from "../../Context/EcomContext";
+import { useAuth } from "../../Context/AuthContext";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./CartPage.css";
 
 const CartPage = () => {
-  const { cart, removeFromCart, updateQuantity, saveOrderDetails } = useEcom();
+  const { cart, removeFromCart, updateQuantity, saveOrderDetails, getCartItemCount } = useEcom();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [quantityColors, setQuantityColors] = useState({});
 
@@ -25,6 +27,15 @@ const CartPage = () => {
         position: "top-center",
         autoClose: 3000,
       });
+      return;
+    }
+
+    if (!user) {
+      toast.warning("Please log in or sign up to proceed to checkout.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      navigate('/login');
       return;
     }
 
@@ -75,18 +86,18 @@ const CartPage = () => {
       console.log("Using placeholder image");
       return 'https://via.placeholder.com/150';
     }
-    
+
     if (item.image.startsWith('http')) {
       return item.image;
     }
-    
+
     const imagePath = item.image.includes('/uploads/') ? item.image.split('/uploads/').pop() : item.image;
     return `${apiUrl}/uploads/${imagePath}`;
   };
 
   return (
     <div className="cart-page2">
-      <h1 className="cart-title2">Your Cart</h1>
+      <h1 className="cart-title2">Your Cart ({getCartItemCount()} items)</h1>
       {cart.length === 0 ? (
         <div className="empty-cart2">
           <p>Your cart is empty.</p>
@@ -137,7 +148,7 @@ const CartPage = () => {
               <span>₦{grandTotal.toFixed(2)}</span>
             </div>
             <button className="checkout-btn2" onClick={proceedToCheckout}>
-              Proceed to Checkout
+              {user ? "Proceed to Checkout" : "Login to Checkout"}
             </button>
             <button className="continue-shopping2" onClick={() => navigate('/')}>
               Continue Shopping
