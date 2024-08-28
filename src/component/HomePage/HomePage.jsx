@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "./HomePage.css";
 import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css"
+import "slick-carousel/slick/slick-theme.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { useAuth } from "../Context/AuthContext";
 import GetStarted from "../GetStart/GetStarted";
 
 const HomePage = () => {
@@ -22,11 +24,28 @@ const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState(null);
-  const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isSearchResultsModalOpen, setIsSearchResultsModalOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [cart, setCart] = useState([]);
+  const [signUpData, setSignUpData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    street: "",
+    city: "",
+    state: "",
+    country: "",
+    password: "",
+    confirmPassword: ""
+  });
+  const [signUpError, setSignUpError] = useState("");
+  const [signUpSuccess, setSignUpSuccess] = useState("");
+
+  const navigate = useNavigate();
+  const { signup } = useAuth();
 
   useEffect(() => {
     const timer = setInterval(nextSlide, 5000);
@@ -78,6 +97,38 @@ const HomePage = () => {
     }
   };
 
+  const handleSignUpChange = (e) => {
+    const { name, value } = e.target;
+    setSignUpData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSignUpSubmit = async (e) => {
+    e.preventDefault();
+    setSignUpError("");
+    setSignUpSuccess("");
+
+    if (signUpData.password !== signUpData.confirmPassword) {
+      setSignUpError("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await signup(signUpData);
+      if (response.success) {
+        setSignUpSuccess("Registration successful! Please check your email to verify your account.");
+        setIsSignUpModalOpen(false);
+        navigate("/login");
+      } else {
+        setSignUpError(response.message);
+      }
+    } catch (error) {
+      setSignUpError("An unexpected error occurred. Please try again later.");
+    }
+  };
+
   const closeModal = (setModalState) => () => setModalState(false);
 
   return (
@@ -99,7 +150,7 @@ const HomePage = () => {
         </div>
         <div className="slider-overlay">
           <div className="search-section">
-            <button onClick={() => setIsGetStartedModalOpen(true)} className="get-started-button">
+            <button onClick={() => setIsSignUpModalOpen(true)} className="get-started-button">
               Get Started
             </button>
             <form onSubmit={handleSearch}>
@@ -124,23 +175,29 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Modals */}
-      {isGetStartedModalOpen && (
-        <Modal onClose={closeModal(setIsGetStartedModalOpen)}>
-          <GetStarted onClose={closeModal(setIsGetStartedModalOpen)} />
+      {/* Sign Up Modal */}
+      {isSignUpModalOpen && (
+        <Modal onClose={closeModal(setIsSignUpModalOpen)}>
+          <h2>Sign Up</h2>
+          {signUpError && <p className="error-message">{signUpError}</p>}
+          {signUpSuccess && <p className="success-message">{signUpSuccess}</p>}
+          <form onSubmit={handleSignUpSubmit}>
+            <input type="text" name="firstName" placeholder="First Name" value={signUpData.firstName} onChange={handleSignUpChange} required />
+            <input type="text" name="lastName" placeholder="Last Name" value={signUpData.lastName} onChange={handleSignUpChange} required />
+            <input type="email" name="email" placeholder="Email" value={signUpData.email} onChange={handleSignUpChange} required />
+            <input type="tel" name="phone" placeholder="Phone" value={signUpData.phone} onChange={handleSignUpChange} required />
+            <input type="text" name="street" placeholder="Street" value={signUpData.street} onChange={handleSignUpChange} />
+            <input type="text" name="city" placeholder="City" value={signUpData.city} onChange={handleSignUpChange} />
+            <input type="text" name="state" placeholder="State" value={signUpData.state} onChange={handleSignUpChange} />
+            <input type="text" name="country" placeholder="Country" value={signUpData.country} onChange={handleSignUpChange} />
+            <input type="password" name="password" placeholder="Password" value={signUpData.password} onChange={handleSignUpChange} required />
+            <input type="password" name="confirmPassword" placeholder="Confirm Password" value={signUpData.confirmPassword} onChange={handleSignUpChange} required />
+            <button type="submit">Sign Up</button>
+          </form>
         </Modal>
       )}
 
-      {isSearchResultsModalOpen && (
-        <Modal onClose={closeModal(setIsSearchResultsModalOpen)}>
-          {searchResults.length > 0 ? (
-            <FoodOrderingPage foods={searchResults} cart={cart} setCart={setCart} />
-          ) : (
-            <p>Food item not found. Please try another search.</p>
-          )}
-        </Modal>
-      )}
-
+      {/* Location Modal */}
       {isLocationModalOpen && location && (
         <Modal onClose={closeModal(setIsLocationModalOpen)}>
           <MapContainer
@@ -159,12 +216,23 @@ const HomePage = () => {
         </Modal>
       )}
 
+      {/* Search Results Modal */}
+      {isSearchResultsModalOpen && (
+        <Modal onClose={closeModal(setIsSearchResultsModalOpen)}>
+          {searchResults.length > 0 ? (
+            <FoodOrderingPage foods={searchResults} cart={cart} setCart={setCart} />
+          ) : (
+            <p>Food item not found. Please try another search.</p>
+          )}
+        </Modal>
+      )}
+
       {/* Featured Dishes Section */}
       <section className="featured-dishes">
         <h2>Featured Dishes</h2>
         <div className="dishes-container">
           <div className="dish">
-          <img src="/images/food8.jpeg" alt="Signature Dish 1" className="dish-image" />
+            <img src="/images/food8.jpeg" alt="Signature Dish 1" className="dish-image" />
             <div className="dish-content">
               <h3>Ewa Agonyin with Bread and Pepsi Cola</h3>
               <p>Our delectable Ewa Agonyin is a true culinary delight. We begin with premium black-eyed peas, slow-cooked to creamy perfection and generously smothered in a rich, spicy palm oil sauce. This hearty dish is complemented by our freshly baked bread, offering a perfect balance of textures. To round out this satisfying meal, we serve it with an ice-cold Pepsi cola, providing a refreshing contrast to the savory flavors. This classic combination represents the best of Nigerian street food, bringing together traditional tastes with modern convenience for a truly memorable dining experience.</p>
