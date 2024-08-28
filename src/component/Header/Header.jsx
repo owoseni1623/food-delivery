@@ -79,7 +79,9 @@ const Header = () => {
     <header className={`header ${isSticky ? "sticky" : ""} ${hideHeader ? "hide" : ""}`}>
       <div className="header-container">
         <div className="logo-title-container">
-          <img src={logo} alt="Logo" className="header-logo" />
+          <Link to="/">
+            <img src={logo} alt="Logo" className="header-logo" />
+          </Link>
           <h1 className="header-title">Roadrunner Foods</h1>
           <button className="menu-toggle" onClick={toggleMenu}>
             <FontAwesomeIcon icon={faBars} />
