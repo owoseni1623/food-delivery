@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useEcom } from "../../Context/EcomContext";
 import { useAuth } from "../../Context/AuthContext";
 import { toast } from 'react-toastify';
@@ -7,33 +7,25 @@ import "./SearchResultPage.css";
 
 const SearchResultsPage = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const searchTerm = new URLSearchParams(location.search).get("q");
   const { addToCart, ecoMode } = useEcom();
   const { isLoggedIn } = useAuth();
   const [restaurants, setRestaurants] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
-  const [searchInput, setSearchInput] = useState(searchTerm || "");
 
   useEffect(() => {
-    if (searchTerm) {
-      fetchResults(searchTerm);
-    }
-  }, [searchTerm]);
-
-  const fetchResults = (term) => {
     // Fetch restaurants
-    fetch(`https://food-delivery-api-rcff.onrender.com/api/restaurants?search=${term}`)
+    fetch(`https://food-delivery-api-rcff.onrender.com/api/restaurants?search=${searchTerm}`)
       .then(response => response.json())
       .then(data => setRestaurants(data))
       .catch(error => console.error('Error fetching restaurants:', error));
 
     // Fetch menu items
-    fetch(`https://food-delivery-api-rcff.onrender.com/api/menu?search=${term}`)
+    fetch(`https://food-delivery-api-rcff.onrender.com/api/menu?search=${searchTerm}`)
       .then(response => response.json())
       .then(data => setMenuItems(data))
       .catch(error => console.error('Error fetching menu items:', error));
-  };
+  }, [searchTerm]);
 
   const handleAddToCart = (item) => {
     addToCart(item);
@@ -43,26 +35,8 @@ const SearchResultsPage = () => {
     });
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchInput.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchInput.trim())}`);
-    }
-  };
-
   return (
     <div className={`search-results-page ${ecoMode ? 'eco-mode' : ''}`}>
-      <form onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder="Search for restaurants or menu items"
-          className="search-input"
-        />
-        <button type="submit" className="search-button">Search</button>
-      </form>
-
       <h1>Search Results for "{searchTerm}"</h1>
 
       <section className="restaurants-section">
