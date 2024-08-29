@@ -18,7 +18,7 @@ const sendAlert = (message, isDev) => {
 };
 
 export const EcomProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const [ecoMode, setEcoMode] = useState(false);
   const [menuData, setMenuData] = useState([]);
   const [error, setError] = useState(null);
@@ -32,6 +32,12 @@ export const EcomProvider = ({ children }) => {
     fetchCart();
     fetchMenuData();
   }, [user]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      mergeCartsAfterLogin();
+    }
+  }, [isLoggedIn]);
 
   const getHeaders = () => {
     const token = localStorage.getItem('authToken');
@@ -284,6 +290,43 @@ export const EcomProvider = ({ children }) => {
     localStorage.removeItem('cart');
   };
 
+  const mergeCartsAfterLogin = async () => {
+    try {
+      const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (localCart.length > 0) {
+        const response = await fetch(`${apiUrl}/api/cart/merge`, {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ localCart }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.success) {
+          setCart(data.cartData);
+          localStorage.removeItem('cart');
+          toast.success("Your cart has been updated with previously added items", {
+            position: "top-center",
+            autoClose: 3000,
+          });
+        } else {
+          throw new Error(data.message || 'Failed to merge carts');
+        }
+      }
+    } catch (e) {
+      console.error("Error merging carts:", e);
+      setError(e.message);
+      toast.error("Failed to update your cart. Please try again later.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+    }
+  };
+
   return (
     <EcomContext.Provider
       value={{
@@ -301,6 +344,7 @@ export const EcomProvider = ({ children }) => {
         loading,
         clearCart,
         fetchMenuData,
+        mergeCartsAfterLogin,
       }}
     >
       {children}
