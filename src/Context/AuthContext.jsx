@@ -57,6 +57,7 @@ export const AuthProvider = ({ children }) => {
       setToken(storedToken);
       setAuthToken(storedToken);
       setIsLoggedIn(true);
+      updateAxiosToken(storedToken);
     }
   
     if (storedUser) {
@@ -80,9 +81,9 @@ export const AuthProvider = ({ children }) => {
     }
   
     setIsLoading(false);
-  }, []);
+  }, [updateAxiosToken]);
 
-  const handleAuthResponse = async (response) => {
+  const handleAuthResponse = useCallback(async (response) => {
     if (response.data.success) {
       const { token: newToken, user: newUser } = response.data;
       setIsLoggedIn(true);
@@ -100,7 +101,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       throw new Error(response.data.message || "Authentication failed");
     }
-  };
+  }, [updateAxiosToken]);
 
   const login = async (email, password) => {
     try {
@@ -133,12 +134,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUser = (updatedUserData) => {
+  const updateUser = useCallback((updatedUserData) => {
     const newUserData = { ...user, ...updatedUserData };
     setUser(newUserData);
     localStorage.setItem("user", JSON.stringify(newUserData));
     window.dispatchEvent(new Event('user-updated'));
-  };
+  }, [user]);
 
   const logout = useCallback(() => {
     setIsLoggedIn(false);
@@ -151,9 +152,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userProfile");
-  }, []);
+    updateAxiosToken(null);
+  }, [updateAxiosToken]);
 
-  const refreshToken = async () => {
+  const refreshToken = useCallback(async () => {
     try {
       const response = await axios.post(`${API_BASE_URL}/users/refresh-token`, {}, {
         withCredentials: true
@@ -163,6 +165,7 @@ export const AuthProvider = ({ children }) => {
         setToken(newToken);
         setAuthToken(newToken);
         localStorage.setItem("authToken", newToken);
+        updateAxiosToken(newToken);
         return newToken;
       }
       return null;
@@ -170,16 +173,12 @@ export const AuthProvider = ({ children }) => {
       console.error("Failed to refresh token:", error);
       return null;
     }
-  };
+  }, [updateAxiosToken]);
 
   const getUserProfile = useCallback(async () => {
     if (!token) return;
     try {
-      const response = await axiosInstance.get(`/profile/get`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await axiosInstance.get(`/profile/get`);
       const updatedProfile = response.data.user || response.data.profile;
       if (updatedProfile) {
         setUserProfile(updatedProfile);
@@ -196,7 +195,7 @@ export const AuthProvider = ({ children }) => {
         }
       }
     }
-  }, [token, logout, axiosInstance]);
+  }, [token, logout, axiosInstance, refreshToken]);
 
   const updateUserProfile = async (profileData) => {
     try {
@@ -241,31 +240,36 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isLoggedIn, userProfile, getUserProfile]);
 
+  const contextValue = useMemo(() => ({
+    isLoggedIn,
+    user, 
+    login, 
+    token,
+    authToken,
+    setToken,
+    setAuthToken,
+    logout, 
+    signup, 
+    updateUser,
+    getUserProfile, 
+    userProfile, 
+    updateUserProfile, 
+    error, 
+    success,
+    isLoading,
+    setError,
+    refreshToken,
+    setSuccess,
+    axiosInstance,
+    updateAxiosToken
+  }), [
+    isLoggedIn, user, login, token, authToken, setToken, setAuthToken,
+    logout, signup, updateUser, getUserProfile, userProfile, updateUserProfile,
+    error, success, isLoading, refreshToken, axiosInstance, updateAxiosToken
+  ]);
+
   return (
-    <AuthContext.Provider 
-      value={{ 
-        isLoggedIn,
-        user, 
-        login, 
-        token,
-        authToken,
-        setToken,
-        setAuthToken,
-        logout, 
-        signup, 
-        updateUser,
-        getUserProfile, 
-        userProfile, 
-        updateUserProfile, 
-        error, 
-        success,
-        isLoading,
-        setError,
-        refreshToken,
-        setSuccess,
-        axiosInstance,
-        updateAxiosToken
-      }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
