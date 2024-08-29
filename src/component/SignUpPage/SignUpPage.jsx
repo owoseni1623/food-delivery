@@ -142,17 +142,6 @@ const SignUp = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
             <label htmlFor="phone">Phone:</label>
             <input
               type="tel"
@@ -200,6 +189,17 @@ const SignUp = () => {
               name="country"
               value={formData.country}
               onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
