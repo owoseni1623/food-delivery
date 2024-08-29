@@ -262,6 +262,7 @@ export const EcomProvider = ({ children }) => {
         removeFromCart,
         updateQuantity,
         getCartItemCount,
+        mergeCartsAfterLogin,
         orderDetails,
         saveOrderDetails,
         loading,
