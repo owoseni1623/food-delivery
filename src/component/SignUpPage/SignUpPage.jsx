@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
-
 const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com';
 
 const SignUp = () => {
@@ -20,7 +19,8 @@ const SignUp = () => {
     state: "",
     country: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    agreeToTerms: false
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -32,10 +32,10 @@ const SignUp = () => {
   const { signup } = useAuth();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -46,6 +46,10 @@ const SignUp = () => {
     }
     if (formData.password.length < 8) {
       setError("Password must be at least 8 characters long");
+      return false;
+    }
+    if (!formData.agreeToTerms) {
+      setError("You must agree to the terms of use & privacy policy");
       return false;
     }
     return true;
@@ -92,7 +96,8 @@ const SignUp = () => {
           state: "",
           country: "",
           password: "",
-          confirmPassword: ""
+          confirmPassword: "",
+          agreeToTerms: false
         });
         navigate("/login");
       } else {
@@ -122,7 +127,7 @@ const SignUp = () => {
         {successMessage && <p className="success-message">{successMessage}</p>}
         <p>After signing up, please check your email to verify your account before logging in.</p>
         <form onSubmit={handleSubmit}>
-        <div className="form-group">
+          <div className="form-group">
             <label htmlFor="firstName">First Name:</label>
             <input
               type="text"
@@ -130,7 +135,6 @@ const SignUp = () => {
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              required
             />
           </div>
           <div className="form-group">
@@ -141,7 +145,6 @@ const SignUp = () => {
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              required
             />
           </div>
           <div className="form-group">
@@ -163,7 +166,6 @@ const SignUp = () => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              required
             />
           </div>
           <div className="form-group">
@@ -243,6 +245,18 @@ const SignUp = () => {
                 aria-label={showConfirmPassword ? "Hide password" : "Show password"}
               />
             </div>
+          </div>
+          <div className="form-group">
+            <label>
+              <input
+                type="checkbox"
+                name="agreeToTerms"
+                checked={formData.agreeToTerms}
+                onChange={handleChange}
+                required
+              />
+              By continuing, I agree to the terms of use & privacy policy
+            </label>
           </div>
           <button type="submit" className="sign-up-button" disabled={isLoading}>
             {isLoading ? "Signing Up..." : "Sign Up"}
