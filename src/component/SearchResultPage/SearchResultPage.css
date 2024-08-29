@@ -21,18 +21,25 @@
 }
 
 .search-button {
-  padding: 10px 20px;
-  font-size: 1rem;
-  background-color: #4CAF50;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #FF6B6B;
   color: white;
   border: none;
-  border-radius: 0 4px 4px 0;
+  border-radius: 30px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .search-button:hover {
-  background-color: #45a049;
+  background-color: #FF8E8E;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 .search-results-page h1 {
