@@ -18,7 +18,7 @@ const sendAlert = (message, isDev) => {
 };
 
 export const EcomProvider = ({ children }) => {
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, authToken } = useAuth();
   const [ecoMode, setEcoMode] = useState(false);
   const [menuData, setMenuData] = useState([]);
   const [error, setError] = useState(null);
@@ -344,7 +344,6 @@ export const EcomProvider = ({ children }) => {
         loading,
         clearCart,
         fetchMenuData,
-        mergeCartsAfterLogin,
       }}
     >
       {children}

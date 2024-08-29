@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react";
 import axios from "axios";
-import { useEcom } from "./EcomContext";
 
 const AuthContext = createContext();
 
@@ -18,7 +17,6 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [profileFetched, setProfileFetched] = useState(false);
-  const { mergeCartsAfterLogin } = useEcom();
 
   const axiosInstance = useMemo(() => {
     const instance = axios.create({
@@ -97,9 +95,8 @@ export const AuthProvider = ({ children }) => {
       updateAxiosToken(newToken);
       setProfileFetched(false);
       console.log("Auth token set:", newToken);
-  
+
       await getUserProfile();
-      await mergeCartsAfterLogin();
     } else {
       throw new Error(response.data.message || "Authentication failed");
     }
