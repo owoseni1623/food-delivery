@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
+
 const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com';
 
 const SignUp = () => {
@@ -54,13 +55,13 @@ const SignUp = () => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
-
+  
     if (!validateForm()) {
       return;
     }
-
+  
     setIsLoading(true);
-
+  
     const registrationData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -74,10 +75,10 @@ const SignUp = () => {
       },
       password: formData.password,
     };
-
+  
     try {
       const response = await axios.post(`${API_BASE_URL}/api/users/register`, registrationData);
-
+  
       if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
         alert("Registration successful! Please check your email to verify your account.");
@@ -104,7 +105,7 @@ const SignUp = () => {
       setIsLoading(false);
     }
   };
-
+  
   const togglePasswordVisibility = (field) => {
     if (field === 'password') {
       setShowPassword((prev) => !prev);
@@ -121,7 +122,7 @@ const SignUp = () => {
         {successMessage && <p className="success-message">{successMessage}</p>}
         <p>After signing up, please check your email to verify your account before logging in.</p>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+        <div className="form-group">
             <label htmlFor="firstName">First Name:</label>
             <input
               type="text"
@@ -129,6 +130,7 @@ const SignUp = () => {
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -139,6 +141,18 @@ const SignUp = () => {
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -149,6 +163,7 @@ const SignUp = () => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -189,17 +204,6 @@ const SignUp = () => {
               name="country"
               value={formData.country}
               onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
             />
           </div>
           <div className="form-group">
