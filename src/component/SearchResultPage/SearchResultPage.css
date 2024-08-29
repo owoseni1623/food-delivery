@@ -63,9 +63,10 @@ body {
 }
 
 .search-results-page h1 {
-  font-size: 3rem;
+  font-size: 2rem;
   color: var(--text-color);
   margin-bottom: 40px;
+  margin-top: 3rem;
   text-align: center;
   font-weight: 700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
