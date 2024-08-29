@@ -10,7 +10,14 @@ const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
+    phone: "",
+    street: "",
+    city: "",
+    state: "",
+    country: "",
     password: "",
     confirmPassword: ""
   });
@@ -55,7 +62,16 @@ const SignUp = () => {
     setIsLoading(true);
 
     const registrationData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
       email: formData.email,
+      phone: formData.phone,
+      address: {
+        street: formData.street,
+        city: formData.city,
+        state: formData.state,
+        country: formData.country,
+      },
       password: formData.password,
     };
 
@@ -66,7 +82,14 @@ const SignUp = () => {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
         alert("Registration successful! Please check your email to verify your account.");
         setFormData({
+          firstName: "",
+          lastName: "",
           email: "",
+          phone: "",
+          street: "",
+          city: "",
+          state: "",
+          country: "",
           password: "",
           confirmPassword: ""
         });
@@ -99,6 +122,26 @@ const SignUp = () => {
         <p>After signing up, please check your email to verify your account before logging in.</p>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
+            <label htmlFor="firstName">First Name:</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="lastName">Last Name:</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
             <label htmlFor="email">Email:</label>
             <input
               type="email"
@@ -107,6 +150,56 @@ const SignUp = () => {
               value={formData.email}
               onChange={handleChange}
               required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="phone">Phone:</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="street">Street:</label>
+            <input
+              type="text"
+              id="street"
+              name="street"
+              value={formData.street}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="city">City:</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="state">State:</label>
+            <input
+              type="text"
+              id="state"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="country">Country:</label>
+            <input
+              type="text"
+              id="country"
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
             />
           </div>
           <div className="form-group">
