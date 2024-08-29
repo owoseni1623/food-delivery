@@ -6,19 +6,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./SignUpPage.css";
 
-
 const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
     email: "",
-    phone: "",
-    street: "",
-    city: "",
-    state: "",
-    country: "",
     password: "",
     confirmPassword: ""
   });
@@ -55,42 +47,26 @@ const SignUp = () => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
-  
+
     if (!validateForm()) {
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     const registrationData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
       email: formData.email,
-      phone: formData.phone,
-      address: {
-        street: formData.street,
-        city: formData.city,
-        state: formData.state,
-        country: formData.country,
-      },
       password: formData.password,
     };
-  
+
     try {
       const response = await axios.post(`${API_BASE_URL}/api/users/register`, registrationData);
-  
+
       if (response.data.success) {
         setSuccessMessage("Registration successful! Please check your email to verify your account.");
         alert("Registration successful! Please check your email to verify your account.");
         setFormData({
-          firstName: "",
-          lastName: "",
           email: "",
-          phone: "",
-          street: "",
-          city: "",
-          state: "",
-          country: "",
           password: "",
           confirmPassword: ""
         });
@@ -105,7 +81,7 @@ const SignUp = () => {
       setIsLoading(false);
     }
   };
-  
+
   const togglePasswordVisibility = (field) => {
     if (field === 'password') {
       setShowPassword((prev) => !prev);
@@ -122,28 +98,6 @@ const SignUp = () => {
         {successMessage && <p className="success-message">{successMessage}</p>}
         <p>After signing up, please check your email to verify your account before logging in.</p>
         <form onSubmit={handleSubmit}>
-        <div className="form-group">
-            <label htmlFor="firstName">First Name:</label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="lastName">Last Name:</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-            />
-          </div>
           <div className="form-group">
             <label htmlFor="email">Email:</label>
             <input
@@ -153,57 +107,6 @@ const SignUp = () => {
               value={formData.email}
               onChange={handleChange}
               required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phone">Phone:</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="street">Street:</label>
-            <input
-              type="text"
-              id="street"
-              name="street"
-              value={formData.street}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="city">City:</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="state">State:</label>
-            <input
-              type="text"
-              id="state"
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="country">Country:</label>
-            <input
-              type="text"
-              id="country"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
             />
           </div>
           <div className="form-group">
