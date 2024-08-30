@@ -102,7 +102,7 @@ const MenuPage = () => {
       <h1 className="title022">Menu Page</h1>
       {isLoggedIn && (
         <button onClick={() => setIsAddingItem(!isAddingItem)} className="add-item-btn022">
-          {isAddingItem ? 'Cancel' : ''}
+          {isAddingItem ? 'Cancel' : 'Add New Item'}
         </button>
       )}
 
