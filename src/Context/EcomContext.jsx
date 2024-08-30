@@ -226,8 +226,7 @@ export const EcomProvider = ({ children }) => {
     try {
       const localCart = JSON.parse(localStorage.getItem('cart')) || [];
       if (localCart.length > 0) {
-        console.log('Merging carts...');
-        const response = await axiosInstance.post(`${apiUrl}/api/users/merge-cart`, { localCart });
+        const response = await axiosInstance.post(`${apiUrl}/api/cart/merge`, { localCart });
         if (response.data.success) {
           setCart(response.data.cartData);
           localStorage.removeItem('cart');
