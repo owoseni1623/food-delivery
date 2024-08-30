@@ -10,66 +10,38 @@ const apiUrl = import.meta.env.VITE_API_URL || 'https://food-delivery-api-rcff.o
 
 export const useEcom = () => useContext(EcomContext);
 
-const sendAlert = (message, isDev) => {
-  if (isDev) {
-    console.log('DEV ALERT:', message);
-  } else {
-    console.log('PROD ALERT:', message);
-  }
-};
-
 export const EcomProvider = ({ children }) => {
   const { user, isLoggedIn, authToken, axiosInstance } = useAuth();
-  const [ecoMode, setEcoMode] = useState(false);
-  const [menuData, setMenuData] = useState([]);
-  const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const toggleEcoMode = () => setEcoMode(prevMode => !prevMode);
-
   const fetchCart = useCallback(async () => {
+    setLoading(true);
     if (!isLoggedIn) {
-      console.log('No user, loading cart from localStorage');
       const localCart = JSON.parse(localStorage.getItem('cart')) || [];
       setCart(localCart);
+      setLoading(false);
       return;
     }
     try {
-      console.log('Fetching cart data...');
       const response = await axiosInstance.get(`${apiUrl}/api/cart/get`);
-      console.log('Received cart data:', response.data);
       if (response.data.success) {
         setCart(response.data.cartData || []);
       } else {
-        console.error('Failed to fetch cart data:', response.data.message);
-        setError(response.data.message || 'Failed to fetch cart data');
+        throw new Error(response.data.message || 'Failed to fetch cart data');
       }
     } catch (e) {
       console.error("Error fetching cart:", e);
-      setError("Failed to fetch cart data. Please try again later.");
-    }
-  }, [isLoggedIn, axiosInstance]);
-
-  const fetchMenuData = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`${apiUrl}/api/menu/getAll`);
-      setMenuData(response.data);
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching menu data:", err);
-      setError(err.message);
+      toast.error("Failed to fetch cart data. Please try again later.");
     } finally {
       setLoading(false);
     }
-  }, [axiosInstance]);
+  }, [isLoggedIn, axiosInstance]);
 
   useEffect(() => {
     fetchCart();
-    fetchMenuData();
-  }, [fetchCart, fetchMenuData]);
+  }, [fetchCart]);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -80,11 +52,9 @@ export const EcomProvider = ({ children }) => {
   const addToCart = async (item) => {
     try {
       let imagePath = item.image;
-      if (imagePath) {
-        if (!imagePath.startsWith('http') && !imagePath.startsWith('/')) {
-          imagePath = `/uploads/${imagePath}`;
-        }
-      } else {
+      if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('/')) {
+        imagePath = `/uploads/${imagePath}`;
+      } else if (!imagePath) {
         imagePath = 'https://via.placeholder.com/300x300';
       }
 
@@ -104,11 +74,6 @@ export const EcomProvider = ({ children }) => {
 
         if (response.data.success) {
           setCart(response.data.cartData);
-          sendAlert(`Added to cart: ${itemToAdd.name}`, process.env.NODE_ENV === 'development');
-          toast.success("Item added to cart", {
-            position: "top-center",
-            autoClose: 2000,
-          });
         } else {
           throw new Error(response.data.message || 'Failed to add item to cart');
         }
@@ -122,16 +87,13 @@ export const EcomProvider = ({ children }) => {
         }
         localStorage.setItem('cart', JSON.stringify(localCart));
         setCart(localCart);
-        sendAlert(`Added to cart: ${itemToAdd.name}`, process.env.NODE_ENV === 'development');
-        toast.success("Item added to cart", {
-          position: "top-center",
-          autoClose: 2000,
-        });
       }
+      toast.success("Item added to cart", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     } catch (e) {
       console.error("Error adding to cart:", e);
-      setError(e.message);
-      sendAlert(`Error adding to cart: ${e.message}`, process.env.NODE_ENV === 'development');
       toast.error(e.message, {
         position: "top-center",
         autoClose: 2000,
@@ -145,10 +107,6 @@ export const EcomProvider = ({ children }) => {
         const response = await axiosInstance.post(`${apiUrl}/api/cart/remove`, { itemId });
         if (response.data.success) {
           setCart(response.data.cartData);
-          toast.error("Item removed from cart", {
-            position: "top-center",
-            autoClose: 2000,
-          });
         } else {
           throw new Error(response.data.message || 'Failed to remove item from cart');
         }
@@ -157,14 +115,13 @@ export const EcomProvider = ({ children }) => {
         const updatedCart = localCart.filter(item => item.id !== itemId);
         localStorage.setItem('cart', JSON.stringify(updatedCart));
         setCart(updatedCart);
-        toast.error("Item removed from cart", {
-          position: "top-center",
-          autoClose: 2000,
-        });
       }
+      toast.error("Item removed from cart", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     } catch (e) {
       console.error("Error removing from cart:", e);
-      setError(e.message);
       toast.error(e.message, {
         position: "top-center",
         autoClose: 2000,
@@ -178,10 +135,6 @@ export const EcomProvider = ({ children }) => {
         const response = await axiosInstance.post(`${apiUrl}/api/cart/update`, { itemId, change });
         if (response.data.success) {
           setCart(response.data.cartData);
-          toast.info("Cart updated", {
-            position: "top-center",
-            autoClose: 2000,
-          });
         } else {
           throw new Error(response.data.message || 'Failed to update cart');
         }
@@ -196,14 +149,13 @@ export const EcomProvider = ({ children }) => {
         }).filter(Boolean);
         localStorage.setItem('cart', JSON.stringify(updatedCart));
         setCart(updatedCart);
-        toast.info("Cart updated", {
-          position: "top-center",
-          autoClose: 2000,
-        });
       }
+      toast.info("Cart updated", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     } catch (e) {
       console.error("Error updating quantity:", e);
-      setError(e.message);
       toast.error(e.message, {
         position: "top-center",
         autoClose: 2000,
@@ -226,9 +178,7 @@ export const EcomProvider = ({ children }) => {
     try {
       const localCart = JSON.parse(localStorage.getItem('cart')) || [];
       if (localCart.length > 0) {
-        console.log('Merging carts...');
         const response = await axiosInstance.post(`${apiUrl}/api/users/merge-cart`, { localCart });
-        console.log('Merge cart response:', response);
         if (response.data.success) {
           setCart(response.data.cartData);
           localStorage.removeItem('cart');
@@ -239,10 +189,12 @@ export const EcomProvider = ({ children }) => {
         } else {
           throw new Error(response.data.message || 'Failed to merge carts');
         }
+      } else {
+        // If local cart is empty, fetch the server cart
+        await fetchCart();
       }
     } catch (e) {
       console.error("Error merging carts:", e);
-      setError(e.message);
       toast.error("Failed to update your cart. Please try again later.", {
         position: "top-center",
         autoClose: 3000,
@@ -253,10 +205,6 @@ export const EcomProvider = ({ children }) => {
   return (
     <EcomContext.Provider
       value={{
-        ecoMode,
-        toggleEcoMode,
-        menuData,
-        error,
         cart,
         addToCart,
         removeFromCart,
@@ -267,7 +215,7 @@ export const EcomProvider = ({ children }) => {
         saveOrderDetails,
         loading,
         clearCart,
-        fetchMenuData,
+        fetchCart,
       }}
     >
       {children}

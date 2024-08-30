@@ -5,56 +5,22 @@ import { useAuth } from "../../Context/AuthContext";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./CartPage.css";
-import axios from 'axios';
 
 const CartPage = () => {
-  const { cart, removeFromCart, updateQuantity, saveOrderDetails, getCartItemCount, setCart } = useEcom();
-  const { user, token } = useAuth();
+  const { cart, removeFromCart, updateQuantity, saveOrderDetails, getCartItemCount, fetchCart } = useEcom();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [quantityColors, setQuantityColors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Current cart:", cart);
-    console.log("CartPage rendered with cart:", cart);
-
-    if (user && token) {
-      mergeCartWithServer();
-    }
-  }, [user, token]);
-
-  const mergeCartWithServer = async () => {
-    setIsLoading(true);
-    try {
-      const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-      if (localCart.length > 0 || cart.length > 0) {
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/users/merge-cart`,
-          { localCart: localCart.length > 0 ? localCart : cart },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        if (response.data.success) {
-          setCart(response.data.cartData);
-          localStorage.removeItem('cart');
-          toast.success("Cart updated successfully", {
-            position: "top-center",
-            autoClose: 2000,
-          });
-        } else {
-          throw new Error(response.data.message || 'Failed to merge carts');
-        }
-      }
-    } catch (error) {
-      console.error("Error merging cart:", error);
-      toast.error("Failed to update your cart. Please try again later.", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-    } finally {
+    const loadCart = async () => {
+      setIsLoading(true);
+      await fetchCart();
       setIsLoading(false);
-    }
-  };
+    };
+    loadCart();
+  }, [fetchCart]);
 
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryFee = 300;
@@ -85,91 +51,40 @@ const CartPage = () => {
       totalPrice: grandTotal,
     };
 
-    console.log("Proceeding to checkout with order details:", orderDetails);
     saveOrderDetails(orderDetails);
     navigate('/checkout');
   };
 
   const handleRemoveFromCart = async (itemId, itemName) => {
     setIsLoading(true);
-    try {
-      if (user && token) {
-        await removeFromCart(itemId);
-      } else {
-        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        const updatedCart = localCart.filter(item => item.id !== itemId);
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
-        setCart(updatedCart);
-      }
-      toast.error(`${itemName} removed from cart`, {
-        position: "top-center",
-        autoClose: 2000,
-      });
-    } catch (error) {
-      console.error("Error removing item from cart:", error);
-      toast.error("Failed to remove item from cart. Please try again.", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await removeFromCart(itemId);
+    setIsLoading(false);
   };
 
   const handleUpdateQuantity = async (itemId, change, itemName) => {
     setIsLoading(true);
-    try {
-      if (user && token) {
-        await updateQuantity(itemId, change);
-      } else {
-        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        const updatedCart = localCart.map(item => 
-          item.id === itemId ? { ...item, quantity: Math.max(1, item.quantity + change) } : item
-        );
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
-        setCart(updatedCart);
-      }
+    await updateQuantity(itemId, change);
+    setQuantityColors(prev => ({
+      ...prev,
+      [itemId]: change > 0 ? 'green' : 'red'
+    }));
+    setTimeout(() => {
       setQuantityColors(prev => ({
         ...prev,
-        [itemId]: change > 0 ? 'green' : 'red'
+        [itemId]: ''
       }));
-      setTimeout(() => {
-        setQuantityColors(prev => ({
-          ...prev,
-          [itemId]: ''
-        }));
-      }, 500);
-
-      toast.info(`${itemName} ${change > 0 ? 'added to' : 'removed from'} cart`, {
-        position: "top-center",
-        autoClose: 2000,
-      });
-    } catch (error) {
-      console.error("Error updating quantity:", error);
-      toast.error("Failed to update quantity. Please try again.", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    }, 500);
+    setIsLoading(false);
   };
 
-  const apiUrl = import.meta.env.VITE_API_URL || "https://food-delivery-api-rcff.onrender.com";
-
   const getImageUrl = (item) => {
-    console.log("Item image:", item.image);
     if (!item.image) {
-      console.log("Using placeholder image");
       return 'https://via.placeholder.com/150';
     }
-
     if (item.image.startsWith('http')) {
       return item.image;
     }
-
-    const imagePath = item.image.includes('/uploads/') ? item.image.split('/uploads/').pop() : item.image;
-    return `${apiUrl}/uploads/${imagePath}`;
+    return `${import.meta.env.VITE_API_URL}/uploads/${item.image}`;
   };
 
   if (isLoading) {
@@ -187,14 +102,13 @@ const CartPage = () => {
       ) : (
         <>
           <div className="cart-items2">
-            {cart.map((item, index) => (
-              <div key={`${item.id}-${index}`} className="cart-item2">
+            {cart.map((item) => (
+              <div key={item.id} className="cart-item2">
                 <img
                   src={getImageUrl(item)}
                   alt={item.name}
                   className="item-image2"
                   onError={(e) => {
-                    console.log("Image failed to load, using placeholder");
                     e.target.src = 'https://via.placeholder.com/150';
                   }}
                 />
