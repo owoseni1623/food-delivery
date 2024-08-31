@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react";
 import axios from "axios";
+import { useEcom } from "./EcomContext";
 
 const AuthContext = createContext();
 
@@ -16,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { syncCartAfterLogin } = useEcom();
   const [profileFetched, setProfileFetched] = useState(false);
 
   const axiosInstance = useMemo(() => {
@@ -105,14 +107,24 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      console.log("Attempting login...");
-      const response = await axiosInstance.post(`/users/login`, { email, password });
-      console.log("Login response:", response);
-      await handleAuthResponse(response);
-      return { success: true, message: "Login successful", token: response.data.token };
+      const response = await axios.post(`${API_BASE_URL}/users/login`, { email, password });
+      if (response.data.token) {
+        localStorage.setItem('authToken', response.data.token);
+        setUser(response.data.user);
+        setAuthToken(response.data.token);
+        setToken(response.data.token);
+        setIsLoggedIn(true);
+        updateAxiosToken(response.data.token);
+        setProfileFetched(false);
+        await syncCartAfterLogin(); // Sync cart after successful login
+        await getUserProfile(); // Fetch user profile after login
+        return { success: true, message: "Login successful", token: response.data.token };
+      } else {
+        throw new Error("Login failed: No token received");
+      }
     } catch (error) {
       console.error("Login error:", error);
-      console.error("Error response:", error.response);
+      setError(error.response?.data?.message || 'An error occurred during login');
       return { 
         success: false, 
         message: error.response?.data?.message || error.message || "An error occurred during login"

@@ -75,7 +75,7 @@ export const EcomProvider = ({ children }) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      mergeCartsAfterLogin();
+      syncCartAfterLogin();
     }
   }, [isLoggedIn]);
 
@@ -224,26 +224,29 @@ export const EcomProvider = ({ children }) => {
     localStorage.removeItem('cart');
   };
 
-  const mergeCartsAfterLogin = async () => {
+  const syncCartAfterLogin = async () => {
     try {
       const localCart = JSON.parse(localStorage.getItem('cart')) || [];
       if (localCart.length > 0) {
-        const response = await axiosInstance.post(`${apiUrl}/api/cart/merge`, { localCart });
+        const response = await axiosInstance.post(`${apiUrl}/api/cart/sync`, { localCart });
         if (response.data.success) {
           setCart(response.data.cartData);
-          localStorage.setItem('cart', JSON.stringify(response.data.cartData));
-          toast.success("Your cart has been updated with previously added items", {
+          localStorage.removeItem('cart');
+          toast.success("Your cart has been synced with your account", {
             position: "top-center",
             autoClose: 3000,
           });
         } else {
-          throw new Error(response.data.message || 'Failed to merge carts');
+          throw new Error(response.data.message || 'Failed to sync cart');
         }
+      } else {
+        // If local cart is empty, fetch the user's cart from the server
+        await fetchCart();
       }
     } catch (e) {
-      console.error("Error merging carts:", e);
+      console.error("Error syncing cart:", e);
       setError(e.message);
-      toast.error("Failed to update your cart. Please try again later.", {
+      toast.error("Failed to sync your cart. Please try again later.", {
         position: "top-center",
         autoClose: 3000,
       });
@@ -267,6 +270,7 @@ export const EcomProvider = ({ children }) => {
         loading,
         clearCart,
         fetchMenuData,
+        syncCartAfterLogin,
       }}
     >
       {children}
