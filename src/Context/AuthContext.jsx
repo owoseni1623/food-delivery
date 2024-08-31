@@ -121,7 +121,7 @@ export const AuthProvider = ({ children }) => {
         setIsLoggedIn(true);
         updateAxiosToken(response.data.token);
         setProfileFetched(false);
-        await getUserProfile(); // Fetch user profile after login
+        await getUserProfile();
         return { success: true, message: "Login successful", token: response.data.token };
       } else {
         throw new Error("Login failed: No token received");
