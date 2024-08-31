@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react";
 import axios from "axios";
-import { useEcom } from "./EcomContext";
 
 const AuthContext = createContext();
 
@@ -17,7 +16,6 @@ export const AuthProvider = ({ children }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { syncCartAfterLogin } = useEcom();
   const [profileFetched, setProfileFetched] = useState(false);
 
   const axiosInstance = useMemo(() => {
@@ -116,7 +114,6 @@ export const AuthProvider = ({ children }) => {
         setIsLoggedIn(true);
         updateAxiosToken(response.data.token);
         setProfileFetched(false);
-        await syncCartAfterLogin(); // Sync cart after successful login
         await getUserProfile(); // Fetch user profile after login
         return { success: true, message: "Login successful", token: response.data.token };
       } else {
