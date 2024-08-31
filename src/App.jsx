@@ -48,6 +48,7 @@ function App() {
           
           <div className="App">
             <Header />
+            <DemoComponent />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/menu" element={<MenuPage />} />

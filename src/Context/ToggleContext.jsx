@@ -34,4 +34,5 @@ export const ToggleProvider = ({ children }) => {
   );
 };
 
+export { ToggleContext };
 export default ToggleProvider;
