@@ -5,7 +5,13 @@ const AuthContext = createContext();
 
 const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com/api';
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
