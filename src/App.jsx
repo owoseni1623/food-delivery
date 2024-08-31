@@ -25,6 +25,7 @@ import ThankYouPage from "./component/Thank You/ThankYouPage";
 import ProfilePage from "./component/ProfilePage/ProfilePage";
 import VerifyPage from "./component/VerificationPage/VerifyPage";
 import SearchResultsPage from "./component/SearchResultPage/SearchResultPage";
+import DemoComponent from "./component/DemoComponent/DemoComponent";
 
 
 axios.interceptors.request.use(
