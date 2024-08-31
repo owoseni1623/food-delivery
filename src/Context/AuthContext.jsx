@@ -1,18 +1,16 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
-import { useEcom } from "./EcomContext";
 import { toast } from 'react-toastify';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children, syncCartAfterLogin }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { syncCartAfterLogin } = useEcom();
 
   const apiUrl = import.meta.env.VITE_API_URL || "https://food-delivery-api-rcff.onrender.com";
 
@@ -53,7 +51,9 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       localStorage.setItem('token', token);
       axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
-      await syncCartAfterLogin();
+      if (syncCartAfterLogin) {
+        await syncCartAfterLogin();
+      }
       toast.success("Login successful", {
         position: "top-center",
         autoClose: 2000,
@@ -79,7 +79,9 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       localStorage.setItem('token', token);
       axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
-      await syncCartAfterLogin();
+      if (syncCartAfterLogin) {
+        await syncCartAfterLogin();
+      }
       toast.success("Registration successful", {
         position: "top-center",
         autoClose: 2000,
