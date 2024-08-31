@@ -17,38 +17,7 @@ const CartPage = () => {
   useEffect(() => {
     console.log("Current cart:", cart);
     console.log("CartPage rendered with cart:", cart);
-
-    if (user && token && cart.length > 0) {
-      mergeCartWithServer();
-    }
-  }, [user, token, cart]);
-
-  const mergeCartWithServer = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/users/merge-cart`,
-        { localCart: cart },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (response.data.success) {
-        setCart(response.data.cartData);
-        toast.success("Cart updated successfully", {
-          position: "top-center",
-          autoClose: 2000,
-        });
-      }
-    } catch (error) {
-      console.error("Error merging cart:", error);
-      toast.error("Failed to update your cart. Please try again later.", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [cart]);
 
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryFee = 300;
