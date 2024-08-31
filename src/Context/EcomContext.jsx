@@ -204,9 +204,9 @@ export const EcomProvider = ({ children }) => {
     } catch (e) {
       console.error("Error updating quantity:", e);
       setError(e.message);
-      toast.error(e.message, {
+      toast.error(`Failed to update cart: ${e.message}`, {
         position: "top-center",
-        autoClose: 2000,
+        autoClose: 3000,
       });
     }
   };
