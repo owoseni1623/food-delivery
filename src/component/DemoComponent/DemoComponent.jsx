@@ -1,6 +1,3 @@
-// The reason i create a new component that demonstrates how to use both the AuthContext and ToggleContext:
-
-
 import React from 'react';
 import { useAuth } from './AuthProvider';
 import { useToggle } from './ToggleContext';
