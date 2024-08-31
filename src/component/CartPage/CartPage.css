@@ -142,10 +142,6 @@
   padding: 0.3rem;
 }
 
-.quantity-control2 span{
-  color: FFFFFF;
-}
-
 .quantity-control2 button {
   width: 32px; 
   height: 32px;
@@ -172,7 +168,7 @@
   text-align: center;
   transition: color 0.3s ease;
   font-size: 1.2rem;
-  color: FFFFFF; /* Changed from inherit to white */
+  color: white; /* Changed from inherit to white */
 }
 
 .quantity-number.green {

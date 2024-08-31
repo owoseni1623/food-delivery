@@ -168,7 +168,7 @@ const CartPage = () => {
                   <p className="item-total2">Total: ₦{(item.price * item.quantity).toFixed(2)}</p>
                   <div className="quantity-control2">
                     <button onClick={() => handleUpdateQuantity(item.id, -1, item.name)}>-</button>
-                    <span className="quantity-number" style={{ color: quantityColors[item.id] || 'FFFFFF' }}>{item.quantity}</span>
+                    <span className="quantity-number" style={{ color: quantityColors[item.id] || 'inherit' }}>{item.quantity}</span>
                     <button onClick={() => handleUpdateQuantity(item.id, 1, item.name)}>+</button>
                   </div>
                   <button className="remove-btn2" onClick={() => handleRemoveFromCart(item.id, item.name)}>
