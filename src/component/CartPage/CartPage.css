@@ -142,6 +142,10 @@
   padding: 0.3rem;
 }
 
+.quantity-control2 span{
+  color: FFFFFF;
+}
+
 .quantity-control2 button {
   width: 32px; 
   height: 32px;
@@ -172,7 +176,7 @@
 }
 
 .quantity-number.green {
-  color: FFFFFF;
+  color: #28a745;
   font-weight: 700;
 }
 
