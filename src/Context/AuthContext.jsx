@@ -285,7 +285,9 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={contextValue}>
-      {children}
+      <ToggleProvider>
+        {children}
+      </ToggleProvider>
     </AuthContext.Provider>
   );
 };
