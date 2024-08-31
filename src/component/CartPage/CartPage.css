@@ -162,21 +162,21 @@
   transform: scale(1.1);
 }
 
-.quantity-number {
+.quantity-control2 span {
   font-weight: 600;
-  min-width: 50px; /* Increased from 36px to 50px for more space */
+  min-width: 36px;
   text-align: center;
   transition: color 0.3s ease;
   font-size: 1.2rem;
-  color: white; /* Changed from inherit to white */
+  color: white;
 }
 
-.quantity-number.green {
+.quantity-control2 span.green {
   color: #28a745;
   font-weight: 700;
 }
 
-.quantity-number.red {
+.quantity-control2 span.red {
   color: #dc3545;
   font-weight: 700;
 }
@@ -459,8 +459,8 @@
     font-size: 1rem;
   }
 
-  .quantity-number {
-    min-width: 40px; /* Adjusted for mobile view */
+  .quantity-control2 span {
+    min-width: 30px;
     font-size: 1rem;
   }
 
