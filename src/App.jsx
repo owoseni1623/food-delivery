@@ -50,8 +50,9 @@ function App() {
           
           <div className="App">
             <Header />
-            <DemoComponent />
+            
             <Routes>
+            <DemoComponent />
               <Route path="/" element={<HomePage />} />
               <Route path="/menu" element={<MenuPage />} />
               <Route path="/cart" element={<CartPage />} />
