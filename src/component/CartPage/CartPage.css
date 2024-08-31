@@ -164,11 +164,11 @@
 
 .quantity-number {
   font-weight: 600;
-  min-width: 36px;
+  min-width: 50px; /* Increased from 36px to 50px for more space */
   text-align: center;
   transition: color 0.3s ease;
   font-size: 1.2rem;
-  color: white;
+  color: white; /* Changed from inherit to white */
 }
 
 .quantity-number.green {
@@ -460,7 +460,7 @@
   }
 
   .quantity-number {
-    min-width: 30px;
+    min-width: 40px; /* Adjusted for mobile view */
     font-size: 1rem;
   }
 
