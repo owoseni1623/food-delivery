@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react";
+import ToggleProvider from "./ToggleContext";
 import axios from "axios";
 
 const AuthContext = createContext();
