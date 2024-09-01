@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 import { toast } from 'react-toastify';
+import { useToggle } from "./ToggleContext";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
@@ -20,14 +21,15 @@ const sendAlert = (message, isDev) => {
 
 export const EcomProvider = ({ children }) => {
   const { user, isLoggedIn, authToken, axiosInstance } = useAuth();
-  const [ecoMode, setEcoMode] = useState(false);
+  const { toggleStates, setToggle, toggle } = useToggle();
   const [menuData, setMenuData] = useState([]);
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const toggleEcoMode = () => setEcoMode(prevMode => !prevMode);
+  const ecoMode = toggleStates.ecoMode || false;
+  const toggleEcoMode = () => toggle('ecoMode');
 
   const fetchCart = useCallback(async () => {
     if (!isLoggedIn) {
@@ -42,7 +44,6 @@ export const EcomProvider = ({ children }) => {
       console.log('Received cart data:', response.data);
       if (response.data.success) {
         setCart(response.data.cartData || []);
-        // Update localStorage with the fetched cart data
         localStorage.setItem('cart', JSON.stringify(response.data.cartData || []));
       } else {
         console.error('Failed to fetch cart data:', response.data.message);
@@ -121,7 +122,6 @@ export const EcomProvider = ({ children }) => {
         updatedCart = localCart;
       }
 
-      // Update state and localStorage
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
       
@@ -156,7 +156,6 @@ export const EcomProvider = ({ children }) => {
         updatedCart = localCart.filter(item => item.id !== itemId);
       }
 
-      // Update state and localStorage
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
 
@@ -195,7 +194,6 @@ export const EcomProvider = ({ children }) => {
         }).filter(Boolean);
       }
 
-      // Update state and localStorage
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
 
