@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from './AuthProvider';
-import { useToggle } from './ToggleContext';
+import { useToggle } from './AuthProvider'; // Note: We're now importing useToggle from AuthProvider
 
 const DemoComponent = () => {
   const { isLoggedIn, user, login, logout } = useAuth();

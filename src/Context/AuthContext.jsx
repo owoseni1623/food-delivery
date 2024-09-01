@@ -1,8 +1,8 @@
 import React, { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react";
-import ToggleProvider, { ToggleContext } from "./ToggleContext";
 import axios from "axios";
 
 const AuthContext = createContext();
+const ToggleContext = createContext();
 
 const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com/api';
 
@@ -12,6 +12,38 @@ export const useAuth = () => {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
+};
+
+export const useToggle = () => {
+  const context = useContext(ToggleContext);
+  if (!context) {
+    throw new Error("useToggle must be used within a ToggleProvider");
+  }
+  return context;
+};
+
+export const ToggleProvider = ({ children }) => {
+  const [toggleStates, setToggleStates] = useState({});
+
+  const setToggle = (key, value) => {
+    setToggleStates(prev => ({ ...prev, [key]: value }));
+  };
+
+  const toggle = (key) => {
+    setToggleStates(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const value = useMemo(() => ({
+    toggleStates,
+    setToggle,
+    toggle,
+  }), [toggleStates]);
+
+  return (
+    <ToggleContext.Provider value={value}>
+      {children}
+    </ToggleContext.Provider>
+  );
 };
 
 export const AuthProvider = ({ children }) => {
@@ -96,7 +128,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
       setUser(newUser);
       setToken(newToken);
-      setAuthToken(newToken); 
+      setAuthToken(newToken);
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("user", JSON.stringify(newUser));
       localStorage.setItem("authToken", newToken);
@@ -162,7 +194,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setUserProfile(null);
     setToken(null);
-    setAuthToken(null); 
+    setAuthToken(null);
     setProfileFetched(false);
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
