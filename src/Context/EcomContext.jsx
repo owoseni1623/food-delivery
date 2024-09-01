@@ -43,8 +43,9 @@ export const EcomProvider = ({ children }) => {
       const response = await axiosInstance.get(`${apiUrl}/api/cart/get`);
       console.log('Received cart data:', response.data);
       if (response.data.success) {
-        setCart(response.data.cartData || []);
-        localStorage.setItem('cart', JSON.stringify(response.data.cartData || []));
+        const serverCart = response.data.cartData || [];
+        setCart(serverCart);
+        localStorage.setItem('cart', JSON.stringify(serverCart));
       } else {
         console.error('Failed to fetch cart data:', response.data.message);
         setError(response.data.message || 'Failed to fetch cart data');
@@ -92,19 +93,16 @@ export const EcomProvider = ({ children }) => {
       }
 
       const itemToAdd = {
-        ...item,
+        id: item.id,
+        name: item.name,
+        price: item.price,
         image: imagePath,
+        quantity: 1
       };
 
       let updatedCart;
       if (isLoggedIn) {
-        const response = await axiosInstance.post(`${apiUrl}/api/cart/add`, {
-          productId: itemToAdd.id,
-          name: itemToAdd.name,
-          price: itemToAdd.price,
-          quantity: 1,
-          image: itemToAdd.image,
-        });
+        const response = await axiosInstance.post(`${apiUrl}/api/cart/add`, itemToAdd);
 
         if (response.data.success) {
           updatedCart = response.data.cartData;
@@ -113,11 +111,11 @@ export const EcomProvider = ({ children }) => {
         }
       } else {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existingItem = localCart.find(cartItem => cartItem.id === itemToAdd.id);
-        if (existingItem) {
-          existingItem.quantity += 1;
+        const existingItemIndex = localCart.findIndex(cartItem => cartItem.id === itemToAdd.id);
+        if (existingItemIndex !== -1) {
+          localCart[existingItemIndex].quantity += 1;
         } else {
-          localCart.push({ ...itemToAdd, quantity: 1 });
+          localCart.push(itemToAdd);
         }
         updatedCart = localCart;
       }
@@ -217,9 +215,17 @@ export const EcomProvider = ({ children }) => {
     setOrderDetails(details);
   };
 
-  const clearCart = () => {
-    setCart([]);
-    localStorage.removeItem('cart');
+  const clearCart = async () => {
+    try {
+      if (isLoggedIn) {
+        await axiosInstance.post(`${apiUrl}/api/cart/clear`);
+      }
+      setCart([]);
+      localStorage.removeItem('cart');
+    } catch (e) {
+      console.error("Error clearing cart:", e);
+      setError("Failed to clear cart. Please try again.");
+    }
   };
 
   const syncCartAfterLogin = async () => {
@@ -231,7 +237,7 @@ export const EcomProvider = ({ children }) => {
         console.log('Server response:', response.data);
         if (response.data.success) {
           setCart(response.data.cartData);
-          localStorage.removeItem('cart');
+          localStorage.setItem('cart', JSON.stringify(response.data.cartData));
           toast.success("Your cart has been synced with your account", {
             position: "top-center",
             autoClose: 3000,
@@ -245,15 +251,6 @@ export const EcomProvider = ({ children }) => {
       }
     } catch (e) {
       console.error("Error syncing cart:", e);
-      if (e.response) {
-        console.error("Response data:", e.response.data);
-        console.error("Response status:", e.response.status);
-        console.error("Response headers:", e.response.headers);
-      } else if (e.request) {
-        console.error("No response received:", e.request);
-      } else {
-        console.error("Error setting up request:", e.message);
-      }
       setError(e.message);
       toast.error("Failed to sync your cart. Please try again later.", {
         position: "top-center",
