@@ -2,8 +2,6 @@ import React, { createContext, useState, useEffect, useContext, useCallback, use
 import axios from "axios";
 
 const AuthContext = createContext();
-const ToggleContext = createContext();
-
 const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com/api';
 
 export const useAuth = () => {
@@ -12,38 +10,6 @@ export const useAuth = () => {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-};
-
-export const useToggle = () => {
-  const context = useContext(ToggleContext);
-  if (!context) {
-    throw new Error("useToggle must be used within a ToggleProvider");
-  }
-  return context;
-};
-
-export const ToggleProvider = ({ children }) => {
-  const [toggleStates, setToggleStates] = useState({});
-
-  const setToggle = (key, value) => {
-    setToggleStates(prev => ({ ...prev, [key]: value }));
-  };
-
-  const toggle = (key) => {
-    setToggleStates(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const value = useMemo(() => ({
-    toggleStates,
-    setToggle,
-    toggle,
-  }), [toggleStates]);
-
-  return (
-    <ToggleContext.Provider value={value}>
-      {children}
-    </ToggleContext.Provider>
-  );
 };
 
 export const AuthProvider = ({ children }) => {
@@ -87,7 +53,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [axiosInstance]);
 
-  useEffect(() => {
+  const initializeAuth = useCallback(async () => {
     const storedToken = localStorage.getItem("authToken");
     const storedUser = localStorage.getItem("user");
     const storedProfile = localStorage.getItem("userProfile");
@@ -120,7 +86,15 @@ export const AuthProvider = ({ children }) => {
     }
   
     setIsLoading(false);
+
+    if (storedToken && !storedProfile) {
+      await getUserProfile();
+    }
   }, [updateAxiosToken]);
+
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
 
   const handleAuthResponse = useCallback(async (response) => {
     if (response.data.success) {
@@ -146,14 +120,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post(`${API_BASE_URL}/users/login`, { email, password });
       if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token);
-        setUser(response.data.user);
-        setAuthToken(response.data.token);
-        setToken(response.data.token);
-        setIsLoggedIn(true);
-        updateAxiosToken(response.data.token);
-        setProfileFetched(false);
-        await getUserProfile();
+        await handleAuthResponse(response);
         return { success: true, message: "Login successful", token: response.data.token };
       } else {
         throw new Error("Login failed: No token received");
@@ -240,6 +207,8 @@ export const AuthProvider = ({ children }) => {
         const refreshed = await refreshToken();
         if (!refreshed) {
           logout();
+        } else {
+          await getUserProfile();
         }
       }
     }
@@ -282,12 +251,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    if (isLoggedIn && (!userProfile || Object.keys(userProfile).length === 0)) {
-      getUserProfile();
-    }
-  }, [isLoggedIn, userProfile, getUserProfile]);
-
   const contextValue = useMemo(() => ({
     isLoggedIn,
     user, 
@@ -318,9 +281,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={contextValue}>
-      <ToggleProvider>
-        {children}
-      </ToggleProvider>
+      {children}
     </AuthContext.Provider>
   );
 };
