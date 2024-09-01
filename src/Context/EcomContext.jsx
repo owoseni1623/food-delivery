@@ -228,7 +228,9 @@ export const EcomProvider = ({ children }) => {
     try {
       const localCart = JSON.parse(localStorage.getItem('cart')) || [];
       if (localCart.length > 0) {
-        const response = await axiosInstance.post(`${apiUrl}/api/cart/sync`, { localCart });
+        console.log('Syncing cart with server...');
+        const response = await axiosInstance.post(`${apiUrl}/api/users/merge-cart`, { localCart });
+        console.log('Server response:', response.data);
         if (response.data.success) {
           setCart(response.data.cartData);
           localStorage.removeItem('cart');
@@ -240,11 +242,20 @@ export const EcomProvider = ({ children }) => {
           throw new Error(response.data.message || 'Failed to sync cart');
         }
       } else {
-        // If local cart is empty, fetch the user's cart from the server
+        console.log('Local cart is empty, fetching user cart from server...');
         await fetchCart();
       }
     } catch (e) {
       console.error("Error syncing cart:", e);
+      if (e.response) {
+        console.error("Response data:", e.response.data);
+        console.error("Response status:", e.response.status);
+        console.error("Response headers:", e.response.headers);
+      } else if (e.request) {
+        console.error("No response received:", e.request);
+      } else {
+        console.error("Error setting up request:", e.message);
+      }
       setError(e.message);
       toast.error("Failed to sync your cart. Please try again later.", {
         position: "top-center",
