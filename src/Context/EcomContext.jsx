@@ -244,15 +244,30 @@ export const EcomProvider = ({ children }) => {
         console.log('Local cart is empty, fetching user cart from server...');
         await fetchCart();
       }
-    } catch (e) {
-      console.error("Error syncing cart:", e);
-      setError(e.message);
-      toast.error("Failed to sync your cart. Please try again later.", {
-        position: "top-center",
-        autoClose: 3000,
-      });
+    } catch (error) {
+      console.error("Error syncing cart:", error);
+      if (error.response && error.response.status === 404) {
+        console.error("Cart merge endpoint not found. Please check your backend routes.");
+        toast.error("Unable to sync cart. Please try again later.", {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      } else {
+        console.error("Error syncing cart:", error);
+        toast.error("Failed to sync your cart. Please try again later.", {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      }
+      setError("Failed to sync cart. Please try again later.");
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      syncCartAfterLogin();
+    }
+  }, [isLoggedIn]);
 
   return (
     <EcomContext.Provider
