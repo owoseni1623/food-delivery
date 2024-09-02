@@ -1,7 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 import { toast } from 'react-toastify';
-import { useToggle } from "./ToggleContext";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
@@ -21,15 +20,11 @@ const sendAlert = (message, isDev) => {
 
 export const EcomProvider = ({ children }) => {
   const { user, isLoggedIn, authToken, axiosInstance } = useAuth();
-  const { toggleStates, setToggle, toggle } = useToggle();
   const [menuData, setMenuData] = useState([]);
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const ecoMode = toggleStates.ecoMode || false;
-  const toggleEcoMode = () => toggle('ecoMode');
 
   const fetchCart = useCallback(async () => {
     if (!isLoggedIn) {
@@ -262,8 +257,6 @@ export const EcomProvider = ({ children }) => {
   return (
     <EcomContext.Provider
       value={{
-        ecoMode,
-        toggleEcoMode,
         menuData,
         error,
         cart,
