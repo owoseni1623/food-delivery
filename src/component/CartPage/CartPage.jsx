@@ -309,7 +309,7 @@ const CartPage = () => {
                     console.log("Image failed to load, using placeholder");
                     e.target.src = 'https://via.placeholder.com/150';
                   }}
-                />
+                  />
                 <div className="item-details2">
                   <h3 className="item-name2">{item.name}</h3>
                   <p className="item-price2">₦{item.price}</p>
