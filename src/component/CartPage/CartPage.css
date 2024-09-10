@@ -407,7 +407,7 @@
 
 @media (max-width: 480px) {
   .cart-page2 {
-    margin-top: 3rem;
+    padding: 3rem;
   }
   .cart-title2 {
     font-size: 1.75rem;
