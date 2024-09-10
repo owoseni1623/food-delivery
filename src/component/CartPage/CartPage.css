@@ -360,7 +360,6 @@
 @media (max-width: 768px) {
   .cart-page2 {
     padding: 0 0.5rem;
-    margin-top: 3rem;
   }
 
   .cart-title2 {
@@ -407,6 +406,9 @@
 }
 
 @media (max-width: 480px) {
+  .cart-page2 {
+    margin-top: 3rem;
+  }
   .cart-title2 {
     font-size: 1.75rem;
   }
