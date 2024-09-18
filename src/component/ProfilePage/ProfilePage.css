@@ -258,7 +258,7 @@ body {
 @media (max-width: 768px) {
   .profile-page-container {
     padding: 1rem;
-    margin: 4rem;
+    margin: 3rem 1rem 1rem; /* Increased top margin for better visibility */
   }
 
   .profile-page-tab {
@@ -273,5 +273,20 @@ body {
 
   .profile-page-info-card {
     grid-template-columns: 1fr;
+  }
+
+  .profile-page-title {
+    font-size: 2rem; /* Slightly reduced font size for better fit */
+    margin-top: 1rem; /* Added top margin for better spacing */
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .profile-page-container {
+    margin: 3rem auto; /* Increased top margin for tablet view */
+  }
+
+  .profile-page-title {
+    margin-top: 1rem; /* Added top margin for better spacing in tablet view */
   }
 }
