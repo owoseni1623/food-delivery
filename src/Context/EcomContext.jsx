@@ -40,7 +40,6 @@ export const EcomProvider = ({ children }) => {
       if (response.data.success) {
         const serverCart = response.data.cartData || [];
         setCart(serverCart);
-        localStorage.setItem('cart', JSON.stringify(serverCart));
       } else {
         console.error('Failed to fetch cart data:', response.data.message);
         setError(response.data.message || 'Failed to fetch cart data');
@@ -99,7 +98,6 @@ export const EcomProvider = ({ children }) => {
       let updatedCart;
       if (isLoggedIn) {
         const response = await axiosInstance.post(`${apiUrl}/api/cart/add`, itemToAdd);
-
         if (response.data.success) {
           updatedCart = response.data.cartData;
         } else {
@@ -114,11 +112,10 @@ export const EcomProvider = ({ children }) => {
           localCart.push(itemToAdd);
         }
         updatedCart = localCart;
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
       }
 
       setCart(updatedCart);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-      
       sendAlert(`Added to cart: ${itemToAdd.name}`, process.env.NODE_ENV === 'development');
       toast.success("Item added to cart", {
         position: "top-center",
@@ -148,11 +145,10 @@ export const EcomProvider = ({ children }) => {
       } else {
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         updatedCart = localCart.filter(item => item.id !== itemId);
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
       }
 
       setCart(updatedCart);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-
       toast.error("Item removed from cart", {
         position: "top-center",
         autoClose: 2000,
@@ -186,11 +182,10 @@ export const EcomProvider = ({ children }) => {
           }
           return item;
         }).filter(Boolean);
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
       }
 
       setCart(updatedCart);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-
       toast.info("Cart updated", {
         position: "top-center",
         autoClose: 2000,
@@ -233,7 +228,7 @@ export const EcomProvider = ({ children }) => {
         console.log('Server response:', response.data);
         if (response.data.success) {
           setCart(response.data.cartData);
-          localStorage.setItem('cart', JSON.stringify(response.data.cartData));
+          localStorage.removeItem('cart');  // Clear local storage after successful sync
           toast.success("Your cart has been synced with your account", {
             position: "top-center",
             autoClose: 3000,
