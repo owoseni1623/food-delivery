@@ -99,8 +99,8 @@ export const EcomProvider = ({ children }) => {
       let updatedCart;
       if (isLoggedIn) {
         if (isFirstAddAfterLogin) {
-          // Clear local storage on first add after login
-          localStorage.removeItem('cart');
+          // Set local storage cart to an empty array on first add after login
+          localStorage.setItem('cart', JSON.stringify([]));
           setIsFirstAddAfterLogin(false);
         }
         const response = await axiosInstance.post(`${apiUrl}/api/cart/add`, itemToAdd);
@@ -218,7 +218,7 @@ export const EcomProvider = ({ children }) => {
         await axiosInstance.post(`${apiUrl}/api/cart/clear`);
       }
       setCart([]);
-      localStorage.removeItem('cart');
+      localStorage.setItem('cart', JSON.stringify([]));
     } catch (e) {
       console.error("Error clearing cart:", e);
       setError("Failed to clear cart. Please try again.");
