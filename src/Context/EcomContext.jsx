@@ -25,6 +25,7 @@ export const EcomProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isFirstAddAfterLogin, setIsFirstAddAfterLogin] = useState(true);
 
   const fetchCart = useCallback(async () => {
     if (!isLoggedIn) {
@@ -97,6 +98,11 @@ export const EcomProvider = ({ children }) => {
 
       let updatedCart;
       if (isLoggedIn) {
+        if (isFirstAddAfterLogin) {
+          // Clear local storage on first add after login
+          localStorage.removeItem('cart');
+          setIsFirstAddAfterLogin(false);
+        }
         const response = await axiosInstance.post(`${apiUrl}/api/cart/add`, itemToAdd);
         if (response.data.success) {
           updatedCart = response.data.cartData;
@@ -228,7 +234,7 @@ export const EcomProvider = ({ children }) => {
         console.log('Server response:', response.data);
         if (response.data.success) {
           setCart(response.data.cartData);
-          localStorage.removeItem('cart');  // Clear local storage after successful sync
+          setIsFirstAddAfterLogin(true);  // Reset the flag
           toast.success("Your cart has been synced with your account", {
             position: "top-center",
             autoClose: 3000,
