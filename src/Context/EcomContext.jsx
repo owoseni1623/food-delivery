@@ -99,7 +99,7 @@ export const EcomProvider = ({ children }) => {
       let updatedCart;
       if (isLoggedIn) {
         if (isFirstAddAfterLogin) {
-          // Set local storage cart to an empty array on first add after login
+          // Clear local storage cart and set it to an empty array
           localStorage.setItem('cart', JSON.stringify([]));
           setIsFirstAddAfterLogin(false);
         }
@@ -235,6 +235,8 @@ export const EcomProvider = ({ children }) => {
         if (response.data.success) {
           setCart(response.data.cartData);
           setIsFirstAddAfterLogin(true);  // Reset the flag
+          // Keep an empty array in local storage instead of removing it
+          localStorage.setItem('cart', JSON.stringify([]));
           toast.success("Your cart has been synced with your account", {
             position: "top-center",
             autoClose: 3000,
@@ -258,6 +260,35 @@ export const EcomProvider = ({ children }) => {
     }
   };
 
+  const viewDatabaseCart = async () => {
+    if (!isLoggedIn) {
+      toast.error("Please log in to view your cart data", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.get(`${apiUrl}/api/cart/get`);
+      if (response.data.success) {
+        console.log("Cart data in database:", response.data.cartData);
+        toast.info("Cart data logged in console", {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      } else {
+        throw new Error(response.data.message || 'Failed to fetch cart data');
+      }
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+      toast.error("Failed to fetch cart data. Please try again.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+    }
+  };
+
   return (
     <EcomContext.Provider
       value={{
@@ -274,6 +305,7 @@ export const EcomProvider = ({ children }) => {
         clearCart,
         fetchMenuData,
         syncCartAfterLogin,
+        viewDatabaseCart,
       }}
     >
       {children}

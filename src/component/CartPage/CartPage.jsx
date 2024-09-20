@@ -7,8 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import "./CartPage.css";
 
 const CartPage = () => {
-  const { cart, removeFromCart, updateQuantity, saveOrderDetails, getCartItemCount } = useEcom();
-  const { user } = useAuth();
+  const { cart, removeFromCart, updateQuantity, saveOrderDetails, getCartItemCount, viewDatabaseCart } = useEcom();
+  const { user, isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const [quantityColors, setQuantityColors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,7 @@ const CartPage = () => {
       return;
     }
 
-    if (!user) {
+    if (!isLoggedIn) {
       toast.warning("Please log in or sign up to proceed to checkout.", {
         position: "top-center",
         autoClose: 3000,
@@ -103,6 +103,10 @@ const CartPage = () => {
     return `${apiUrl}/uploads/${imagePath}`;
   };
 
+  const handleViewDatabaseCart = () => {
+    viewDatabaseCart();
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -128,7 +132,7 @@ const CartPage = () => {
                     console.log("Image failed to load, using placeholder");
                     e.target.src = 'https://via.placeholder.com/150';
                   }}
-                  />
+                />
                 <div className="item-details2">
                   <h3 className="item-name2">{item.name}</h3>
                   <p className="item-price2">₦{item.price}</p>
@@ -160,11 +164,16 @@ const CartPage = () => {
               <span>₦{grandTotal.toFixed(2)}</span>
             </div>
             <button className="checkout-btn2" onClick={proceedToCheckout}>
-              {user ? "Proceed to Checkout" : "Login to Checkout"}
+              {isLoggedIn ? "Proceed to Checkout" : "Login to Checkout"}
             </button>
             <button className="continue-shopping2" onClick={() => navigate('/')}>
               Continue Shopping
             </button>
+            {isLoggedIn && (
+              <button className="view-database-cart2" onClick={handleViewDatabaseCart}>
+                View Database Cart
+              </button>
+            )}
           </div>
         </>
       )}
