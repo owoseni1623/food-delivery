@@ -99,8 +99,8 @@ export const EcomProvider = ({ children }) => {
       let updatedCart;
       if (isLoggedIn) {
         if (isFirstAddAfterLogin) {
-          // Clear local storage cart and set it to an empty array
-          localStorage.setItem('cart', JSON.stringify([]));
+          // Sync local cart with server before adding new item
+          await syncCartAfterLogin();
           setIsFirstAddAfterLogin(false);
         }
         const response = await axiosInstance.post(`${apiUrl}/api/cart/add`, itemToAdd);
@@ -234,8 +234,6 @@ export const EcomProvider = ({ children }) => {
         console.log('Server response:', response.data);
         if (response.data.success) {
           setCart(response.data.cartData);
-          setIsFirstAddAfterLogin(true);  // Reset the flag
-          // Keep an empty array in local storage instead of removing it
           localStorage.setItem('cart', JSON.stringify([]));
           toast.success("Your cart has been synced with your account", {
             position: "top-center",
