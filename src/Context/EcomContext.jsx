@@ -172,41 +172,34 @@ export const EcomProvider = ({ children }) => {
     }
   };
 
-  const updateQuantity = async (itemId, change) => {
-    try {
-      let updatedCart;
-      if (isLoggedIn) {
-        const response = await axiosInstance.post(`${apiUrl}/api/cart/update`, { itemId, change });
-        if (response.data.success) {
-          updatedCart = response.data.cartData;
-        } else {
-          throw new Error(response.data.message || 'Failed to update cart');
-        }
-      } else {
-        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-        updatedCart = localCart.map(item => {
-          if (item.id === itemId) {
-            const newQuantity = item.quantity + change;
-            return newQuantity > 0 ? { ...item, quantity: newQuantity } : null;
-          }
-          return item;
-        }).filter(Boolean);
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
+  const updateQuantity = (itemId, change) => {
+    const updatedCart = cart.map(item => {
+      if (item.id === itemId) {
+        const newQuantity = item.quantity + change;
+        return newQuantity > 0 ? { ...item, quantity: newQuantity } : null;
       }
+      return item;
+    }).filter(Boolean);
 
-      if (isMounted.current) setCart(updatedCart);
-      toast.info("Cart updated", {
-        position: "top-center",
-        autoClose: 2000,
-      });
-    } catch (e) {
-      console.error("Error updating quantity:", e);
-      if (isMounted.current) setError(e.message);
-      toast.error(`Failed to update cart: ${e.message}`, {
-        position: "top-center",
-        autoClose: 3000,
-      });
+    setCart(updatedCart);
+
+    if (isLoggedIn) {
+      axiosInstance.post(`${apiUrl}/api/cart/update`, { itemId, change })
+        .catch(error => {
+          console.error("Error updating cart on server:", error);
+          toast.error("Failed to sync cart with server. Please try again.", {
+            position: "top-center",
+            autoClose: 3000,
+          });
+        });
+    } else {
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
     }
+
+    toast.info("Cart updated", {
+      position: "top-center",
+      autoClose: 2000,
+    });
   };
 
   const getCartItemCount = () => cart.reduce((total, item) => total + item.quantity, 0);
@@ -254,7 +247,6 @@ export const EcomProvider = ({ children }) => {
       if (error.response && error.response.status === 404) {
         console.error("Cart merge endpoint not found. Please check your backend routes.");
       }
-      // Instead of showing an error toast, we'll silently fall back to the local cart
       console.log("Falling back to local cart due to sync error");
       const localCart = JSON.parse(localStorage.getItem('cart')) || [];
       if (isMounted.current) setCart(localCart);
