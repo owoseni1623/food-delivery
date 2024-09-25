@@ -254,7 +254,6 @@ export const EcomProvider = ({ children }) => {
       if (error.response && error.response.status === 404) {
         console.error("Cart merge endpoint not found. Please check your backend routes.");
       }
-      // Instead of showing an error toast, we'll silently fall back to the local cart
       console.log("Falling back to local cart due to sync error");
       const localCart = JSON.parse(localStorage.getItem('cart')) || [];
       if (isMounted.current) setCart(localCart);
