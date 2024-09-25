@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEcom } from "../../Context/EcomContext";
 import { useAuth } from "../../Context/AuthContext";
@@ -8,7 +8,7 @@ import "./CartPage.css";
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, saveOrderDetails, getCartItemCount, viewDatabaseCart } = useEcom();
-  const { user, isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const [quantityColors, setQuantityColors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ const CartPage = () => {
   const deliveryFee = 300;
   const grandTotal = totalPrice + deliveryFee;
 
-  const proceedToCheckout = () => {
+  const proceedToCheckout = useCallback(() => {
     if (cart.length === 0) {
       toast.warning("Your cart is empty. Please add items to your cart before proceeding to checkout.", {
         position: "top-center",
@@ -49,18 +49,19 @@ const CartPage = () => {
     console.log("Proceeding to checkout with order details:", orderDetails);
     saveOrderDetails(orderDetails);
     navigate('/checkout');
-  };
+  }, [cart, isLoggedIn, totalPrice, grandTotal, navigate, saveOrderDetails]);
 
-  const handleRemoveFromCart = (itemId, itemName) => {
+  const handleRemoveFromCart = useCallback((itemId, itemName) => {
     removeFromCart(itemId);
     toast.error(`${itemName} removed from cart`, {
       position: "top-center",
       autoClose: 2000,
     });
-  };
+  }, [removeFromCart]);
 
-  const handleUpdateQuantity = async (itemId, change, itemName) => {
+  const handleUpdateQuantity = useCallback(async (itemId, change, itemName) => {
     try {
+      setIsLoading(true);
       await updateQuantity(itemId, change);
       setQuantityColors(prev => ({
         ...prev,
@@ -83,12 +84,14 @@ const CartPage = () => {
         position: "top-center",
         autoClose: 3000,
       });
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [updateQuantity]);
 
   const apiUrl = import.meta.env.VITE_API_URL || "https://food-delivery-api-rcff.onrender.com";
 
-  const getImageUrl = (item) => {
+  const getImageUrl = useCallback((item) => {
     console.log("Item image:", item.image);
     if (!item.image) {
       console.log("Using placeholder image");
@@ -101,11 +104,11 @@ const CartPage = () => {
 
     const imagePath = item.image.includes('/uploads/') ? item.image.split('/uploads/').pop() : item.image;
     return `${apiUrl}/uploads/${imagePath}`;
-  };
+  }, [apiUrl]);
 
-  const handleViewDatabaseCart = () => {
+  const handleViewDatabaseCart = useCallback(() => {
     viewDatabaseCart();
-  };
+  }, [viewDatabaseCart]);
 
   if (isLoading) {
     return <div>Loading...</div>;

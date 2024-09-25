@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
+import React, { createContext, useState, useContext, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "./AuthContext";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,42 +25,51 @@ export const EcomProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const fetchCart = useCallback(async () => {
     if (!isLoggedIn) {
       console.log('No user, loading cart from localStorage');
       const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-      setCart(localCart);
+      if (isMounted.current) setCart(localCart);
       return;
     }
     try {
       console.log('Fetching cart data...');
       const response = await axiosInstance.get(`${apiUrl}/api/cart/get`);
       console.log('Received cart data:', response.data);
-      if (response.data.success) {
+      if (response.data.success && isMounted.current) {
         const serverCart = response.data.cartData || [];
         setCart(serverCart);
       } else {
         console.error('Failed to fetch cart data:', response.data.message);
-        setError(response.data.message || 'Failed to fetch cart data');
+        if (isMounted.current) setError(response.data.message || 'Failed to fetch cart data');
       }
     } catch (e) {
       console.error("Error fetching cart:", e);
-      setError("Failed to fetch cart data. Please try again later.");
+      if (isMounted.current) setError("Failed to fetch cart data. Please try again later.");
     }
   }, [isLoggedIn, axiosInstance]);
 
   const fetchMenuData = useCallback(async () => {
     try {
-      setLoading(true);
+      if (isMounted.current) setLoading(true);
       const response = await axiosInstance.get(`${apiUrl}/api/menu/getAll`);
-      setMenuData(response.data);
-      setError(null);
+      if (isMounted.current) {
+        setMenuData(response.data);
+        setError(null);
+      }
     } catch (err) {
       console.error("Error fetching menu data:", err);
-      setError(err.message);
+      if (isMounted.current) setError(err.message);
     } finally {
-      setLoading(false);
+      if (isMounted.current) setLoading(false);
     }
   }, [axiosInstance]);
 
@@ -115,7 +124,7 @@ export const EcomProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(updatedCart));
       }
 
-      setCart(updatedCart);
+      if (isMounted.current) setCart(updatedCart);
       sendAlert(`Added to cart: ${itemToAdd.name}`, process.env.NODE_ENV === 'development');
       toast.success("Item added to cart", {
         position: "top-center",
@@ -123,7 +132,7 @@ export const EcomProvider = ({ children }) => {
       });
     } catch (e) {
       console.error("Error adding to cart:", e);
-      setError(e.message);
+      if (isMounted.current) setError(e.message);
       sendAlert(`Error adding to cart: ${e.message}`, process.env.NODE_ENV === 'development');
       toast.error(e.message, {
         position: "top-center",
@@ -148,14 +157,14 @@ export const EcomProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(updatedCart));
       }
 
-      setCart(updatedCart);
+      if (isMounted.current) setCart(updatedCart);
       toast.error("Item removed from cart", {
         position: "top-center",
         autoClose: 2000,
       });
     } catch (e) {
       console.error("Error removing from cart:", e);
-      setError(e.message);
+      if (isMounted.current) setError(e.message);
       toast.error(e.message, {
         position: "top-center",
         autoClose: 2000,
@@ -185,14 +194,14 @@ export const EcomProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(updatedCart));
       }
 
-      setCart(updatedCart);
+      if (isMounted.current) setCart(updatedCart);
       toast.info("Cart updated", {
         position: "top-center",
         autoClose: 2000,
       });
     } catch (e) {
       console.error("Error updating quantity:", e);
-      setError(e.message);
+      if (isMounted.current) setError(e.message);
       toast.error(`Failed to update cart: ${e.message}`, {
         position: "top-center",
         autoClose: 3000,
@@ -203,7 +212,7 @@ export const EcomProvider = ({ children }) => {
   const getCartItemCount = () => cart.reduce((total, item) => total + item.quantity, 0);
 
   const saveOrderDetails = (details) => {
-    setOrderDetails(details);
+    if (isMounted.current) setOrderDetails(details);
   };
 
   const clearCart = async () => {
@@ -211,11 +220,11 @@ export const EcomProvider = ({ children }) => {
       if (isLoggedIn) {
         await axiosInstance.post(`${apiUrl}/api/cart/clear`);
       }
-      setCart([]);
+      if (isMounted.current) setCart([]);
       localStorage.setItem('cart', JSON.stringify([]));
     } catch (e) {
       console.error("Error clearing cart:", e);
-      setError("Failed to clear cart. Please try again.");
+      if (isMounted.current) setError("Failed to clear cart. Please try again.");
     }
   };
 
@@ -227,7 +236,7 @@ export const EcomProvider = ({ children }) => {
         const response = await axiosInstance.post(`${apiUrl}/api/cart/merge`, { localCart });
         console.log('Server response:', response.data);
         if (response.data.success) {
-          setCart(response.data.cartData);
+          if (isMounted.current) setCart(response.data.cartData);
           localStorage.setItem('cart', JSON.stringify([]));
           toast.success("Your cart has been synced with your account", {
             position: "top-center",
@@ -248,7 +257,7 @@ export const EcomProvider = ({ children }) => {
       // Instead of showing an error toast, we'll silently fall back to the local cart
       console.log("Falling back to local cart due to sync error");
       const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-      setCart(localCart);
+      if (isMounted.current) setCart(localCart);
     }
   };
 
