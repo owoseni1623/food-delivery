@@ -25,7 +25,6 @@ export const EcomProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isFirstAddAfterLogin, setIsFirstAddAfterLogin] = useState(true);
 
   const fetchCart = useCallback(async () => {
     if (!isLoggedIn) {
@@ -98,11 +97,6 @@ export const EcomProvider = ({ children }) => {
 
       let updatedCart;
       if (isLoggedIn) {
-        if (isFirstAddAfterLogin) {
-          // Sync local cart with server before adding new item
-          await syncCartAfterLogin();
-          setIsFirstAddAfterLogin(false);
-        }
         const response = await axiosInstance.post(`${apiUrl}/api/cart/add`, itemToAdd);
         if (response.data.success) {
           updatedCart = response.data.cartData;
