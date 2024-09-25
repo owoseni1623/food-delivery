@@ -13,7 +13,9 @@ function ProfilePage() {
     getUserProfile, 
     setError, 
     setSuccess,
-    isLoggedIn 
+    isLoggedIn,
+    orderHistory,
+    getOrderHistory
   } = useAuth();
   
   const [profileData, setProfileData] = useState({
@@ -30,8 +32,9 @@ function ProfilePage() {
   useEffect(() => {
     if (isLoggedIn) {
       getUserProfile();
+      getOrderHistory();
     }
-  }, [isLoggedIn, getUserProfile]);
+  }, [isLoggedIn, getUserProfile, getOrderHistory]);
 
   useEffect(() => {
     if (isLoggedIn && userProfile) {
@@ -189,6 +192,24 @@ function ProfilePage() {
           </div>
           <button type="submit" className="btn btn-primary">Update Profile</button>
         </form>
+      </div>
+      
+      <div className="order-history-section">
+        <h3>Order History</h3>
+        {orderHistory.length === 0 ? (
+          <p>No orders found.</p>
+        ) : (
+          <ul className="order-list">
+            {orderHistory.map((order) => (
+              <li key={order._id} className="order-item">
+                <div>Order ID: {order._id}</div>
+                <div>Total: ${order.total}</div>
+                <div>Date: {new Date(order.createdAt).toLocaleDateString()}</div>
+                <div>Status: {order.status}</div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
