@@ -15,8 +15,7 @@ function ProfilePage() {
     setSuccess,
     isLoggedIn,
     orderHistory,
-    getOrderHistory,
-    profileUpdateTrigger
+    getOrderHistory
   } = useAuth();
   
   const [profileData, setProfileData] = useState({
@@ -29,46 +28,45 @@ function ProfilePage() {
   });
   const [selectedImage, setSelectedImage] = useState(null);
   const [localError, setLocalError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isLoggedIn) {
       getUserProfile();
       getOrderHistory();
     }
-  }, [isLoggedIn, getUserProfile, getOrderHistory, profileUpdateTrigger]);
+  }, [isLoggedIn, getUserProfile, getOrderHistory]);
 
   useEffect(() => {
     if (isLoggedIn && userProfile) {
       setProfileData({
-        firstName: userProfile.firstName ?? '',
-        lastName: userProfile.lastName ?? '',
-        email: userProfile.email ?? '',
-        phone: userProfile.phone ?? '',
-        address: userProfile.address ?? '',
-        image: userProfile.image ?? ''
+        firstName: userProfile.firstName || '',
+        lastName: userProfile.lastName || '',
+        email: userProfile.email || '',
+        phone: userProfile.phone || '',
+        address: userProfile.address || '',
+        image: userProfile.image || ''
       });
     }
-  }, [isLoggedIn, userProfile, profileUpdateTrigger]);
+  }, [isLoggedIn, userProfile]);
 
-  const handleChange = ({ target: { name, value } }) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     setProfileData(prevData => ({ ...prevData, [name]: value }));
   };
 
   const handleImageChange = (e) => {
-    setSelectedImage(e.target.files[0]);
+    const file = e.target.files[0];
+    setSelectedImage(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setLocalError(null);
-    setSuccess(false);
+    console.log("Submitting profile update:", profileData);
 
     const formData = new FormData();
-    Object.entries(profileData).forEach(([key, value]) => {
-      if (value != null && value !== '') {
-        formData.append(key, value);
+    Object.keys(profileData).forEach(key => {
+      if (profileData[key] !== null && profileData[key] !== undefined) {
+        formData.append(key, profileData[key]);
       }
     });
 
@@ -78,7 +76,8 @@ function ProfilePage() {
 
     try {
       const result = await updateUserProfile(formData);
-      
+      console.log("Profile update result:", result);
+
       if (result.success) {
         setProfileData(prevData => ({
           ...prevData,
@@ -87,18 +86,19 @@ function ProfilePage() {
         setSelectedImage(null);
         setSuccess(true);
         setLocalError(null);
-        
+        console.log("Profile update submitted and refreshed");
+
+        // Refresh the profile data
         await getUserProfile();
       } else {
-        setLocalError(result.message || 'Failed to update profile. Please try again.');
+        console.error('Profile update failed:', result.message);
+        setLocalError(result.message);
         setSuccess(false);
       }
     } catch (error) {
       console.error('Failed to update profile:', error);
       setLocalError('An error occurred while updating the profile. Please try again.');
       setSuccess(false);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -106,6 +106,8 @@ function ProfilePage() {
     if (!imagePath) return '/images/Avatar.png';
     return imagePath.startsWith('http') ? imagePath : `${API_URL}${imagePath}`;
   };
+
+  console.log("Current profile data:", profileData);
 
   return (
     <div className="profile-page-container">
@@ -121,10 +123,6 @@ function ProfilePage() {
               src={getImageUrl(profileData.image)}
               alt="Profile"
               className="profile-avatar"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = '/images/Avatar.png';
-              }}
             />
             <input
               type="file"
@@ -192,9 +190,7 @@ function ProfilePage() {
               />
             </div>
           </div>
-          <button type="submit" className="btn btn-primary" disabled={isLoading}>
-            {isLoading ? 'Updating...' : 'Update Profile'}
-          </button>
+          <button type="submit" className="btn btn-primary">Update Profile</button>
         </form>
       </div>
       
