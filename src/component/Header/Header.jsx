@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faBars } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../Context/AuthContext";
 import { useEcom } from "../../Context/EcomContext";
-import avatarImage from "/images/Avatar.png"
-import logo from "/images/logo.jpeg"
+import avatarImage from "/images/Avatar.png";
+import logo from "/images/logo.jpeg";
 import "./Header.css";
 
 const API_BASE_URL = 'https://food-delivery-api-rcff.onrender.com';
@@ -16,7 +16,7 @@ const Header = () => {
   const [hideHeader, setHideHeader] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
-  const { isLoggedIn, user, logout, userProfile } = useAuth();
+  const { isLoggedIn, user, logout, userProfile, getUserProfile } = useAuth();
   const { getCartItemCount } = useEcom();
 
   const toggleMenu = () => {
@@ -51,7 +51,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleUserUpdate = () => {
-      setLastScrollY(prev => prev + 1);
+      getUserProfile();
     };
 
     window.addEventListener('user-updated', handleUserUpdate);
@@ -59,7 +59,7 @@ const Header = () => {
     return () => {
       window.removeEventListener('user-updated', handleUserUpdate);
     };
-  }, []);
+  }, [getUserProfile]);
 
   const handleLogout = () => {
     logout();
@@ -70,7 +70,7 @@ const Header = () => {
     if (userProfile && userProfile.image) {
       return userProfile.image.startsWith('http') 
         ? userProfile.image 
-        : `${API_BASE_URL}/uploads/${userProfile.image}`;
+        : `${API_BASE_URL}${userProfile.image}`;
     }
     return avatarImage;
   };
