@@ -15,7 +15,8 @@ function ProfilePage() {
     setSuccess,
     isLoggedIn,
     orderHistory,
-    getOrderHistory
+    getOrderHistory,
+    profileUpdateTrigger
   } = useAuth();
   
   const [profileData, setProfileData] = useState({
@@ -35,29 +36,27 @@ function ProfilePage() {
       getUserProfile();
       getOrderHistory();
     }
-  }, [isLoggedIn, getUserProfile, getOrderHistory]);
+  }, [isLoggedIn, getUserProfile, getOrderHistory, profileUpdateTrigger]);
 
   useEffect(() => {
     if (isLoggedIn && userProfile) {
       setProfileData({
-        firstName: userProfile.firstName || '',
-        lastName: userProfile.lastName || '',
-        email: userProfile.email || '',
-        phone: userProfile.phone || '',
-        address: userProfile.address || '',
-        image: userProfile.image || ''
+        firstName: userProfile.firstName ?? '',
+        lastName: userProfile.lastName ?? '',
+        email: userProfile.email ?? '',
+        phone: userProfile.phone ?? '',
+        address: userProfile.address ?? '',
+        image: userProfile.image ?? ''
       });
     }
-  }, [isLoggedIn, userProfile]);
+  }, [isLoggedIn, userProfile, profileUpdateTrigger]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = ({ target: { name, value } }) => {
     setProfileData(prevData => ({ ...prevData, [name]: value }));
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedImage(file);
+    setSelectedImage(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
@@ -67,9 +66,9 @@ function ProfilePage() {
     setSuccess(false);
 
     const formData = new FormData();
-    Object.keys(profileData).forEach(key => {
-      if (profileData[key] !== null && profileData[key] !== undefined && profileData[key] !== '') {
-        formData.append(key, profileData[key]);
+    Object.entries(profileData).forEach(([key, value]) => {
+      if (value != null && value !== '') {
+        formData.append(key, value);
       }
     });
 
@@ -89,7 +88,6 @@ function ProfilePage() {
         setSuccess(true);
         setLocalError(null);
         
-        // Refresh the profile data
         await getUserProfile();
       } else {
         setLocalError(result.message || 'Failed to update profile. Please try again.');
@@ -123,6 +121,10 @@ function ProfilePage() {
               src={getImageUrl(profileData.image)}
               alt="Profile"
               className="profile-avatar"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/images/Avatar.png';
+              }}
             />
             <input
               type="file"

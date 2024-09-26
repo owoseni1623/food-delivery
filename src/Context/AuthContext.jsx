@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [profileUpdateTrigger, setProfileUpdateTrigger] = useState(0);
 
   const axiosInstance = useMemo(() => {
     const instance = axios.create({
@@ -213,6 +214,8 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, logout, axiosInstance, refreshToken]);
 
+
+
   const updateUserProfile = async (profileData) => {
     try {
       setError(null);
@@ -236,6 +239,7 @@ export const AuthProvider = ({ children }) => {
         }));
         localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
         setSuccess(true);
+        setProfileUpdateTrigger(prev => prev + 1); // Trigger re-render
         return { success: true, profile: updatedProfile };
       } else {
         const errorMessage = response.data?.message || "Failed to update profile. Please try again.";
@@ -249,6 +253,8 @@ export const AuthProvider = ({ children }) => {
       return { success: false, message: errorMessage };
     }
   };
+
+
 
   const getOrderHistory = useCallback(async () => {
     try {
@@ -286,6 +292,7 @@ export const AuthProvider = ({ children }) => {
     axiosInstance,
     updateAxiosToken,
     orderHistory,
+    profileUpdateTrigger,
     getOrderHistory
   };
 
