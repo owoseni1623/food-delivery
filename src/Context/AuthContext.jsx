@@ -18,10 +18,10 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [authToken, setAuthToken] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
-  const [orderHistory, setOrderHistory] = useState([]);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [profileFetched, setProfileFetched] = useState(false);
 
   const axiosInstance = useMemo(() => {
     const instance = axios.create({
@@ -107,6 +107,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(newUser));
       localStorage.setItem("authToken", newToken);
       updateAxiosToken(newToken);
+      setProfileFetched(false);
       console.log("Auth token set:", newToken);
 
       await getUserProfile();
@@ -159,9 +160,9 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(false);
     setUser(null);
     setUserProfile(null);
-    setOrderHistory([]);
     setToken(null);
     setAuthToken(null);
+    setProfileFetched(false);
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     localStorage.removeItem("authToken");
@@ -198,8 +199,8 @@ export const AuthProvider = ({ children }) => {
         setUserProfile(updatedProfile);
         setUser(prevUser => ({ ...prevUser, ...updatedProfile }));
         localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
+        setProfileFetched(true);
       }
-      await getOrderHistory();
     } catch (error) {
       console.error("Error fetching user profile:", error);
       if (error.response && error.response.status === 401) {
@@ -212,8 +213,6 @@ export const AuthProvider = ({ children }) => {
       }
     }
   }, [token, logout, axiosInstance, refreshToken]);
-
-  
 
   const updateUserProfile = async (profileData) => {
     try {
@@ -252,20 +251,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const getOrderHistory = useCallback(async () => {
-    try {
-      const response = await axiosInstance.get('/profile/order-history');
-      if (response.data.success) {
-        setOrderHistory(response.data.orders);
-      } else {
-        console.error('Failed to fetch order history:', response.data.message);
-      }
-    } catch (error) {
-      console.error('Error fetching order history:', error);
-    }
-  }, [axiosInstance]);
-
-  const contextValue = {
+  const contextValue = useMemo(() => ({
     isLoggedIn,
     user, 
     login, 
@@ -286,10 +272,12 @@ export const AuthProvider = ({ children }) => {
     refreshToken,
     setSuccess,
     axiosInstance,
-    updateAxiosToken,
-    orderHistory,
-    getOrderHistory
-  };
+    updateAxiosToken
+  }), [
+    isLoggedIn, user, login, token, authToken, setToken, setAuthToken,
+    logout, signup, updateUser, getUserProfile, userProfile, updateUserProfile,
+    error, success, isLoading, refreshToken, axiosInstance, updateAxiosToken
+  ]);
 
   return (
     <AuthContext.Provider value={contextValue}>
