@@ -28,6 +28,7 @@ function ProfilePage() {
   });
   const [selectedImage, setSelectedImage] = useState(null);
   const [localError, setLocalError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -61,11 +62,13 @@ function ProfilePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting profile update:", profileData);
+    setIsLoading(true);
+    setLocalError(null);
+    setSuccess(false);
 
     const formData = new FormData();
     Object.keys(profileData).forEach(key => {
-      if (profileData[key] !== null && profileData[key] !== undefined) {
+      if (profileData[key] !== null && profileData[key] !== undefined && profileData[key] !== '') {
         formData.append(key, profileData[key]);
       }
     });
@@ -76,8 +79,7 @@ function ProfilePage() {
 
     try {
       const result = await updateUserProfile(formData);
-      console.log("Profile update result:", result);
-
+      
       if (result.success) {
         setProfileData(prevData => ({
           ...prevData,
@@ -86,19 +88,19 @@ function ProfilePage() {
         setSelectedImage(null);
         setSuccess(true);
         setLocalError(null);
-        console.log("Profile update submitted and refreshed");
-
+        
         // Refresh the profile data
         await getUserProfile();
       } else {
-        console.error('Profile update failed:', result.message);
-        setLocalError(result.message);
+        setLocalError(result.message || 'Failed to update profile. Please try again.');
         setSuccess(false);
       }
     } catch (error) {
       console.error('Failed to update profile:', error);
       setLocalError('An error occurred while updating the profile. Please try again.');
       setSuccess(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,8 +108,6 @@ function ProfilePage() {
     if (!imagePath) return '/images/Avatar.png';
     return imagePath.startsWith('http') ? imagePath : `${API_URL}${imagePath}`;
   };
-
-  console.log("Current profile data:", profileData);
 
   return (
     <div className="profile-page-container">
@@ -190,7 +190,9 @@ function ProfilePage() {
               />
             </div>
           </div>
-          <button type="submit" className="btn btn-primary">Update Profile</button>
+          <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            {isLoading ? 'Updating...' : 'Update Profile'}
+          </button>
         </form>
       </div>
       
