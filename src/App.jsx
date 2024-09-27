@@ -79,7 +79,7 @@ function AppContent() {
         <Route path="/search" element={<SearchResultsPage />} />
       </Routes>
       <FooterPage />
-      <ToastContainer 
+      {/* <ToastContainer 
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -89,7 +89,7 @@ function AppContent() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+      /> */}
     </div>
   );
 }

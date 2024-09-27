@@ -180,7 +180,7 @@ const CartPage = () => {
           </div>
         </>
       )}
-      {/* <ToastContainer /> */}
+      <ToastContainer />
     </div>
   );
 };
